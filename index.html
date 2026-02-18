@@ -1,21 +1,86 @@
-<title>Love Light Links – Premium Model Directory</title>
-
-<meta name="description" content="Love Light Links is a premium model directory featuring curated profiles, images and direct access links. Discover and explore featured models easily.">
-
-<meta name="keywords" content="model directory, premium models, curated models, model profiles, Love Light Links">
-
-<meta name="author" content="Love Light Links">
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta property="og:title" content="Love Light Links – Premium Model Directory">
-<meta property="og:description" content="Explore curated premium models with direct access links and profiles.">
+
+<title>Love Light Links | Premium Model Directory</title>
+<meta name="description" content="Love Light Links is a premium model directory featuring curated model profiles with direct access links.">
+<meta name="robots" content="index, follow">
+
+<!-- Social Preview -->
+<meta property="og:title" content="Love Light Links | Premium Model Directory">
+<meta property="og:description" content="Explore curated premium model profiles in one clean directory.">
 <meta property="og:image" content="https://lovelightlinks.github.io/images/Icon.png">
 <meta property="og:url" content="https://lovelightlinks.github.io/">
 <meta property="og:type" content="website">
-<meta name="robots" content="index, follow">    opacity:0.7;
+
+<style>
+
+body {
+    margin:0;
+    font-family: Arial, sans-serif;
+    background: radial-gradient(circle at top, #2a003f, #000);
+    color:white;
+    text-align:center;
+}
+
+/* Header */
+.header {
+    padding:30px 20px 10px;
+}
+
+.logo {
+    width:140px;
+    display:block;
+    margin:0 auto;
+    animation: float 3s ease-in-out infinite,
+               glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+}
+
+@keyframes glow {
+    from { filter: drop-shadow(0 0 10px #ff00cc); }
+    to { filter: drop-shadow(0 0 25px #00ccff); }
+}
+
+h1 {
+    margin:10px 0 5px;
+}
+
+.tagline {
+    opacity:0.7;
     font-size:14px;
 }
 
+/* Social Buttons */
+.social-links {
+    margin-top:15px;
+}
+
+.social-links a {
+    display:inline-block;
+    margin:5px 10px;
+    padding:8px 18px;
+    border-radius:25px;
+    text-decoration:none;
+    font-size:14px;
+    color:white;
+    border:1px solid #ff00cc;
+    transition:0.3s;
+}
+
+.social-links a:hover {
+    background:linear-gradient(45deg,#ff00cc,#00ccff);
+    box-shadow:0 0 15px #ff00cc;
+}
+
+/* Search */
 .search-box {
     margin:20px auto;
     width:90%;
@@ -33,6 +98,7 @@
     font-size:16px;
 }
 
+/* Model Grid */
 .grid {
     display:flex;
     flex-wrap:wrap;
@@ -69,23 +135,41 @@
 .popup {
     display:none;
     position:fixed;
-    top:0; left:0;
+    top:0;
+    left:0;
     width:100%;
     height:100%;
     background:rgba(0,0,0,0.9);
     justify-content:center;
     align-items:center;
     flex-direction:column;
+    padding:20px;
 }
 
-.popup img {
-    max-width:90%;
-    max-height:60%;
+.popup-content {
+    max-width:400px;
+    width:100%;
+    background:#111;
+    padding:20px;
     border-radius:15px;
 }
 
+.popup img {
+    width:100%;
+    border-radius:10px;
+}
+
+.popup h3 {
+    margin-top:15px;
+}
+
+.popup p {
+    font-size:14px;
+    opacity:0.8;
+}
+
 .popup button {
-    margin-top:20px;
+    margin-top:15px;
     padding:10px 20px;
     border:none;
     border-radius:25px;
@@ -93,6 +177,7 @@
     color:white;
     cursor:pointer;
 }
+
 </style>
 </head>
 
@@ -102,26 +187,39 @@
     <img src="https://lovelightlinks.github.io/images/Icon.png" class="logo">
     <h1>Love Light Links</h1>
     <div class="tagline">Premium Model Directory</div>
-<link rel="icon" type="image/png" href="/images/favicon.png">
+
+    <div class="social-links">
+        <a href="https://www.instagram.com/love_light_stream?igsh=MWR6aDM5ZWQ0bWpteA==" target="_blank">Instagram</a>
+        <a href="https://x.com/LoveLightStream" target="_blank">X</a>
+        <a href="https://t.me/lovelightlinks" target="_blank">Telegram</a>
+    </div>
+</div>
+
+<div class="search-box">
+    <input type="text" id="search" placeholder="Search by Model ID...">
 </div>
 
 <div class="grid" id="modelGrid"></div>
 
 <div class="popup" id="popup">
-    <img id="popupImg">
-    <button id="visitBtn" target="_blank">Visit</button>
-    <button onclick="closePopup()">Close</button>
+    <div class="popup-content">
+        <img id="popupImg">
+        <h3 id="popupID"></h3>
+        <p id="popupDesc"></p>
+        <button id="visitBtn">Visit</button>
+        <button onclick="closePopup()">Close</button>
+    </div>
 </div>
 
 <script>
-const sheetURL = "https://opensheet.elk.sh/1mLlHZt6MLsEV4Oq0m9_WQPex94v5JbY0pTgr9hL7PjY/Sheet1";
 
+const sheetURL = "https://opensheet.elk.sh/1mLlHZt6MLsEV4Oq0m9_WQPex94v5JbY0pTgr9hL7PjY/Sheet1";
 let models = [];
 
 fetch(sheetURL)
 .then(res => res.json())
 .then(data => {
-    models = data;
+    models = data.reverse(); // newest first
     displayModels(models);
 });
 
@@ -142,7 +240,7 @@ function displayModels(data) {
 
 document.getElementById("search").addEventListener("input", function() {
     const value = this.value.toLowerCase();
-    const filtered = models.filter(m => 
+    const filtered = models.filter(m =>
         m.ID.toLowerCase().includes(value) ||
         m.Name.toLowerCase().includes(value)
     );
@@ -151,26 +249,18 @@ document.getElementById("search").addEventListener("input", function() {
 
 function openPopup(model) {
     document.getElementById("popupImg").src = model.Image1;
-
-    document.getElementById("popupImg").insertAdjacentHTML("afterend", `
-        <div id="popupDetails" style="padding:15px; max-width:90%; text-align:center;">
-            <h3>Model ${model.ID}</h3>
-            <p>${model.Name}</p>
-        </div>
-    `);
-
+    document.getElementById("popupID").innerText = "Model " + model.ID;
+    document.getElementById("popupDesc").innerText = model.Name;
     document.getElementById("visitBtn").onclick = () => {
         window.open(model.Link, "_blank");
     };
-
     document.getElementById("popup").style.display = "flex";
 }
 
 function closePopup() {
     document.getElementById("popup").style.display = "none";
-    const details = document.getElementById("popupDetails");
-    if(details) details.remove();
 }
+
 </script>
 
 </body>
