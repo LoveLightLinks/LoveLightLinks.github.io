@@ -18,10 +18,10 @@ a {color:#00ffcc; text-decoration:none;}
 
 <div class="gallery">
 
-<div class="card">
+<div class="card" onclick="openPopup()">
 <img src="images/IMG-20260210-WA0001.jpg" alt="Model 001">
 <h3>Model 001</h3>
-<a href="#">View Details</a>
+<p style="color:#00ffcc;">View Details</p>
 </div>
 
 <div class="card">
@@ -31,6 +31,24 @@ a {color:#00ffcc; text-decoration:none;}
 </div>
 
 </div>
+<div id="popup" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); justify-content:center; align-items:center;">
+  <div style="background:#222; padding:20px; border-radius:12px; width:90%; max-width:400px; text-align:center;">
+    <img src="images/IMG-20260210-WA0001.jpg" style="width:100%; border-radius:10px;">
+    <h2>Model 001</h2>
+    <p>Premium profile. Click below to access full details.</p>
+    <a href="https://xhamsterlive.com/deepu_urs" style="display:inline-block; margin-top:10px; padding:10px 20px; background:#00ffcc; color:black; border-radius:8px; text-decoration:none;">Visit Now</a>
+    <br><br>
+    <button onclick="closePopup()" style="background:none; border:none; color:white;">Close</button>
+  </div>
+</div>
 
+<script>
+function openPopup() {
+  document.getElementById('popup').style.display = 'flex';
+}
+function closePopup() {
+  document.getElementById('popup').style.display = 'none';
+}
+</script>
 </body>
 </html>
