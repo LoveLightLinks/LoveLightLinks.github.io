@@ -213,7 +213,37 @@ h1 {
     pointer-events: none;
 }
 .slider {
-    touch-action: pan-y;
+    position: relative;   /* required for arrows */
+    width: 100%;
+    overflow: hidden;
+    border-radius: 10px;
+    touch-action: pan-y;  /* keep swipe smooth */
+}
+.nav-btn {
+    position:absolute;
+    top:50%;
+    transform:translateY(-50%);
+    background:rgba(0,0,0,0.6);
+    border:none;
+    color:white;
+    font-size:22px;
+    width:35px;
+    height:35px;
+    border-radius:50%;
+    cursor:pointer;
+    z-index:10;
+}
+
+.nav-btn.left {
+    left:10px;
+}
+
+.nav-btn.right {
+    right:10px;
+}
+
+.nav-btn:hover {
+    background:#ff00cc;
 }
 </style>
 </head>
@@ -241,7 +271,9 @@ h1 {
 <div class="popup" id="popup">
     <div class="popup-content">
         <div class="slider">
+    <button class="nav-btn left" onclick="prevSlide()">❮</button>
     <div class="slides" id="slides"></div>
+    <button class="nav-btn right" onclick="nextSlide()">❯</button>
 </div>
         <h3 id="popupID"></h3>
         <p id="popupDesc"></p>
@@ -416,6 +448,29 @@ window.addEventListener("popstate", function(event) {
 
         slides.style.transform = `translateX(-${currentSlide * 100}%)`;
     };
+}
+function nextSlide() {
+    const slides = document.getElementById("slides");
+    const totalSlides = slides.children.length;
+
+    currentSlide++;
+    if (currentSlide >= totalSlides) {
+        currentSlide = 0;
+    }
+
+    slides.style.transform = `translateX(-${currentSlide * 100}%)`;
+}
+
+function prevSlide() {
+    const slides = document.getElementById("slides");
+    const totalSlides = slides.children.length;
+
+    currentSlide--;
+    if (currentSlide < 0) {
+        currentSlide = totalSlides - 1;
+    }
+
+    slides.style.transform = `translateX(-${currentSlide * 100}%)`;
 }
 // LOVEHONEY LOAD
 const lovehoneyURL = `https://opensheet.elk.sh/${sheetID}/Lovehoney`;
