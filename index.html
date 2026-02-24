@@ -1,40 +1,303 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Love Light Links | Premium Model Directory</title>
-<meta name="description" content="Love Light Links is a premium model directory featuring curated model profiles with direct access links.">
-<meta name="robots" content="index, follow">
-
-<!-- Social Preview -->
-<meta property="og:title" content="Love Light Links | Premium Model Directory">
-<meta property="og:description" content="Explore curated premium model profiles in one clean directory.">
-<meta property="og:image" content="https://lovelightlinks.github.io/images/Icon.png">
-<meta property="og:url" content="https://lovelightlinks.github.io/">
-<meta property="og:type" content="website">
+<title>Love Light Links - Premium Model Directory</title>
 
 <style>
-
 body {
-    margin:0;
-    font-family: Arial, sans-serif;
-    background: radial-gradient(circle at top, #2a003f, #000);
-    color:white;
-    text-align:center;
-}
-
-/* Header */
-.header {
-    padding:30px 20px 10px;
+  margin:0;
+  font-family:Arial, sans-serif;
+  background:linear-gradient(135deg,#1a0026,#33004d);
+  color:white;
+  text-align:center;
 }
 
 .logo {
-    width:140px;
-    display:block;
-    margin:0 auto;
-    animation: float 3s ease-in-out infinite,
+  width:140px;
+  margin-top:30px;
+}
+
+h1 { margin:10px 0 5px; }
+.subtitle { opacity:0.8; margin-bottom:20px; }
+
+.socials a {
+  display:inline-block;
+  margin:5px;
+  padding:8px 18px;
+  border-radius:20px;
+  border:1px solid #ff00cc;
+  color:white;
+  text-decoration:none;
+  font-size:14px;
+}
+
+.search-box {
+  margin:20px auto;
+  width:90%;
+  max-width:400px;
+}
+
+.search-box input {
+  width:100%;
+  padding:12px;
+  border-radius:25px;
+  border:none;
+  outline:none;
+  background:#111;
+  color:white;
+}
+
+.grid {
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:15px;
+  padding:15px;
+  max-width:600px;
+  margin:auto;
+}
+
+.card {
+  background:#1a001f;
+  border-radius:15px;
+  padding:10px;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.card:hover { transform:scale(1.05); }
+
+.card img {
+  width:100%;
+  border-radius:10px;
+}
+
+.load-btn {
+  margin:20px;
+  padding:10px 25px;
+  border:none;
+  border-radius:20px;
+  background:#ff00cc;
+  color:white;
+  cursor:pointer;
+}
+
+.popup {
+  display:none;
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.9);
+  justify-content:center;
+  align-items:center;
+  padding:15px;
+  box-sizing:border-box;
+}
+
+.popup-content {
+  background:#111;
+  border-radius:20px;
+  padding:20px;
+  max-width:400px;
+  width:100%;
+  box-sizing:border-box;
+}
+
+.popup img {
+  width:100%;
+  border-radius:10px;
+  margin-bottom:10px;
+}
+
+.popup button {
+  margin:10px;
+  padding:8px 20px;
+  border:none;
+  border-radius:20px;
+  background:#ff00cc;
+  color:white;
+  cursor:pointer;
+}
+
+.lovehoney-section {
+  margin-top:40px;
+  padding:20px;
+  background:#14001a;
+}
+
+.lovehoney-grid {
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:15px;
+  max-width:600px;
+  margin:auto;
+}
+
+.product {
+  background:#1a001f;
+  border-radius:15px;
+  padding:10px;
+}
+
+.product img {
+  width:100%;
+  border-radius:10px;
+}
+
+footer {
+  margin:30px 0;
+  font-size:12px;
+  opacity:0.6;
+}
+</style>
+</head>
+
+<body>
+
+<img src="https://lovelightlinks.github.io/images/Icon.png" class="logo">
+
+<h1>Love Light Links</h1>
+<div class="subtitle">Premium Model Directory</div>
+
+<div class="socials">
+<a href="https://www.instagram.com/love_light_stream" target="_blank">Instagram</a>
+<a href="https://x.com/LoveLightStream" target="_blank">X</a>
+<a href="https://t.me/lovelightlinks" target="_blank">Telegram</a>
+</div>
+
+<div class="search-box">
+<input type="text" id="search" placeholder="Search by Model ID...">
+</div>
+
+<div class="grid" id="modelGrid"></div>
+<button class="load-btn" onclick="loadMore()">Load More</button>
+
+<div class="lovehoney-section">
+<h2>Recommended For You</h2>
+<div class="lovehoney-grid" id="lovehoneyGrid"></div>
+</div>
+
+<div class="popup" id="popup">
+<div class="popup-content" id="popupContent"></div>
+</div>
+
+<footer>
+© 2026 Love Light Links
+</footer>
+
+<script>
+const sheetID = "1OvecIDrd_0MpuRgS8UDkckq9jknpjz2yJJWLqxq7zV4";
+const modelsURL = `https://opensheet.elk.sh/${sheetID}/Sheet1`;
+const lovehoneyURL = `https://opensheet.elk.sh/${sheetID}/Lovehoney`;
+
+let models = [];
+let displayed = 0;
+let shuffled = [];
+
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+}
+
+async function loadModels() {
+  const res = await fetch(modelsURL);
+  models = await res.json();
+
+  const now = Date.now();
+  const stored = localStorage.getItem("modelShuffle");
+  const time = localStorage.getItem("shuffleTime");
+
+  if (!stored || !time || now - time > 300000) {
+    shuffled = [...models];
+    shuffleArray(shuffled);
+    localStorage.setItem("modelShuffle", JSON.stringify(shuffled));
+    localStorage.setItem("shuffleTime", now);
+  } else {
+    shuffled = JSON.parse(stored);
+  }
+
+  loadMore();
+}
+
+function loadMore() {
+  const grid = document.getElementById("modelGrid");
+  for (let i = displayed; i < displayed + 10 && i < shuffled.length; i++) {
+    const m = shuffled[i];
+    const card = document.createElement("div");
+    card.className = "card";
+    card.innerHTML = `<img src="${m.Image1}"><h3>Model ${m.ID}</h3>`;
+    card.onclick = () => openPopup(m);
+    grid.appendChild(card);
+  }
+  displayed += 10;
+}
+
+function openPopup(model) {
+  let images = [model.Image1, model.Image2, model.Image3, model.Image4]
+    .filter(img => img);
+
+  let html = images.map(img => `<img src="${img}">`).join("");
+  html += `<h3>Model ${model.ID}</h3>`;
+  html += `<button onclick="window.open('${model.Link}','_blank')">Visit</button>`;
+  html += `<button onclick="closePopup()">Close</button>`;
+
+  document.getElementById("popupContent").innerHTML = html;
+  document.getElementById("popup").style.display = "flex";
+}
+
+function closePopup() {
+  document.getElementById("popup").style.display = "none";
+}
+
+document.getElementById("search").addEventListener("input", function() {
+  const val = this.value.trim();
+  const grid = document.getElementById("modelGrid");
+  grid.innerHTML = "";
+  displayed = 0;
+
+  if (!val) {
+    loadMore();
+    return;
+  }
+
+  const result = models.find(m => m.ID === val);
+  if (result) {
+    const card = document.createElement("div");
+    card.className = "card";
+    card.innerHTML = `<img src="${result.Image1}"><h3>Model ${result.ID}</h3>`;
+    card.onclick = () => openPopup(result);
+    grid.appendChild(card);
+  }
+});
+
+async function loadLovehoney() {
+  const res = await fetch(lovehoneyURL);
+  const data = await res.json();
+  const grid = document.getElementById("lovehoneyGrid");
+
+  data.slice(0,4).forEach(p => {
+    const card = document.createElement("div");
+    card.className = "product";
+    card.innerHTML = `
+      <img src="${p.Image}">
+      <h4>${p.Title}</h4>
+      <button onclick="window.open('${p.Link}','_blank')">View</button>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+loadModels();
+loadLovehoney();
+</script>
+
+</body>
+</html>    animation: float 3s ease-in-out infinite,
                glow 2s ease-in-out infinite alternate;
 }
 
