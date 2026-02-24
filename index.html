@@ -317,29 +317,11 @@ function loadMore() {
 
 // Search
 document.getElementById("search").addEventListener("input", function() {
-    const value = this.value.trim();
-
-    const grid = document.getElementById("modelGrid");
-    grid.innerHTML = "";
-    displayed = 0;
-
-    if (!value) {
-        loadMore();
-        return;
-    }
-
-    const result = models.find(m => m.ID === value);
-
-    if (result) {
-        const card = document.createElement("div");
-        card.className = "card";
-        card.innerHTML = `
-            <img src="${result.Image1}">
-            <h3>Model ${result.ID}</h3>
-        `;
-        card.onclick = () => openPopup(result);
-        grid.appendChild(card);
-    }
+const filtered = models.filter(m => {
+    return (
+        (m.ID && m.ID.toLowerCase().includes(value)) ||
+        (m.Name && m.Name.toLowerCase().includes(value))
+    );
 });
 
 function openPopup(model) {
