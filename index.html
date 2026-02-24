@@ -310,19 +310,27 @@ function openPopup(model) {
     document.getElementById("popupID").innerText = "Model " + model.ID;
     document.getElementById("popupDesc").innerText = model.Name;
 
-    document.getElementById("visitBtn").onclick = () => {
+    document.getElementById("visitBtn").onclick = function() {
         window.open(model.Link, "_blank");
     };
 
     document.getElementById("popup").style.display = "flex";
 
-    // Push history state
-    history.pushState({popup:true}, "");
+    // Add history state
+    history.pushState({ popup: true }, "");
 }
 
 function closePopup() {
     document.getElementById("popup").style.display = "none";
 }
+
+// Handle back button
+window.addEventListener("popstate", function() {
+    const popup = document.getElementById("popup");
+    if (popup.style.display === "flex") {
+        popup.style.display = "none";
+    }
+});
 // LOVEHONEY LOAD
 const lovehoneyURL = `https://opensheet.elk.sh/${sheetID}/Lovehoney`;
 
