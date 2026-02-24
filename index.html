@@ -346,6 +346,7 @@ function openPopup(model) {
 
     const slidesContainer = document.getElementById("slides");
     slidesContainer.innerHTML = "";
+    slidesContainer.style.transform = "translateX(0%)";
     currentSlide = 0;
 
     // Collect available images
@@ -392,6 +393,7 @@ window.addEventListener("popstate", function(event) {
     }
 });
     function enableSwipe(totalSlides) {
+
     const slides = document.getElementById("slides");
     let startX = 0;
 
@@ -400,18 +402,23 @@ window.addEventListener("popstate", function(event) {
     };
 
     slides.ontouchend = function(e) {
+
         let endX = e.changedTouches[0].clientX;
         let diff = startX - endX;
 
-        if (diff > 50 && currentSlide < totalSlides - 1) {
+        if (diff > 50) {
             currentSlide++;
-        } else if (diff < -50 && currentSlide > 0) {
+        } else if (diff < -50) {
             currentSlide--;
         }
 
+        // 🔒 HARD LIMIT PROTECTION
+        if (currentSlide < 0) currentSlide = 0;
+        if (currentSlide >= totalSlides) currentSlide = totalSlides - 1;
+
         slides.style.transform = `translateX(-${currentSlide * 100}%)`;
     };
-    }
+}
 // LOVEHONEY LOAD
 const lovehoneyURL = `https://opensheet.elk.sh/${sheetID}/Lovehoney`;
 
