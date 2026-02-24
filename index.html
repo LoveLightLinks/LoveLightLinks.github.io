@@ -337,8 +337,6 @@ document.getElementById("search").addEventListener("input", function() {
     }
 });
 
-let currentSlide = 0;
-
 function openPopup(model) {
 
     const slidesContainer = document.getElementById("slides");
@@ -388,7 +386,6 @@ window.addEventListener("popstate", function(event) {
         popupOpen = false;
     }
 });
-    let currentSlide = 0;
     function enableSwipe(totalSlides) {
     const slides = document.getElementById("slides");
     let startX = 0;
