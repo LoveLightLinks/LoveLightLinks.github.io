@@ -200,7 +200,13 @@ h1 {
     color:white;
     cursor:pointer;
 }
+.card {
+    user-select: none;
+}
 
+.card img {
+    pointer-events: none;
+}
 </style>
 </head>
 
@@ -289,7 +295,9 @@ function loadMore() {
             <img src="${model.Image1}">
             <h3>Model ${model.ID}</h3>
         `;
-        card.onclick = () => openPopup(model);
+        card.addEventListener("click", function() {
+    openPopup(model);
+});
 
         grid.appendChild(card);
     }
