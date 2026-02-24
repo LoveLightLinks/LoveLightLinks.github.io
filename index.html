@@ -306,17 +306,19 @@ document.getElementById("search").addEventListener("input", function() {
 
 // Popup with multiple images
 function openPopup(model) {
-
-    const images = [model.Image1, model.Image2, model.Image3, model.Image4]
-        .filter(img => img);
-
-    document.getElementById("popupImg").src = images[0];
+    document.getElementById("popupImg").src = model.Image1;
     document.getElementById("popupID").innerText = "Model " + model.ID;
     document.getElementById("popupDesc").innerText = model.Name;
 
     document.getElementById("visitBtn").onclick = () => {
         window.open(model.Link, "_blank");
     };
+
+    document.getElementById("popup").style.display = "flex";
+
+    // Push history state
+    history.pushState({popup:true}, "");
+};
 
     document.getElementById("popup").style.display = "flex";
 }
