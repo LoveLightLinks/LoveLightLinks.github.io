@@ -255,6 +255,21 @@ h1 {
 .nav-btn:hover {
     transform: translateY(-50%) scale(1.05);
 }
+.load-more {
+    margin: 20px auto 40px;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 30px;
+    background: linear-gradient(45deg,#ff00cc,#00ccff);
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    display: block;
+}
+
+.load-more:hover {
+    opacity: 0.85;
+}
 </style>
 </head>
 
@@ -277,6 +292,9 @@ h1 {
 </div>
 
 <div class="grid" id="modelGrid"></div>
+<button id="loadMoreBtn" onclick="loadMore()" class="load-more">
+    Load More
+</button>
 <div id="lovehoneySection"></div>
 <div class="popup" id="popup">
     <div class="popup-content">
