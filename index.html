@@ -237,7 +237,7 @@ h1 {
 </div>
 
 <div class="grid" id="modelGrid"></div>
-
+<div id="lovehoneySection"></div>
 <div class="popup" id="popup">
     <div class="popup-content">
         <div class="slider">
@@ -453,14 +453,19 @@ fetch(lovehoneyURL)
     });
 
     section.appendChild(grid);
-    document.body.appendChild(section);
+    document.getElementById("lovehoneySection").appendChild(section);
 });
 </script>
-<a href="privacy.html" style="color:#ff00cc;">Privacy Policy</a>
-<footer style="margin-top:50px;padding:30px 15px;background:#0a0a0a;font-size:13px;opacity:0.8;">
+
+<footer style="margin-top:50px;padding:30px;text-align:center;">
     <p>© 2026 Love Light Links. All rights reserved.</p>
     <p>This site is an independent directory and is not affiliated with any listed platforms.</p>
     <p>18+ Only. All content is intended for adults.</p>
+    <p style="margin-top:15px;">
+        <a href="privacy.html" style="color:#ff00cc;text-decoration:none;">
+            Privacy Policy
+        </a>
+    </p>
 </footer>
 </body>
 </html>
