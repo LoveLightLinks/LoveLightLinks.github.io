@@ -358,10 +358,16 @@ function openPopup(model) {
     ].filter(img => img && img.trim() !== "");
 
     images.forEach(src => {
-        const img = document.createElement("img");
-        img.src = src;
-        slidesContainer.appendChild(img);
-    });
+    const img = document.createElement("img");
+    img.src = src;
+
+    // If image fails to load, remove it
+    img.onerror = function() {
+        this.remove();
+    };
+
+    slidesContainer.appendChild(img);
+});
 
     document.getElementById("popupID").innerText = "Model " + model.ID;
     document.getElementById("popupDesc").innerText = model.Name;
