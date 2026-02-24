@@ -355,6 +355,27 @@ window.addEventListener("popstate", function(event) {
         popupOpen = false;
     }
 });
+    function enableSwipe(totalSlides) {
+    const slides = document.getElementById("slides");
+    let startX = 0;
+
+    slides.addEventListener("touchstart", function(e) {
+        startX = e.touches[0].clientX;
+    });
+
+    slides.addEventListener("touchend", function(e) {
+        let endX = e.changedTouches[0].clientX;
+        let diff = startX - endX;
+
+        if (diff > 50 && currentSlide < totalSlides - 1) {
+            currentSlide++;
+        } else if (diff < -50 && currentSlide > 0) {
+            currentSlide--;
+        }
+
+        slides.style.transform = `translateX(-${currentSlide * 100}%)`;
+    });
+}
 // LOVEHONEY LOAD
 const lovehoneyURL = `https://opensheet.elk.sh/${sheetID}/Lovehoney`;
 
