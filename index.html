@@ -304,7 +304,8 @@ document.getElementById("search").addEventListener("input", function() {
     }
 });
 
-// Popup with multiple images
+let popupOpen = false;
+
 function openPopup(model) {
     document.getElementById("popupImg").src = model.Image1;
     document.getElementById("popupID").innerText = "Model " + model.ID;
@@ -316,19 +317,22 @@ function openPopup(model) {
 
     document.getElementById("popup").style.display = "flex";
 
-    // Add history state
-    history.pushState({ popup: true }, "");
+    if (!popupOpen) {
+        history.pushState({ popup: true }, "");
+        popupOpen = true;
+    }
 }
 
 function closePopup() {
     document.getElementById("popup").style.display = "none";
+    popupOpen = false;
+    history.back(); // return to previous state
 }
 
-// Handle back button
-window.addEventListener("popstate", function() {
-    const popup = document.getElementById("popup");
-    if (popup.style.display === "flex") {
-        popup.style.display = "none";
+window.addEventListener("popstate", function(event) {
+    if (popupOpen) {
+        document.getElementById("popup").style.display = "none";
+        popupOpen = false;
     }
 });
 // LOVEHONEY LOAD
