@@ -207,6 +207,9 @@ h1 {
 .card img {
     pointer-events: none;
 }
+.slider {
+    touch-action: pan-y;
+}
 </style>
 </head>
 
@@ -250,6 +253,8 @@ const sheetURL = `https://opensheet.elk.sh/${sheetID}/Sheet1`;
 let models = [];
 let shuffled = [];
 let displayed = 0;
+let popupOpen = false;
+let currentSlide = 0;
 
 // Shuffle Function
 function shuffleArray(array) {
@@ -388,11 +393,11 @@ window.addEventListener("popstate", function(event) {
     const slides = document.getElementById("slides");
     let startX = 0;
 
-    slides.addEventListener("touchstart", function(e) {
+    slides.ontouchstart = function(e) {
         startX = e.touches[0].clientX;
-    });
+    };
 
-    slides.addEventListener("touchend", function(e) {
+    slides.ontouchend = function(e) {
         let endX = e.changedTouches[0].clientX;
         let diff = startX - endX;
 
@@ -403,8 +408,8 @@ window.addEventListener("popstate", function(event) {
         }
 
         slides.style.transform = `translateX(-${currentSlide * 100}%)`;
-    });
-}
+    };
+    }
 // LOVEHONEY LOAD
 const lovehoneyURL = `https://opensheet.elk.sh/${sheetID}/Lovehoney`;
 
