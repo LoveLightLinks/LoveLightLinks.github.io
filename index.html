@@ -100,18 +100,18 @@ h1 {
 
 /* Model Grid */
 .grid {
-    display:flex;
-    flex-wrap:wrap;
-    justify-content:center;
+    display:grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap:15px;
     padding:20px;
-    gap:20px;
+    max-width:600px;
+    margin:auto;
 }
 
 .card {
     background:rgba(255,255,255,0.05);
-    padding:15px;
+    padding:12px;
     border-radius:15px;
-    width:160px;
     cursor:pointer;
     transition:0.3s;
 }
@@ -322,7 +322,44 @@ function openPopup(model) {
 function closePopup() {
     document.getElementById("popup").style.display = "none";
 }
+// LOVEHONEY LOAD
+const lovehoneyURL = `https://opensheet.elk.sh/${sheetID}/Lovehoney`;
 
+fetch(lovehoneyURL)
+.then(res => res.json())
+.then(data => {
+
+    const section = document.createElement("div");
+    section.innerHTML = "<h2 style='margin-top:40px;'>Recommended For You</h2>";
+
+    const grid = document.createElement("div");
+    grid.style.display = "grid";
+    grid.style.gridTemplateColumns = "repeat(2,1fr)";
+    grid.style.gap = "15px";
+    grid.style.maxWidth = "600px";
+    grid.style.margin = "20px auto";
+
+    data.slice(0,4).forEach(item => {
+        const card = document.createElement("div");
+        card.style.background = "rgba(255,255,255,0.05)";
+        card.style.padding = "10px";
+        card.style.borderRadius = "12px";
+
+        card.innerHTML = `
+            <img src="${item.Image}" style="width:100%; border-radius:8px;">
+            <p style="font-size:14px;">${item.Title}</p>
+            <button onclick="window.open('${item.Link}','_blank')" 
+                style="padding:6px 15px; border:none; border-radius:20px; background:#ff00cc; color:white;">
+                View
+            </button>
+        `;
+
+        grid.appendChild(card);
+    });
+
+    section.appendChild(grid);
+    document.body.appendChild(section);
+});
 </script>
 
 </body>
