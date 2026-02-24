@@ -332,10 +332,28 @@ document.getElementById("search").addEventListener("input", function() {
     }
 });
 
-let popupOpen = false;
+let currentSlide = 0;
 
 function openPopup(model) {
-    document.getElementById("popupImg").src = model.Image1;
+
+    const slidesContainer = document.getElementById("slides");
+    slidesContainer.innerHTML = "";
+    currentSlide = 0;
+
+    // Collect available images
+    const images = [
+        model.Image1,
+        model.Image2,
+        model.Image3,
+        model.Image4
+    ].filter(img => img && img.trim() !== "");
+
+    images.forEach(src => {
+        const img = document.createElement("img");
+        img.src = src;
+        slidesContainer.appendChild(img);
+    });
+
     document.getElementById("popupID").innerText = "Model " + model.ID;
     document.getElementById("popupDesc").innerText = model.Name;
 
@@ -349,6 +367,8 @@ function openPopup(model) {
         history.pushState({ popup: true }, "");
         popupOpen = true;
     }
+
+    enableSwipe(images.length);
 }
 
 function closePopup() {
@@ -363,6 +383,7 @@ window.addEventListener("popstate", function(event) {
         popupOpen = false;
     }
 });
+    let currentSlide = 0;
     function enableSwipe(totalSlides) {
     const slides = document.getElementById("slides");
     let startX = 0;
