@@ -317,11 +317,21 @@ function loadMore() {
 
 // Search
 document.getElementById("search").addEventListener("input", function() {
-const filtered = models.filter(m => {
-    return (
-        (m.ID && m.ID.toLowerCase().includes(value)) ||
-        (m.Name && m.Name.toLowerCase().includes(value))
-    );
+
+    const value = this.value.toLowerCase();
+    const grid = document.getElementById("modelGrid");
+    grid.innerHTML = "";
+    displayed = 0;
+
+    const filtered = models.filter(m => {
+        return (
+            (m.ID && m.ID.toLowerCase().includes(value)) ||
+            (m.Name && m.Name.toLowerCase().includes(value))
+        );
+    });
+
+    shuffled = filtered;
+    loadMore();
 });
 
 function openPopup(model) {
