@@ -286,7 +286,7 @@ h1 {
     margin-bottom: 10px;
     font-size: 20px;
     font-weight: bold;
-    color: rgba(255,255,2o55,0.85);
+    color: rgba(255,255,255,0.85);
     }
     .blog-title {
     margin: 50px 0 20px;
@@ -638,54 +638,7 @@ fetch(blogFeed)
         blogGrid.appendChild(card);
     });
 });
-// BLOG LOAD
-const blogURL = "https://lovelightlinks.blogspot.com/feeds/posts/default?alt=json";
-
-fetch(blogURL)
-.then(res => res.json())
-.then(data => {
-
-    const section = document.createElement("div");
-    section.innerHTML = "<h2 style='margin-top:40px;'>From Our Blog</h2>";
-
-    const grid = document.createElement("div");
-    grid.style.display = "grid";
-    grid.style.gridTemplateColumns = "repeat(1,1fr)";
-    grid.style.gap = "20px";
-    grid.style.maxWidth = "600px";
-    grid.style.margin = "20px auto";
-
-    const posts = data.feed.entry.slice(0,3);
-
-    posts.forEach(post => {
-
-        const title = post.title.$t;
-        const link = post.link.find(l => l.rel === "alternate").href;
-        const content = post.content.$t;
-
-        const imgMatch = content.match(/<img[^>]+src="([^">]+)"/);
-        const image = imgMatch ? imgMatch[1] : "";
-
-        const card = document.createElement("div");
-        card.style.background = "rgba(255,255,255,0.05)";
-        card.style.padding = "15px";
-        card.style.borderRadius = "15px";
-
-        card.innerHTML = `
-            ${image ? `<img src="${image}" style="width:100%; border-radius:10px; margin-bottom:10px;">` : ""}
-            <h3 style="font-size:16px; margin-bottom:10px;">${title}</h3>
-            <button onclick="window.open('${link}','_blank')" 
-                style="padding:8px 18px; border:none; border-radius:20px; background:#ff00cc; color:white;">
-                Read More
-            </button>
-        `;
-
-        grid.appendChild(card);
-    });
-
-    section.appendChild(grid);
-    document.getElementById("lovehoneySection").appendChild(section);
-});
+    
 </script>
 
 <footer style="margin-top:50px;padding:30px;text-align:center;">
