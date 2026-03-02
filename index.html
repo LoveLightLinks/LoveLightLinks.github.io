@@ -288,6 +288,51 @@ h1 {
     font-weight: bold;
     color: rgba(255,255,2o55,0.85);
     }
+    .blog-title {
+    margin: 50px 0 20px;
+    font-size: 22px;
+    font-weight: bold;
+    color: rgba(255,255,255,0.9);
+}
+
+.blog-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    max-width: 600px;
+    margin: auto;
+    padding: 0 20px;
+}
+
+.blog-card {
+    background: rgba(255,255,255,0.05);
+    border-radius: 15px;
+    padding: 15px;
+    text-align: left;
+}
+
+.blog-card img {
+    width: 100%;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.blog-card h3 {
+    font-size: 16px;
+    margin-bottom: 8px;
+}
+
+.blog-card p {
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+.blog-card a {
+    display: inline-block;
+    margin-top: 10px;
+    color: #ff00cc;
+    text-decoration: none;
+}
 </style>
 </head>
 
@@ -314,6 +359,10 @@ h1 {
     Load More
 </button>
 <div id="lovehoneySection"></div>
+    <div id="blogSection">
+    <h2 class="blog-title">From Our Blog</h2>
+    <div class="blog-grid" id="blogGrid"></div>
+</div>
 <div class="popup" id="popup">
     <div class="popup-content">
         <div class="slider">
@@ -555,6 +604,39 @@ fetch(lovehoneyURL)
 
     section.appendChild(grid);
     document.getElementById("lovehoneySection").appendChild(section);
+});
+const blogFeed = "https://lovelightlinks.blogspot.com/feeds/posts/default?alt=json";
+
+fetch(blogFeed)
+.then(res => res.json())
+.then(data => {
+
+    const entries = data.feed.entry.slice(0,3);
+    const blogGrid = document.getElementById("blogGrid");
+
+    entries.forEach(post => {
+
+        const title = post.title.$t;
+        const link = post.link.find(l => l.rel === "alternate").href;
+        const description = post.summary.$t.replace(/<[^>]*>?/gm, "").slice(0,120) + "...";
+
+        let image = "";
+        if (post.media$thumbnail) {
+            image = post.media$thumbnail.url.replace("s72-c", "s600");
+        }
+
+        const card = document.createElement("div");
+        card.className = "blog-card";
+
+        card.innerHTML = `
+            <img src="${image}">
+            <h3>${title}</h3>
+            <p>${description}</p>
+            <a href="${link}" target="_blank">Read More →</a>
+        `;
+
+        blogGrid.appendChild(card);
+    });
 });
 </script>
 <div id="lovehoneySection"></div>
