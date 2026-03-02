@@ -605,11 +605,7 @@ fetch(lovehoneyURL)
     section.appendChild(grid);
     document.getElementById("lovehoneySection").appendChild(section);
 });
-const blogFeed = "https://lovelightlinks.blogspot.com/feeds/posts/default?alt=json";
-
-fetch(blogFeed)
-.then(res => res.json())
-.then(data => {
+function loadBlog(data) {
 
     const entries = data.feed.entry.slice(0,3);
     const blogGrid = document.getElementById("blogGrid");
@@ -618,7 +614,11 @@ fetch(blogFeed)
 
         const title = post.title.$t;
         const link = post.link.find(l => l.rel === "alternate").href;
-        const description = post.summary.$t.replace(/<[^>]*>?/gm, "").slice(0,120) + "...";
+
+        let description = "";
+        if (post.summary) {
+            description = post.summary.$t.replace(/<[^>]*>?/gm, "").slice(0,120) + "...";
+        }
 
         let image = "";
         if (post.media$thumbnail) {
@@ -629,7 +629,7 @@ fetch(blogFeed)
         card.className = "blog-card";
 
         card.innerHTML = `
-            <img src="${image}">
+            ${image ? `<img src="${image}">` : ""}
             <h3>${title}</h3>
             <p>${description}</p>
             <a href="${link}" target="_blank">Read More →</a>
@@ -637,10 +637,10 @@ fetch(blogFeed)
 
         blogGrid.appendChild(card);
     });
-});
+}
     
 </script>
-
+<script src="https://lovelightlinks.blogspot.com/feeds/posts/default?alt=json-in-script&callback=loadBlog"></script>
 <footer style="margin-top:50px;padding:30px;text-align:center;">
     <p>© 2026 Love Light Links. All rights reserved.</p>
     <p>This site is an independent directory and is not affiliated with any listed platforms.</p>
