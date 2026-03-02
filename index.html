@@ -621,9 +621,12 @@ function loadBlog(data) {
         }
 
         let image = "";
-        if (post.media$thumbnail) {
-            image = post.media$thumbnail.url.replace("s72-c", "s600");
-        }
+if (post.content) {
+    const imgMatch = post.content.$t.match(/<img[^>]+src="([^">]+)"/);
+    if (imgMatch) {
+        image = imgMatch[1];
+    }
+}
 
         const card = document.createElement("div");
         card.className = "blog-card";
