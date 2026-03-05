@@ -462,6 +462,7 @@ document.getElementById("search").addEventListener("input", function() {
 });
 
 function openPopup(model) {
+    history.pushState(null,null,"?model="+model.ID);
 
     const slidesContainer = document.getElementById("slides");
     slidesContainer.innerHTML = "";
@@ -643,7 +644,15 @@ if (post.content) {
         blogGrid.appendChild(card);
     });
 }
-    
+ const urlParams = new URLSearchParams(window.location.search);
+const modelParam = urlParams.get("model");
+
+if(modelParam){
+    const target = models.find(m => m.ID === modelParam);
+    if(target){
+        openPopup(target);
+    }
+}   
 </script>
 <script src="https://lovelightlinks.blogspot.com/feeds/posts/default?alt=json-in-script&callback=loadBlog"></script>
 <footer style="margin-top:50px;padding:30px;text-align:center;">
