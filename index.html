@@ -429,7 +429,7 @@ function loadMore() {
         const card = document.createElement("div");
         card.className = "card";
         card.innerHTML = `
-            <img src="${model.Image1}">
+            <img src="https://lovelightlinks.github.io/images/${model.Image1}" loading="lazy">
             <h3>Model ${model.ID}</h3>
         `;
         card.addEventListener("click", function() {
@@ -469,12 +469,14 @@ function openPopup(model) {
     currentSlide = 0;
 
     // Collect available images
-    const images = [
-        model.Image1,
-        model.Image2,
-        model.Image3,
-        model.Image4
-    ].filter(img => img && img.trim() !== "");
+    const basePath = "https://lovelightlinks.github.io/images/";
+
+const images = [
+    basePath + model.Image1,
+    basePath + model.Image2,
+    basePath + model.Image3,
+    basePath + model.Image4
+].filter(img => img && img.trim() !== "");
 
     images.forEach(src => {
     const img = document.createElement("img");
