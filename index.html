@@ -417,6 +417,18 @@ fetch(sheetURL)
     }
 
     loadMore();
+    // OPEN MODEL FROM URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const modelParam = urlParams.get("model");
+
+    if(modelParam){
+        const target = models.find(m => m.ID === modelParam);
+        if(target){
+            openPopup(target);
+        }
+    }
+
+});
 });
 
 // Display 10 at a time
