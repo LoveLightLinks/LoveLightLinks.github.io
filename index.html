@@ -516,7 +516,6 @@ function prevSlide(){
 
     slides.style.transform = `translateX(-${currentSlide*100}%)`;
   }
-  // SEARCH (PROFILE + LINK HUB)
 document.getElementById("search").addEventListener("input", function(){
 
     const value = this.value.toLowerCase().trim();
@@ -527,6 +526,7 @@ document.getElementById("search").addEventListener("input", function(){
         return;
     }
 
+    // MAIN MODELS SEARCH
     const found = models.find(m =>
         (m.ID && m.ID.toLowerCase() === value) ||
         (m.Username && m.Username.toLowerCase() === value)
@@ -550,8 +550,13 @@ document.getElementById("search").addEventListener("input", function(){
 
             document.getElementById("profileSection").innerHTML = `
                 <div style="background:rgba(255,255,255,0.05);padding:20px;border-radius:15px;">
+                    
+                    <img src="https://lovelightlinks.github.io/images/${hub.Image}" 
+                    style="width:100%;border-radius:10px;margin-bottom:10px;">
+
                     <h3>External Model</h3>
                     <p>ID: ${hub.ID}</p>
+
                     <button onclick="window.open('${hub.Link}','_blank')" 
                     style="margin-top:10px;padding:10px 20px;border:none;border-radius:25px;background:#ff00cc;color:white;">
                     Open Link
@@ -562,7 +567,6 @@ document.getElementById("search").addEventListener("input", function(){
     });
 
 });
-
 
 // LOVEHONEY
 const lovehoneyURL = `https://opensheet.elk.sh/${sheetID}/Lovehoney`;
