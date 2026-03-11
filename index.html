@@ -5,109 +5,334 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Love Light Links | Premium Adult Directory 18+</title>
+<meta name="description" content="Love Light Links is a premium model directory featuring curated model profiles with direct access links.">
+<meta name="robots" content="index, follow">
+
+<!-- Social Preview -->
+<meta property="og:title" content="Love Light Links | Premium Adult Model 18+">
+<meta property="og:description" content="Explore curated premium Adult model profiles in one clean directory.">
+<meta property="og:image" content="https://lovelightlinks.github.io/images/Icon.png">
+<meta property="og:url" content="https://lovelightlinks.github.io/">
+<meta property="og:type" content="website">
 
 <style>
+
 body {
-margin:0;
-font-family: Arial, sans-serif;
-background: radial-gradient(circle at top, #2a003f, #000);
-color:white;
-text-align:center;
+    margin:0;
+    font-family: Arial, sans-serif;
+    background: radial-gradient(circle at top, #2a003f, #000);
+    color:white;
+    text-align:center;
 }
 
-.header { padding:30px 20px 10px; }
+/* Header */
+.header {
+    padding:30px 20px 10px;
+}
 
 .logo {
-width:140px;
-margin:auto;
-animation: float 3s ease-in-out infinite, glow 2s ease-in-out infinite alternate;
+    width:140px;
+    display:block;
+    margin:0 auto;
+    animation: float 3s ease-in-out infinite,
+               glow 2s ease-in-out infinite alternate;
+}
+    .slider {
+    width:100%;
+    overflow:hidden;
+    border-radius:10px;
+    position:relative;
+}
+
+.slides {
+    display:flex;
+    transition:transform 0.4s ease;
+}
+
+.slides img {
+    width:100%;
+    height:auto;
+    max-height:70vh;     /* responsive height */
+    object-fit:contain;  /* show full image */
+    flex-shrink:0;
+}
+.slides {
+    display:flex;
+    align-items:center;
 }
 
 @keyframes float {
-0% { transform: translateY(0px); }
-50% { transform: translateY(-10px); }
-100% { transform: translateY(0px); }
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
 }
 
 @keyframes glow {
-from { filter: drop-shadow(0 0 10px #ff00cc); }
-to { filter: drop-shadow(0 0 25px #00ccff); }
+    from { filter: drop-shadow(0 0 10px #ff00cc); }
+    to { filter: drop-shadow(0 0 25px #00ccff); }
 }
 
+h1 {
+    margin:10px 0 5px;
+}
+
+.tagline {
+    opacity:0.7;
+    font-size:14px;
+}
+
+/* Social Buttons */
+.social-links {
+    margin-top:15px;
+}
+
+.social-links a {
+    display:inline-block;
+    margin:5px 10px;
+    padding:8px 18px;
+    border-radius:25px;
+    text-decoration:none;
+    font-size:14px;
+    color:white;
+    border:1px solid #ff00cc;
+    transition:0.3s;
+}
+
+.social-links a:hover {
+    background:linear-gradient(45deg,#ff00cc,#00ccff);
+    box-shadow:0 0 15px #ff00cc;
+}
+
+/* Search */
 .search-box {
-margin:20px auto;
-width:90%;
-max-width:400px;
+    margin:20px auto;
+    width:90%;
+    max-width:400px;
 }
 
 .search-box input {
-width:100%;
-padding:12px;
-border-radius:25px;
-border:none;
-background:#111;
-color:white;
+    width:100%;
+    padding:12px;
+    border-radius:25px;
+    border:none;
+    outline:none;
+    background:#111;
+    color:white;
+    font-size:16px;
 }
 
-.profile {
-max-width:600px;
-margin:20px auto;
-padding:20px;
-background:rgba(255,255,255,0.05);
-border-radius:15px;
-display:none;
-}
-
-.slider { position:relative; overflow:hidden; border-radius:10px; }
-.slides { display:flex; transition:0.4s; }
-.slides img { width:100%; flex-shrink:0; }
-
-.nav-btn {
-position:absolute;
-top:50%;
-transform:translateY(-50%);
-background:rgba(0,0,0,0.7);
-border:none;
-color:white;
-font-size:24px;
-width:40px;
-height:40px;
-border-radius:50%;
-}
-
-.left { left:10px; }
-.right { right:10px; }
-
+/* Model Grid */
 .grid {
-display:grid;
-grid-template-columns:repeat(2,1fr);
-gap:15px;
-max-width:600px;
-margin:auto;
-padding:20px;
+    display:grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap:15px;
+    padding:20px;
+    max-width:600px;
+    margin:auto;
 }
 
 .card {
-background:rgba(255,255,255,0.05);
-padding:10px;
-border-radius:15px;
-cursor:pointer;
+    background:rgba(255,255,255,0.05);
+    padding:12px;
+    border-radius:15px;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.card:hover {
+    transform:translateY(-5px);
+    box-shadow:0 0 20px #ff00cc;
 }
 
 .card img {
-width:100%;
-height:220px;
-object-fit:cover;
-border-radius:10px;
+    width:100%;
+    height:220px;          /* fixed height */
+    object-fit:cover;      /* crop properly */
+    border-radius:10px;
 }
 
-.next-btn {
-margin:20px;
-padding:12px 25px;
-border-radius:25px;
-border:none;
-background:linear-gradient(45deg,#ff00cc,#00ccff);
-color:white;
+.card h3 {
+    margin:10px 0 5px;
+    font-size:16px;
+}
+
+/* Popup */
+.popup {
+    display:none;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.9);
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+    padding:15px;
+    box-sizing:border-box;
+}
+
+.popup-content {
+    width:90%;
+    max-width:400px;
+    background:#111;
+    padding:20px;
+    border-radius:15px;
+    box-sizing:border-box;
+    max-height:90vh;
+overflow-y:auto;
+}
+
+.popup img {
+    width:100%;
+    border-radius:10px;
+}
+
+.popup h3 {
+    margin-top:15px;
+}
+
+.popup p {
+    font-size:14px;
+    opacity:0.8;
+}
+
+.popup button {
+    margin-top:15px;
+    padding:10px 20px;
+    border:none;
+    border-radius:25px;
+    background:#ff00cc;
+    color:white;
+    cursor:pointer;
+}
+.card {
+    user-select: none;
+}
+
+.card img {
+    pointer-events: none;
+}
+.slider {
+    position: relative;   /* required for arrows */
+    width: 100%;
+    overflow: hidden;
+    border-radius: 10px;
+    touch-action: pan-y;  /* keep swipe smooth */
+}
+.nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(5px);
+
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    z-index: 50;
+    opacity: 0.85;
+}
+
+.nav-btn.left {
+    left: 15px;
+}
+
+.nav-btn.right {
+    right: 15px;
+}
+
+.nav-btn:hover {
+    transform: translateY(-50%) scale(1.05);
+}
+.load-more {
+    margin: 20px auto 40px;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 30px;
+    background: linear-gradient(45deg,#ff00cc,#00ccff);
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    display: block;
+}
+
+.load-more:hover {
+    opacity: 0.85;
+}
+.age-badge {
+    display:inline-block;
+    margin-top:8px;
+    padding:5px 14px;
+    font-size:12px;
+    border-radius:20px;
+    background: rgba(255,0,204,0.15);
+    color:#ff00cc;
+    border:1px solid #ff00cc;
+    letter-spacing:1px;
+}
+    .search-title {
+    margin-top: 35px;
+    margin-bottom: 10px;
+    font-size: 20px;
+    font-weight: bold;
+    color: rgba(255,255,255,0.85);
+    }
+    .blog-title {
+    margin: 50px 0 20px;
+    font-size: 22px;
+    font-weight: bold;
+    color: rgba(255,255,255,0.9);
+}
+
+.blog-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    max-width: 600px;
+    margin: auto;
+    padding: 0 20px;
+}
+
+.blog-card {
+    background: rgba(255,255,255,0.05);
+    border-radius: 15px;
+    padding: 15px;
+    text-align: left;
+}
+
+.blog-card img {
+    width: 100%;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.blog-card h3 {
+    font-size: 16px;
+    margin-bottom: 8px;
+}
+
+.blog-card p {
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+.blog-card a {
+    display: inline-block;
+    margin-top: 10px;
+    color: #ff00cc;
+    text-decoration: none;
 }
 </style>
 </head>
@@ -115,121 +340,343 @@ color:white;
 <body>
 
 <div class="header">
-<img src="https://lovelightlinks.github.io/images/Icon.png" class="logo">
-<h1>Love Light Links</h1>
-</div>
+    <img src="https://lovelightlinks.github.io/images/Icon.png" class="logo">
+    <h1>Love Light Links</h1>
+    <div class="age-badge">18+ Adults Only</div>
 
+    <div class="social-links">
+        <a href="https://www.instagram.com/love_light_stream?igsh=MWR6aDM5ZWQ0bWpteA==" target="_blank">Instagram</a>
+        <a href="https://x.com/LoveLightStream" target="_blank">X</a>
+        <a href="https://t.me/lovelightlinks" target="_blank">Telegram</a>
+    </div>
+</div>
+<h2 class="search-title">Premium Adult Directory</h2>
 <div class="search-box">
-<input type="text" id="search" placeholder="Search Model or Username">
+    <input type="text" id="search" placeholder="Search by Model ID...">
 </div>
 
-<div class="profile" id="profile">
-<div class="slider">
-<button class="nav-btn left" onclick="prev()">❮</button>
-<div class="slides" id="slides"></div>
-<button class="nav-btn right" onclick="next()">❯</button>
+<div class="grid" id="modelGrid"></div>
+<button id="loadMoreBtn" onclick="loadMore()" class="load-more">
+    Load More
+</button>
+<div id="lovehoneySection"></div>
+    <div id="blogSection">
+    <h2 class="blog-title">From Our Blog</h2>
+    <div class="blog-grid" id="blogGrid"></div>
 </div>
-<h3 id="profileModel"></h3>
-<p id="profileUser"></p>
-<p id="profileBio"></p>
-<button id="visitBtn">Visit</button>
+<div class="popup" id="popup">
+    <div class="popup-content">
+        <div class="slider">
+    <button class="nav-btn left" onclick="prevSlide()">❮</button>
+    <div class="slides" id="slides"></div>
+    <button class="nav-btn right" onclick="nextSlide()">❯</button>
 </div>
-
-<div class="grid" id="grid"></div>
-<button class="next-btn" onclick="nextPage()">Next</button>
+        <h3 id="popupID"></h3>
+        <p id="popupDesc"></p>
+        <button id="visitBtn">Visit</button>
+        <button onclick="closePopup()">Close</button>
+    </div>
+</div>
 
 <script>
 
 const sheetID = "1mLlHZt6MLsEV4Oq0m9_WQPex94v5JbY0pTgr9hL7PjY";
-const url = `https://opensheet.elk.sh/${sheetID}/Sheet1`;
+const sheetURL = `https://opensheet.elk.sh/${sheetID}/Sheet1`;
 
 let models = [];
-let index = 0;
-let current = 0;
+let shuffled = [];
+let displayed = 0;
+let popupOpen = false;
+let currentSlide = 0;
 
-fetch(url).then(r=>r.json()).then(data=>{
-models = data;
-loadGrid();
-loadFromURL();
+// Shuffle Function
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+}
+
+// Load Models
+fetch(sheetURL)
+.then(res => res.json())
+.then(data => {
+
+    models = data;
+
+    const now = Date.now();
+    const stored = localStorage.getItem("modelShuffle");
+    const time = localStorage.getItem("shuffleTime");
+
+    if (!stored || !time || now - time > 300000) {
+        shuffled = [...models];
+        shuffleArray(shuffled);
+        localStorage.setItem("modelShuffle", JSON.stringify(shuffled));
+        localStorage.setItem("shuffleTime", now);
+    } else {
+        shuffled = JSON.parse(stored);
+    }
+
+    loadMore();
+    // OPEN MODEL FROM URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const modelParam = urlParams.get("model");
+
+    if(modelParam){
+        const target = models.find(m => m.ID === modelParam);
+        if(target){
+            openPopup(target);
+        }
+    }
+
 });
 
-function loadGrid(){
-const grid = document.getElementById("grid");
-grid.innerHTML="";
-for(let i=index;i<index+10;i++){
-if(!models[i]) break;
-if(!models[i].Image1) continue;
-grid.innerHTML += `
-<div class="card" onclick="openProfile('${models[i].ID}')">
-<img src="https://lovelightlinks.github.io/images/${models[i].Image1}">
-<h3>Model ${models[i].ID}</h3>
-</div>`;
-}
-}
+// Display 10 at a time
+function loadMore() {
+    const grid = document.getElementById("modelGrid");
 
-function nextPage(){
-index +=10;
-if(index>=models.length) index=0;
-loadGrid();
-}
+    for (let i = displayed; i < displayed + 10 && i < shuffled.length; i++) {
+        const model = shuffled[i];
 
-function openProfile(id){
-const m = models.find(x=>x.ID==id);
-if(!m) return;
-
-history.pushState(null,null,"?model="+id);
-
-document.getElementById("profile").style.display="block";
-document.getElementById("profileModel").innerText="Model: "+m.ID;
-document.getElementById("profileUser").innerText="ID: "+(m.Username||"");
-document.getElementById("profileBio").innerText=m.Name||"";
-
-document.getElementById("visitBtn").onclick=()=>window.open(m.Link);
-
-const slides = document.getElementById("slides");
-slides.innerHTML="";
-
-["Image1","Image2","Image3","Image4"].forEach(img=>{
-if(m[img]){
-slides.innerHTML+=`<img src="https://lovelightlinks.github.io/images/${m[img]}">`;
-}
-});
-current=0;
-slides.style.transform="translateX(0%)";
-}
-
-function loadFromURL(){
-const params = new URLSearchParams(window.location.search);
-const id = params.get("model");
-if(id) openProfile(id);
-}
-
-document.getElementById("search").addEventListener("input", e=>{
-const v = e.target.value.toLowerCase();
-const found = models.find(m =>
-(m.ID && m.ID.toLowerCase()==v) ||
-(m.Username && m.Username.toLowerCase()==v)
-);
-if(found) openProfile(found.ID);
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `
+            <img src="https://lovelightlinks.github.io/images/${model.Image1}" loading="lazy">
+            <h3>Model ${model.ID}</h3>
+        `;
+        card.addEventListener("click", function() {
+    openPopup(model);
 });
 
-function next(){
-const slides = document.getElementById("slides");
-const total = slides.children.length;
-current++;
-if(current>=total) current=0;
-slides.style.transform=`translateX(-${current*100}%)`;
+        grid.appendChild(card);
+    }
+
+    displayed += 10;
 }
 
-function prev(){
-const slides = document.getElementById("slides");
-const total = slides.children.length;
-current--;
-if(current<0) current=total-1;
-slides.style.transform=`translateX(-${current*100}%)`;
+// Search
+document.getElementById("search").addEventListener("input", function() {
+
+    const value = this.value.toLowerCase();
+    const grid = document.getElementById("modelGrid");
+    grid.innerHTML = "";
+    displayed = 0;
+
+    const filtered = models.filter(m => {
+        return (
+            (m.ID && m.ID.toLowerCase().includes(value)) ||
+            (m.Name && m.Name.toLowerCase().includes(value))
+        );
+    });
+
+    shuffled = filtered;
+    loadMore();
+});
+
+function openPopup(model) {
+    history.pushState(null,null,"?model="+model.ID);
+
+    const slidesContainer = document.getElementById("slides");
+    slidesContainer.innerHTML = "";
+    slidesContainer.style.transform = "translateX(0%)";
+    currentSlide = 0;
+
+    // Collect available images
+    const basePath = "https://lovelightlinks.github.io/images/";
+
+const images = [
+    basePath + model.Image1,
+    basePath + model.Image2,
+    basePath + model.Image3,
+    basePath + model.Image4
+].filter(img => img && img.trim() !== "");
+
+    images.forEach(src => {
+    const img = document.createElement("img");
+    img.src = src;
+
+    // If image fails to load, remove it
+    img.onerror = function() {
+        this.remove();
+    };
+
+    slidesContainer.appendChild(img);
+});
+
+    document.getElementById("popupID").innerText = "Model " + model.ID;
+    document.getElementById("popupDesc").innerText = model.Name;
+
+    document.getElementById("visitBtn").onclick = function() {
+        window.open(model.Link, "_blank");
+    };
+
+    document.getElementById("popup").style.display = "flex";
+
+    if (!popupOpen) {
+        history.pushState({ popup: true }, "");
+        popupOpen = true;
+    }
+
+    enableSwipe(images.length);
 }
 
+function closePopup() {
+    document.getElementById("popup").style.display = "none";
+    popupOpen = false;
+    history.back(); // return to previous state
+}
+
+window.addEventListener("popstate", function(event) {
+    if (popupOpen) {
+        document.getElementById("popup").style.display = "none";
+        popupOpen = false;
+    }
+});
+    function enableSwipe(totalSlides) {
+
+    const slides = document.getElementById("slides");
+    let startX = 0;
+
+    slides.ontouchstart = function(e) {
+        startX = e.touches[0].clientX;
+    };
+
+    slides.ontouchend = function(e) {
+
+        let endX = e.changedTouches[0].clientX;
+        let diff = startX - endX;
+
+        if (diff > 50) {
+            currentSlide++;
+        } else if (diff < -50) {
+            currentSlide--;
+        }
+
+        // 🔒 HARD LIMIT PROTECTION
+        if (currentSlide < 0) currentSlide = 0;
+        if (currentSlide >= totalSlides) currentSlide = totalSlides - 1;
+
+        slides.style.transform = `translateX(-${currentSlide * 100}%)`;
+    };
+}
+function nextSlide() {
+    const slides = document.getElementById("slides");
+    const totalSlides = slides.children.length;
+
+    currentSlide++;
+    if (currentSlide >= totalSlides) {
+        currentSlide = 0;
+    }
+
+    slides.style.transform = `translateX(-${currentSlide * 100}%)`;
+}
+
+function prevSlide() {
+    const slides = document.getElementById("slides");
+    const totalSlides = slides.children.length;
+
+    currentSlide--;
+    if (currentSlide < 0) {
+        currentSlide = totalSlides - 1;
+    }
+
+    slides.style.transform = `translateX(-${currentSlide * 100}%)`;
+}
+// LOVEHONEY LOAD
+const lovehoneyURL = `https://opensheet.elk.sh/${sheetID}/Lovehoney`;
+
+fetch(lovehoneyURL)
+.then(res => res.json())
+.then(data => {
+
+    const section = document.createElement("div");
+    section.innerHTML = "<h2 style='margin-top:40px;'>Recommended For You</h2>";
+
+    const grid = document.createElement("div");
+    grid.style.display = "grid";
+    grid.style.gridTemplateColumns = "repeat(2,1fr)";
+    grid.style.gap = "15px";
+    grid.style.maxWidth = "600px";
+    grid.style.margin = "20px auto";
+
+    data.slice(0,4).forEach(item => {
+        const card = document.createElement("div");
+        card.style.background = "rgba(255,255,255,0.05)";
+        card.style.padding = "10px";
+        card.style.borderRadius = "12px";
+
+        card.innerHTML = `
+            <img src="${item.Image}" style="width:100%; border-radius:8px;">
+            <p style="font-size:14px;">${item.Title}</p>
+            <button onclick="window.open('${item.Link}','_blank')" 
+                style="padding:6px 15px; border:none; border-radius:20px; background:#ff00cc; color:white;">
+                View
+            </button>
+        `;
+
+        grid.appendChild(card);
+    });
+
+    section.appendChild(grid);
+    document.getElementById("lovehoneySection").appendChild(section);
+});
+function loadBlog(data) {
+
+    const entries = data.feed.entry.slice(0,3);
+    const blogGrid = document.getElementById("blogGrid");
+
+    entries.forEach(post => {
+
+        const title = post.title.$t;
+        const link = post.link.find(l => l.rel === "alternate").href;
+
+        let description = "";
+        if (post.summary) {
+            description = post.summary.$t.replace(/<[^>]*>?/gm, "").slice(0,120) + "...";
+        }
+
+        let image = "";
+if (post.content) {
+    const imgMatch = post.content.$t.match(/<img[^>]+src="([^">]+)"/);
+    if (imgMatch) {
+        image = imgMatch[1];
+    }
+}
+
+        const card = document.createElement("div");
+        card.className = "blog-card";
+
+        card.innerHTML = `
+            ${image ? `<img src="${image}">` : ""}
+            <h3>${title}</h3>
+            <p>${description}</p>
+            <a href="${link}" target="_blank">Read More →</a>
+        `;
+
+        blogGrid.appendChild(card);
+    });
+}
+const urlParams = new URLSearchParams(window.location.search);
+const modelParam = urlParams.get("model");
+
+if(modelParam){
+    const target = models.find(m => m.ID === modelParam);
+    if(target){
+        openPopup(target);
+    }
+}   
 </script>
+<script src="https://lovelightlinks.blogspot.com/feeds/posts/default?alt=json-in-script&callback=loadBlog"></script>
+<footer style="margin-top:50px;padding:30px;text-align:center;">
+    <p>© 2026 Love Light Links. All rights reserved.</p>
+    <p>Love Light Links is an independent 18+ directory and is not owned, operated, or officially affiliated with any listed platforms. All trademarks belong to their respective owners.</p>
+    <p>18+ Only. All content is intended for adults.</p>
 
+    <p style="margin-top:20px;font-size:14px;">
+        <a href="privacy.html" style="color:#ff00cc;text-decoration:none;">
+            Privacy Policy
+        </a>
+    </p>
+</footer>
 </body>
-</html>
+  </html>
