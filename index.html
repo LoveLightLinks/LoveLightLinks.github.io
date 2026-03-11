@@ -8,6 +8,9 @@
 <meta name="description" content="Love Light Links is a premium model directory featuring curated model profiles with direct access links.">
 <meta name="robots" content="index, follow">
 
+<meta name="rating" content="adult">
+<meta name="RATING" content="RTA-5042-1996-1400-1577-RTA">
+
 <meta property="og:title" content="Love Light Links | Premium Adult Model 18+">
 <meta property="og:description" content="Explore curated premium Adult model profiles in one clean directory.">
 <meta property="og:image" content="https://lovelightlinks.github.io/images/Icon.png">
@@ -15,145 +18,32 @@
 <meta property="og:type" content="website">
 
 <style>
-body {
-margin:0;
-font-family: Arial, sans-serif;
-background: radial-gradient(circle at top, #2a003f, #000);
-color:white;
-text-align:center;
-}
-.header { padding:30px 20px 10px; }
-.logo {
-width:140px;
-display:block;
-margin:0 auto;
-animation: float 3s ease-in-out infinite, glow 2s ease-in-out infinite alternate;
-}
-@keyframes float {
-0% { transform: translateY(0px); }
-50% { transform: translateY(-10px); }
-100% { transform: translateY(0px); }
-}
-@keyframes glow {
-from { filter: drop-shadow(0 0 10px #ff00cc); }
-to { filter: drop-shadow(0 0 25px #00ccff); }
-}
-.age-badge {
-display:inline-block;
-margin-top:8px;
-padding:5px 14px;
-font-size:12px;
-border-radius:20px;
-background: rgba(255,0,204,0.15);
-color:#ff00cc;
-border:1px solid #ff00cc;
-}
-.social-links a {
-display:inline-block;
-margin:5px 10px;
-padding:8px 18px;
-border-radius:25px;
-text-decoration:none;
-font-size:14px;
-color:white;
-border:1px solid #ff00cc;
-}
-.search-box { margin:20px auto; width:90%; max-width:400px; }
-.search-box input {
-width:100%;
-padding:12px;
-border-radius:25px;
-border:none;
-background:#111;
-color:white;
-}
-.grid {
-display:grid;
-grid-template-columns: repeat(2, 1fr);
-gap:15px;
-padding:20px;
-max-width:600px;
-margin:auto;
-}
-.card {
-background:rgba(255,255,255,0.05);
-padding:12px;
-border-radius:15px;
-cursor:pointer;
-}
-.card img {
-width:100%;
-height:220px;
-object-fit:cover;
-border-radius:10px;
-}
-.popup {
-display:none;
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:rgba(0,0,0,0.9);
-justify-content:center;
-align-items:center;
-}
-.popup-content {
-width:90%;
-max-width:400px;
-background:#111;
-padding:20px;
-border-radius:15px;
-}
-.slider { position:relative; overflow:hidden; }
-.slides { display:flex; transition:transform .4s; }
-.slides img { width:100%; }
-.nav-btn {
-position:absolute;
-top:50%;
-transform:translateY(-50%);
-width:45px;
-height:45px;
-border-radius:50%;
-border:none;
-background:rgba(0,0,0,.7);
-color:white;
-font-size:24px;
-}
-.left { left:15px; }
-.right { right:15px; }
-.load-more {
-margin:20px auto;
-padding:12px 25px;
-border:none;
-border-radius:30px;
-background:linear-gradient(45deg,#ff00cc,#00ccff);
-color:white;
-cursor:pointer;
-}
+body{margin:0;font-family:Arial;background:radial-gradient(circle at top,#2a003f,#000);color:white;text-align:center}
+.logo{width:140px;margin:auto;display:block}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:15px;padding:20px;max-width:600px;margin:auto}
+.card{background:rgba(255,255,255,.05);padding:12px;border-radius:15px;cursor:pointer}
+.card img{width:100%;height:220px;object-fit:cover;border-radius:10px}
+.popup{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#000e;justify-content:center;align-items:center}
+.popup-content{background:#111;padding:20px;border-radius:15px;width:90%;max-width:400px;max-height:90vh;overflow:auto}
+.slider{position:relative;overflow:hidden}
+.slides{display:flex;transition:.4s}
+.slides img{min-width:100%;object-fit:contain}
+.nav-btn{position:absolute;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:50%;border:none;background:#000a;color:white;font-size:22px}
+.nav-btn.left{left:10px}.nav-btn.right{right:10px}
+.load-more{padding:12px 25px;border:none;border-radius:30px;background:linear-gradient(45deg,#ff00cc,#00ccff);color:white;margin:20px}
 </style>
 </head>
 
 <body>
 
-<div class="header">
 <img src="https://lovelightlinks.github.io/images/Icon.png" class="logo">
-<h1>Love Light Links</h1>
-<div class="age-badge">18+ Adults Only</div>
 
-<div class="social-links">
-<a href="https://www.instagram.com/love_light_stream" target="_blank">Instagram</a>
-<a href="https://x.com/LoveLightStream" target="_blank">X</a>
-<a href="https://t.me/lovelightlinks" target="_blank">Telegram</a>
-</div>
-</div>
-
-<div class="search-box">
-<input type="text" id="search" placeholder="Search Model or Username">
-</div>
+<input type="text" id="search" placeholder="Search by Model ID..." style="padding:10px;border-radius:20px;border:none;width:80%;max-width:400px">
 
 <div class="grid" id="modelGrid"></div>
-<button onclick="loadMore()" class="load-more">Load More</button>
+<button id="loadMoreBtn" onclick="loadMore()" class="load-more">Load More</button>
+
+<div id="lovehoneySection"></div>
 
 <div class="popup" id="popup">
 <div class="popup-content">
@@ -173,83 +63,130 @@ cursor:pointer;
 const sheetID="1mLlHZt6MLsEV4Oq0m9_WQPex94v5JbY0pTgr9hL7PjY";
 const sheetURL=`https://opensheet.elk.sh/${sheetID}/Sheet1`;
 
-let models=[],shuffled=[],displayed=0,currentSlide=0;
+let models=[],shuffled=[],displayed=0,currentSlide=0,popupOpen=false;
 
-fetch(sheetURL)
-.then(r=>r.json())
-.then(data=>{
-models=data;
-shuffled=[...models];
-shuffleArray(shuffled);
-loadMore();
-});
+function shuffleArray(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}}
 
-function shuffleArray(a){
-for(let i=a.length-1;i>0;i--){
-let j=Math.floor(Math.random()*(i+1));
-[a[i],a[j]]=[a[j],a[i]];
-}
-}
+fetch(sheetURL).then(r=>r.json()).then(data=>{
+models=data
+shuffled=[...models]
+shuffleArray(shuffled)
+loadMore()
+
+const param=new URLSearchParams(location.search).get("model")
+if(param){const target=models.find(m=>m.ID===param);if(target)openPopup(target)}
+})
 
 function loadMore(){
-const grid=document.getElementById("modelGrid");
-for(let i=displayed;i<displayed+10 && i<shuffled.length;i++){
-let m=shuffled[i];
-let card=document.createElement("div");
-card.className="card";
-card.innerHTML=`
-<img src="https://lovelightlinks.github.io/images/${m.Image1}">
-<h3>Model ${m.ID}</h3>`;
-card.onclick=()=>openPopup(m);
-grid.appendChild(card);
+const grid=document.getElementById("modelGrid")
+for(let i=displayed;i<displayed+10&&i<shuffled.length;i++){
+const m=shuffled[i]
+const card=document.createElement("div")
+card.className="card"
+card.innerHTML=`<img src="https://lovelightlinks.github.io/images/${m.Image1}"><h3>Model ${m.ID}</h3>`
+card.onclick=()=>openPopup(m)
+grid.appendChild(card)
 }
-displayed+=10;
-}
-
-document.getElementById("search").addEventListener("input",function(){
-let v=this.value.toLowerCase();
-let grid=document.getElementById("modelGrid");
-grid.innerHTML="";
-displayed=0;
-shuffled=models.filter(m=>
-(m.ID && m.ID.toLowerCase().includes(v)) ||
-(m.Username && m.Username.toLowerCase().includes(v))
-);
-loadMore();
-});
-
-function openPopup(m){
-let slides=document.getElementById("slides");
-slides.innerHTML="";
-["Image1","Image2","Image3","Image4"].forEach(i=>{
-if(m[i]){
-let img=document.createElement("img");
-img.src="https://lovelightlinks.github.io/images/"+m[i];
-slides.appendChild(img);
-}
-});
-document.getElementById("popupID").innerText="Model "+m.ID;
-document.getElementById("popupDesc").innerText=m.Name;
-document.getElementById("visitBtn").onclick=()=>window.open(m.Link,"_blank");
-document.getElementById("popup").style.display="flex";
+displayed+=10
+if(displayed>=shuffled.length)document.getElementById("loadMoreBtn").style.display="none"
 }
 
-function closePopup(){ document.getElementById("popup").style.display="none"; }
+document.getElementById("search").oninput=function(){
+const v=this.value.toLowerCase()
+const grid=document.getElementById("modelGrid")
+grid.innerHTML=""
+displayed=0
+let f=models.filter(m=>m.ID.toLowerCase().includes(v))
+shuffleArray(f)
+shuffled=f
+loadMore()
+}
+
+function openPopup(model){
+history.pushState(null,null,"?model="+model.ID)
+document.body.style.overflow="hidden"
+
+const slides=document.getElementById("slides")
+slides.innerHTML=""
+currentSlide=0
+
+;[model.Image1,model.Image2,model.Image3,model.Image4].forEach(img=>{
+if(!img)return
+const i=document.createElement("img")
+i.src="https://lovelightlinks.github.io/images/"+img
+i.onerror=()=>i.remove()
+slides.appendChild(i)
+})
+
+document.getElementById("popupID").innerText="Model "+model.ID
+document.getElementById("popupDesc").innerText=model.Description
+document.getElementById("visitBtn").onclick=()=>window.open(model.Link,"_blank")
+
+document.getElementById("popup").style.display="flex"
+popupOpen=true
+}
+
+function closePopup(){
+document.getElementById("popup").style.display="none"
+document.body.style.overflow="auto"
+popupOpen=false
+history.back()
+}
+
+window.onpopstate=()=>{if(popupOpen)closePopup()}
 
 function nextSlide(){
-let s=document.getElementById("slides");
-currentSlide++;
-if(currentSlide>=s.children.length) currentSlide=0;
-s.style.transform=`translateX(-${currentSlide*100}%)`;
+const slides=document.getElementById("slides")
+const total=slides.children.length
+currentSlide=(currentSlide+1)%total
+slides.style.transform=`translateX(-${currentSlide*100}%)`
 }
 
 function prevSlide(){
-let s=document.getElementById("slides");
-currentSlide--;
-if(currentSlide<0) currentSlide=s.children.length-1;
-s.style.transform=`translateX(-${currentSlide*100}%)`;
+const slides=document.getElementById("slides")
+const total=slides.children.length
+currentSlide=(currentSlide-1+total)%total
+slides.style.transform=`translateX(-${currentSlide*100}%)`
+}
+
+/* LOVEHONEY */
+fetch(`https://opensheet.elk.sh/${sheetID}/Lovehoney`)
+.then(r=>r.json()).then(data=>{
+const sec=document.createElement("div")
+sec.innerHTML="<h2>Recommended</h2>"
+const grid=document.createElement("div")
+grid.style.display="grid"
+grid.style.gridTemplateColumns="repeat(2,1fr)"
+grid.style.gap="15px"
+grid.style.maxWidth="600px"
+grid.style.margin="20px auto"
+data.slice(0,4).forEach(it=>{
+const c=document.createElement("div")
+c.innerHTML=`<img src="${it.Image}" style="width:100%"><p>${it.Title}</p>
+<button onclick="window.open('${it.Link}')">View</button>`
+grid.appendChild(c)
+})
+sec.appendChild(grid)
+document.getElementById("lovehoneySection").appendChild(sec)
+})
+
+function loadBlog(data){
+if(!data.feed||!data.feed.entry)return
+const blogGrid=document.getElementById("blogGrid")
+data.feed.entry.slice(0,3).forEach(post=>{
+const title=post.title.$t
+const link=post.link.find(l=>l.rel==="alternate").href
+let desc=post.summary?post.summary.$t.replace(/<[^>]*>?/gm,"").slice(0,120)+"...":""
+let img=""
+if(post.content){const m=post.content.$t.match(/<img[^>]+src="([^">]+)"/);if(m)img=m[1]}
+const card=document.createElement("div")
+card.innerHTML=`${img?`<img src="${img}">`:""}<h3>${title}</h3><p>${desc}</p><a href="${link}" target="_blank">Read More</a>`
+blogGrid.appendChild(card)
+})
 }
 </script>
+
+<script src="https://lovelightlinks.blogspot.com/feeds/posts/default?alt=json-in-script&callback=loadBlog"></script>
 
 </body>
 </html>
