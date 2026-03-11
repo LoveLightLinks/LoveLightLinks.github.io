@@ -445,19 +445,17 @@ function loadPage() {
     });
 
 }
-
 function loadMore(){
     pageIndex++;
     loadPage();
-}
-
-function loadProfile(model){
-
-    function getImagePath(img){
+        }
+function getImagePath(img){
     if(!img) return "";
     if(img.startsWith("http")) return img;
     return "https://lovelightlinks.github.io/images/" + img;
 }
+function loadProfile(model){
+    
     const images = [
     getImagePath(model.Image1),
     getImagePath(model.Image2),
@@ -471,7 +469,7 @@ function loadProfile(model){
         <div class="slider">
             <button class="nav-btn left" onclick="prevSlide()">❮</button>
             <div class="slides" id="slides">
-                ${images.map(img=>`<img src="${basePath+img}">`).join("")}
+                ${images.map(img=>`<img src="${img}">`).join("")}
             </div>
             <button class="nav-btn right" onclick="nextSlide()">❯</button>
         </div>
