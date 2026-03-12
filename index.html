@@ -413,28 +413,49 @@ const params = new URLSearchParams(window.location.search);
 const routeID = params.get("id");
 
 if(routeID){
+const value = this.value.toLowerCase().trim();
 
-    const foundModel = models.find(m =>
-        m.ID.toLowerCase() === routeID.toLowerCase() ||
-        (m.Username && m.Username.toLowerCase() === routeID.toLowerCase())
-    );
+if(!value){
+    document.getElementById("profileSection").innerHTML = "";
+    loadPage();
+    return;
+}
 
-    if(foundModel){
-        loadProfile(foundModel);
-        return;
+// PROFILE SEARCH
+let found = models.find(m =>
+    (m.ID && m.ID.toLowerCase() === value) ||
+    (m.Username && m.Username.toLowerCase() === value)
+);
+
+if(found){
+    loadProfile(found);
+    return;
+}
+
+// LINK HUB SEARCH
+fetch(`https://opensheet.elk.sh/${sheetID}/LinkHub`)
+.then(r=>r.json())
+.then(data=>{
+
+    const hub = data.find(x => x.ID.toLowerCase() === value);
+
+    if(hub){
+
+        history.pushState({}, "", "?id="+hub.ID);
+
+        document.getElementById("profileSection").innerHTML = `
+            <div style="background:rgba(255,255,255,0.05);padding:20px;border-radius:15px;">
+                <img src="${hub.Image}" style="width:100%;border-radius:10px;margin-bottom:15px;">
+                <h3>Hidden Access</h3>
+                <button onclick="window.open('${hub.Link}','_blank')" 
+                style="margin-top:10px;padding:10px 20px;border:none;border-radius:25px;background:#ff00cc;color:white;">
+                Open Link
+                </button>
+            </div>
+        `;
     }
 
-    fetch(`https://opensheet.elk.sh/${sheetID}/LinkHub`)
-    .then(r=>r.json())
-    .then(hubData=>{
-        const foundHub = hubData.find(x =>
-            x.ID.toLowerCase() === routeID.toLowerCase()
-        );
-        if(foundHub){
-            showExternalProfile(foundHub);
-        }
-    });
-    }
+});
     shuffled = [...models];
     shuffleArray(shuffled);
 
