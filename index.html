@@ -477,7 +477,7 @@ function getImagePath(img){
     return "https://lovelightlinks.github.io/images/" + img;
 }
 function loadProfile(model){
-    history.pushState({}, "", "?id=" + (model.Username || model.ID));
+    history.pushState({}, "", "?id=" + model.ID);
     const images = [
     getImagePath(model.Image1),
     getImagePath(model.Image2),
@@ -551,7 +551,6 @@ document.getElementById("search").addEventListener("input", function(){
 
     if(found){
         loadProfile(found);
-        return;
     }
 
 // LOVEHONEY
