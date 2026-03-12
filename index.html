@@ -603,10 +603,12 @@ fetch(lovehoneyURL)
         const card = document.createElement("div");
 
         card.innerHTML = `
-            <img src="${item.Image}" style="width:100%; border-radius:8px;">
-            <p>${item.Title}</p>
-            <button onclick="window.open('${item.Link}','_blank')">View</button>
-        `;
+    <img src="${item.Image}" 
+         style="width:100%; border-radius:8px; cursor:pointer;"
+         onclick="window.open('${item.Link}','_blank')">
+
+    <p>${item.Title}</p>
+`;
 
         grid.appendChild(card);
     });
