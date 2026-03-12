@@ -392,6 +392,7 @@ h1 {
 
 const sheetID = "1mLlHZt6MLsEV4Oq0m9_WQPex94v5JbY0pTgr9hL7PjY";
 const sheetURL = `https://opensheet.elk.sh/${sheetID}/Sheet1`;
+const linkHubURL = `https://opensheet.elk.sh/${sheetID}/LinkHub`;
 
 let models = [];
 let linkHubData = [];
@@ -405,46 +406,44 @@ function shuffleArray(array) {
     }
 }
 
-fetch(sheetURL)
-.then(res => res.json())
-.then(data => {
+Promise.all([
+    fetch(sheetURL).then(res=>res.json()),
+    fetch(linkHubURL).then(res=>res.json())
+]).then(([modelsData, hubData])=>{
 
-    models = data;
-    linkHubData = data;
+    models = modelsData;
+    linkHubData = hubData;
 
     const params = new URLSearchParams(window.location.search);
     const routeID = params.get("id");
 
-if(routeID){
+    if(routeID){
 
-    // MAIN MODEL
-    let found = models.find(m =>
-        m.ID && m.ID.toLowerCase() === routeID.toLowerCase()
-    );
+        let found = models.find(m =>
+            m.ID && m.ID.toLowerCase() === routeID.toLowerCase()
+        );
 
-    if(found){
-        loadProfile(found);
-        return;
+        if(found){
+            loadProfile(found);
+            return;
+        }
+
+        let hub = linkHubData.find(x =>
+            x.ID && x.ID.toLowerCase() === routeID.toLowerCase()
+        );
+
+        if(hub){
+            showExternalProfile(hub);
+            return;
+        }
     }
-
-    // LINK HUB
-    let hub = linkHubData.find(x =>
-        x.ID && x.ID.toLowerCase() === routeID.toLowerCase()
-    );
-
-    if(hub){
-        showExternalProfile(hub);
-        return;
-    }
-}
 
     shuffled = [...models];
     shuffleArray(shuffled);
-
     loadPage();
 
 });
-
+    
 function loadPage() {
 
     const grid = document.getElementById("modelGrid");
