@@ -542,8 +542,7 @@ document.getElementById("search").addEventListener("input", function(){
         loadPage();
         return;
     }
-    
-    // MAIN MODELS SEARCH
+
     const found = models.find(m =>
         (m.ID && m.ID.toLowerCase() === value) ||
         (m.Username && m.Username.toLowerCase() === value)
@@ -551,11 +550,13 @@ document.getElementById("search").addEventListener("input", function(){
 
     if(found){
         loadProfile(found);
+        return;
     }
-    });
-    });
 
-// LOVEHONEY
+});
+
+function loadLoveHoney(){
+
 const lovehoneyURL = `https://opensheet.elk.sh/${sheetID}/Lovehoney`;
 
 fetch(lovehoneyURL)
@@ -574,17 +575,11 @@ fetch(lovehoneyURL)
 
     data.slice(0,4).forEach(item => {
         const card = document.createElement("div");
-        card.style.background = "rgba(255,255,255,0.05)";
-        card.style.padding = "10px";
-        card.style.borderRadius = "12px";
 
         card.innerHTML = `
             <img src="${item.Image}" style="width:100%; border-radius:8px;">
-            <p style="font-size:14px;">${item.Title}</p>
-            <button onclick="window.open('${item.Link}','_blank')" 
-                style="padding:6px 15px; border:none; border-radius:20px; background:#ff00cc; color:white;">
-                View
-            </button>
+            <p>${item.Title}</p>
+            <button onclick="window.open('${item.Link}','_blank')">View</button>
         `;
 
         grid.appendChild(card);
@@ -592,25 +587,11 @@ fetch(lovehoneyURL)
 
     section.appendChild(grid);
     document.getElementById("lovehoneySection").appendChild(section);
+
 });
-function showExternalProfile(hub){
+}
 
-    history.pushState({}, "", "?id=" + hub.ID);
-
-    const profile = document.getElementById("profileSection");
-
-    profile.innerHTML = `
-        <div style="background:rgba(255,255,255,0.05);padding:20px;border-radius:15px;">
-            <img src="${hub.Image}" style="width:100%;border-radius:10px;">
-            <h3 style="margin-top:15px;">Model: ${hub.ID}</h3>
-
-            <button onclick="window.open('${hub.Link}','_blank')" 
-            style="margin-top:10px;padding:10px 20px;border:none;border-radius:25px;background:#ff00cc;color:white;">
-            Open Link
-            </button>
-        </div>
-    `;
-    }
+loadLoveHoney();
 
 // BLOG
 function loadBlog(data) {
