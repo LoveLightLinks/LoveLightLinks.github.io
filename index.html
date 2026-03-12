@@ -593,6 +593,29 @@ fetch(lovehoneyURL)
 
 loadLoveHoney();
 
+function showExternalProfile(hub){
+
+    history.pushState({}, "", "?id=" + hub.ID);
+
+    const profile = document.getElementById("profileSection");
+
+    profile.innerHTML = `
+        <div style="background:rgba(255,255,255,0.05);padding:20px;border-radius:15px;">
+
+            <img src="https://lovelightlinks.github.io/images/Linkhub01.png" 
+            style="width:100%;border-radius:10px;">
+
+            <h3 style="margin-top:15px;">Hub: ${hub.ID}</h3>
+
+            <button onclick="window.open('${hub.Link}','_blank')" 
+            style="margin-top:10px;padding:10px 20px;border:none;border-radius:25px;background:#ff00cc;color:white;">
+            Open Link
+            </button>
+
+        </div>
+    `;
+      }
+    
 // BLOG
 function loadBlog(data) {
 
