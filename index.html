@@ -516,6 +516,10 @@ function loadProfile(model){
         style="margin-top:10px;padding:10px 20px;border:none;border-radius:25px;background:#ff00cc;color:white;">
         Visit
         </button>
+        <button onclick="goHome()" 
+style="margin-top:10px;padding:10px 20px;border:none;border-radius:25px;background:#444;color:white;">
+Home
+</button>
     `;
 
     currentSlide = 0;
@@ -626,6 +630,13 @@ function showExternalProfile(hub){
         </div>
     `;
       }
+
+function goHome(){
+    history.pushState({}, "", window.location.pathname);
+    document.getElementById("profileSection").innerHTML = "";
+    loadPage();
+    window.scrollTo({top:0,behavior:"smooth"});
+}
     
 // BLOG
 function loadBlog(data) {
