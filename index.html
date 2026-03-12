@@ -615,21 +615,30 @@ function showExternalProfile(hub){
     const profile = document.getElementById("profileSection");
 
     profile.innerHTML = `
-        <div style="background:rgba(255,255,255,0.05);padding:20px;border-radius:15px;">
+        <div style="padding:20px;text-align:center">
 
-            <img src="https://lovelightlinks.github.io/images/Linkhub01.png" 
-            style="width:100%;border-radius:10px;">
+            <img src="https://lovelightlinks.github.io/images/Linkhub01.png"
+                 style="width:100%;max-width:400px;border-radius:12px">
 
-            <h3 style="margin-top:15px;">Hub: ${hub.ID}</h3>
+            <h2 style="margin-top:15px">External Hub</h2>
+            <p>ID: ${hub.ID}</p>
 
-            <button onclick="window.open('${hub.Link}','_blank')" 
-            style="margin-top:10px;padding:10px 20px;border:none;border-radius:25px;background:#ff00cc;color:white;">
-            Open Link
+            <button onclick="window.open('${hub.Link}','_blank')"
+                    style="margin-top:10px;padding:12px 20px;
+                    background:#ff0080;border:none;border-radius:8px;color:white">
+                Open Link
+            </button>
+
+            <br><br>
+
+            <button onclick="goHome()"
+                    style="padding:10px 20px;border-radius:8px">
+                Home
             </button>
 
         </div>
     `;
-      }
+}
 
 function goHome(){
     history.pushState({}, "", window.location.pathname);
