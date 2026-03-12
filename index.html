@@ -627,27 +627,48 @@ function showExternalProfile(hub){
 
     const profile = document.getElementById("profileSection");
 
+    if(!hub || !hub.Link){
+        profile.innerHTML = `
+            <div style="padding:30px;text-align:center">
+                <h2>Nothing Found</h2>
+                <button onclick="goHome()"
+                style="margin-top:20px;padding:12px 25px;
+                border:none;border-radius:30px;
+                background:linear-gradient(45deg,#ff00cc,#00ccff);
+                color:white;">
+                Home
+                </button>
+            </div>
+        `;
+        return;
+    }
+
     profile.innerHTML = `
         <div style="padding:20px;text-align:center">
 
             <img src="https://lovelightlinks.github.io/images/Linkhub01.png"
                  style="width:100%;max-width:400px;border-radius:12px">
 
-            <h2 style="margin-top:15px">External Hub</h2>
+            <h2 style="margin-top:15px">Found Link</h2>
             <p>ID: ${hub.ID}</p>
 
             <button onclick="window.open('${hub.Link}','_blank')"
-                    style="margin-top:10px;padding:12px 20px;
-                    background:#ff0080;border:none;border-radius:8px;color:white">
+                    style="margin-top:15px;padding:12px 25px;
+                    background:linear-gradient(45deg,#ff00cc,#00ccff);
+                    border:none;border-radius:30px;color:white">
                 Open Link
             </button>
 
             <br><br>
 
-            <button onclick="goHome()" 
-style="margin-top:10px;padding:10px 20px;border:none;border-radius:25px;background:#ff00cc;color:white;">
-Home
-</button>
+            <button onclick="goHome()"
+                    style="padding:12px 25px;
+                    border:none;border-radius:30px;
+                    background:linear-gradient(45deg,#ff00cc,#00ccff);
+                    color:white;">
+                Home
+            </button>
+
         </div>
     `;
 }
