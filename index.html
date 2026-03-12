@@ -422,7 +422,7 @@ fetch(sheetURL)
 
         if(found){
             loadProfile(found);
-            return;
+        
         }
     }
 
@@ -542,7 +542,7 @@ document.getElementById("search").addEventListener("input", function(){
         loadPage();
         return;
     }
-
+    
     // MAIN MODELS SEARCH
     const found = models.find(m =>
         (m.ID && m.ID.toLowerCase() === value) ||
@@ -552,6 +552,8 @@ document.getElementById("search").addEventListener("input", function(){
     if(found){
         loadProfile(found);
     }
+    });
+    });
 
 // LOVEHONEY
 const lovehoneyURL = `https://opensheet.elk.sh/${sheetID}/Lovehoney`;
