@@ -409,6 +409,7 @@ fetch(sheetURL)
 .then(data => {
 
     models = data;
+    linkHubData = data;
 const params = new URLSearchParams(window.location.search);
 const routeID = params.get("id");
 
@@ -431,29 +432,6 @@ if(found){
     loadProfile(found);
     return;
 }
-
-// LINK HUB SEARCH
-fetch(`https://opensheet.elk.sh/${sheetID}/LinkHub`)
-.then(r=>r.json())
-.then(data=>{
-
-    const hub = data.find(x => x.ID.toLowerCase() === value);
-
-    if(hub){
-
-        history.pushState({}, "", "?id="+hub.ID);
-
-        document.getElementById("profileSection").innerHTML = `
-            <div style="background:rgba(255,255,255,0.05);padding:20px;border-radius:15px;">
-                <img src="${hub.Image}" style="width:100%;border-radius:10px;margin-bottom:15px;">
-                <h3>Hidden Access</h3>
-                <button onclick="window.open('${hub.Link}','_blank')" 
-                style="margin-top:10px;padding:10px 20px;border:none;border-radius:25px;background:#ff00cc;color:white;">
-                Open Link
-                </button>
-            </div>
-        `;
-    }
 
 });
     shuffled = [...models];
@@ -591,7 +569,7 @@ document.getElementById("search").addEventListener("input", function(){
     .then(r=>r.json())
     .then(data=>{
 
-        const hub = data.find(x => x.ID.toLowerCase() === value);
+        const hub = linkHubData.find(x => x.ID.toLowerCase() === value);
 
         if(hub){
 
