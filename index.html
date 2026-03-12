@@ -394,6 +394,7 @@ const sheetID = "1mLlHZt6MLsEV4Oq0m9_WQPex94v5JbY0pTgr9hL7PjY";
 const sheetURL = `https://opensheet.elk.sh/${sheetID}/Sheet1`;
 
 let models = [];
+let linkHubData = [];
 let shuffled = [];
 let pageIndex = 0;
 let currentSlide = 0;
@@ -407,14 +408,12 @@ function shuffleArray(array) {
 fetch(sheetURL)
 .then(res => res.json())
 .then(data => {
-
-    models = data;
-    linkHubData = data;
+models = data;
+linkHubData = data;
 const params = new URLSearchParams(window.location.search);
 const routeID = params.get("id");
 
-if(routeID){
-const value = this.value.toLowerCase().trim();
+const value = routeID.toLowerCase();
 
 if(!value){
     document.getElementById("profileSection").innerHTML = "";
@@ -561,37 +560,6 @@ document.getElementById("search").addEventListener("input", function(){
         loadProfile(found);
         return;
     }
-
-    // LINK HUB SEARCH
-    const hubURL = `https://opensheet.elk.sh/${sheetID}/LinkHub`;
-
-    fetch(hubURL)
-    .then(r=>r.json())
-    .then(data=>{
-
-        const hub = linkHubData.find(x => x.ID.toLowerCase() === value);
-
-        if(hub){
-
-            document.getElementById("profileSection").innerHTML = `
-                <div style="background:rgba(255,255,255,0.05);padding:20px;border-radius:15px;">
-                    
-                    <img src="https://lovelightlinks.github.io/images/Linkhub01.png" 
-                    style="width:100%;border-radius:10px;margin-bottom:10px;">
-
-                    <h3>Result for Model</h3>
-                    <p>ID: ${hub.ID}</p>
-
-                    <button onclick="window.open('${hub.Link}','_blank')" 
-                    style="margin-top:10px;padding:10px 20px;border:none;border-radius:25px;background:#ff00cc;color:white;">
-                    Open Link
-                    </button>
-                </div>
-            `;
-        }
-    });
-
-});
 
 // LOVEHONEY
 const lovehoneyURL = `https://opensheet.elk.sh/${sheetID}/Lovehoney`;
