@@ -558,13 +558,22 @@ document.getElementById("search").addEventListener("input", function(){
         return;
     }
 
-    const found = models.find(m =>
+    let found = models.find(m =>
         (m.ID && m.ID.toLowerCase() === value) ||
         (m.Username && m.Username.toLowerCase() === value)
     );
 
     if(found){
         loadProfile(found);
+        return;
+    }
+
+    let hub = linkHubData.find(x =>
+        x.ID && x.ID.toLowerCase() === value
+    );
+
+    if(hub){
+        showExternalProfile(hub);
         return;
     }
 
