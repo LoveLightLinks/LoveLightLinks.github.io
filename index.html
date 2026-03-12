@@ -408,23 +408,24 @@ function shuffleArray(array) {
 fetch(sheetURL)
 .then(res => res.json())
 .then(data => {
-models = data;
-linkHubData = data;
-const params = new URLSearchParams(window.location.search);
-const routeID = params.get("id");
-if(routeID){
-    const found = models.find(m =>
-        m.ID && m.ID.toLowerCase() === routeID.toLowerCase()
-    );
 
-    if(found){
-        loadProfile(found);
-        return;
+    models = data;
+    linkHubData = data;
+
+    const params = new URLSearchParams(window.location.search);
+    const routeID = params.get("id");
+
+    if(routeID){
+        const found = models.find(m =>
+            m.ID && m.ID.toLowerCase() === routeID.toLowerCase()
+        );
+
+        if(found){
+            loadProfile(found);
+            return;
+        }
     }
-}
 
-
-});
     shuffled = [...models];
     shuffleArray(shuffled);
 
