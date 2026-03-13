@@ -558,7 +558,6 @@ document.getElementById("search").addEventListener("input", function(){
 
     if(!value){
         document.getElementById("profileSection").innerHTML = "";
-        loadPage();
         return;
     }
 
@@ -568,20 +567,27 @@ document.getElementById("search").addEventListener("input", function(){
     );
 
     if(found){
-    loadProfile(found);
-    
-    return;
-}
+        this.blur();
+        loadProfile(found);
+        return;
+    }
 
     let hub = linkHubData.find(x =>
         x.ID && x.ID.toLowerCase() === value
     );
 
     if(hub){
+        this.blur();
         showExternalProfile(hub);
         return;
     }
 
+    document.getElementById("profileSection").innerHTML = `
+        <div style="padding:25px;opacity:0.8">
+            <h3>Nothing Found</h3>
+            <p>Try correct Model ID</p>
+        </div>
+    `;
 });
 
 function loadLoveHoney(){
