@@ -417,16 +417,19 @@ Promise.all([
     const params = new URLSearchParams(window.location.search);
     const routeID = params.get("id");
 
-    if(routeID){
+shuffled = [...models];
+shuffleArray(shuffled);
+loadPage();
 
-        let found = models.find(m =>
-            m.ID && m.ID.toLowerCase() === routeID.toLowerCase()
-        );
+if(routeID){
 
-        if(found){
-            loadProfile(found);
-            return;
-        }
+    let found = models.find(m =>
+        m.ID && m.ID.toLowerCase() === routeID.toLowerCase()
+    );
+
+    if(found){
+        loadProfile(found);
+    } else {
 
         let hub = linkHubData.find(x =>
             x.ID && x.ID.toLowerCase() === routeID.toLowerCase()
@@ -434,9 +437,9 @@ Promise.all([
 
         if(hub){
             showExternalProfile(hub);
-            return;
         }
     }
+}
 
     shuffled = [...models];
     shuffleArray(shuffled);
