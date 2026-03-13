@@ -484,7 +484,14 @@ function loadPage() {
 function loadMore(){
     pageIndex++;
     loadPage();
-        }
+
+    // scroll to grid top after loading
+    const grid = document.getElementById("modelGrid");
+    window.scrollTo({
+        top: grid.offsetTop - 80,
+        behavior: "smooth"
+    });
+}
 function getImagePath(img){
     if(!img) return "";
     if(img.startsWith("http")) return img;
