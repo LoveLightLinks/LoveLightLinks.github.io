@@ -398,6 +398,8 @@ let models = [];
 let linkHubData = [];
 let shuffled = [];
 let pageIndex = 0;
+let firstLoadCount = 10;
+let nextLoadCount = 6;
 let currentSlide = 0;
 function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
@@ -452,14 +454,28 @@ function loadPage() {
     const grid = document.getElementById("modelGrid");
     grid.innerHTML = "";
 
-    let start = pageIndex * 10;
-    let end = start + 10;
+    let start, end;
+
+if(pageIndex === 0){
+    start = 0;
+    end = firstLoadCount;
+} else {
+    start = firstLoadCount + (pageIndex - 1) * nextLoadCount;
+    end = start + nextLoadCount;
+}
 
     if(start >= shuffled.length){
-        pageIndex = 0;
-        start = 0;
-        end = 10;
-    }
+    shuffleArray(shuffled);
+    pageIndex = 0;
+
+    window.scrollTo({
+        top: document.getElementById("modelGrid").offsetTop - 40,
+        behavior: "smooth"
+    });
+
+    start = 0;
+    end = firstLoadCount;
+}
 
     const slice = shuffled.slice(start,end);
 
