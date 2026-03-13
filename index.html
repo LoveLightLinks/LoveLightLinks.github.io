@@ -647,33 +647,60 @@ function showExternalProfile(hub){
     }
 
     profile.innerHTML = `
-        <div style="padding:20px;text-align:center">
+<div style="
+    padding:25px;
+    text-align:center;
+    background:rgba(255,255,255,0.05);
+    border-radius:20px;
+    box-shadow:0 0 25px #ff00cc;
+    animation:fadeIn 0.4s ease;
+">
 
-            <img src="https://lovelightlinks.github.io/images/Linkhub01.png"
-                 style="width:100%;max-width:400px;border-radius:12px">
+    <h2 style="
+        font-size:26px;
+        margin-bottom:10px;
+        background:linear-gradient(45deg,#ff00cc,#00ccff);
+        -webkit-background-clip:text;
+        color:transparent;
+    ">
+        🔗 Link Found
+    </h2>
 
-            <h2 style="margin-top:15px">Found Link</h2>
-            <p>ID: ${hub.ID}</p>
+    <p style="opacity:0.8;margin-bottom:15px">
+        ID: ${hub.ID}
+    </p>
 
-            <button onclick="window.open('${hub.Link}','_blank')"
-                    style="margin-top:15px;padding:12px 25px;
-                    background:linear-gradient(45deg,#ff00cc,#00ccff);
-                    border:none;border-radius:30px;color:white">
-                Open Link
-            </button>
+    <img src="https://lovelightlinks.github.io/images/Linkhub01.png"
+         style="width:100%;max-width:420px;border-radius:14px;margin-bottom:20px">
 
-            <br><br>
+    <button onclick="window.open('${hub.Link}','_blank')"
+        style="
+        padding:14px 28px;
+        border:none;
+        border-radius:30px;
+        font-size:16px;
+        background:linear-gradient(45deg,#ff00cc,#00ccff);
+        color:white;
+        box-shadow:0 0 20px #ff00cc;
+        ">
+        Open Link
+    </button>
 
-            <button onclick="goHome()"
-                    style="padding:12px 25px;
-                    border:none;border-radius:30px;
-                    background:linear-gradient(45deg,#ff00cc,#00ccff);
-                    color:white;">
-                Home
-            </button>
+    <br><br>
 
-        </div>
-    `;
+    <button onclick="goHome()"
+        style="
+        padding:12px 25px;
+        border:none;
+        border-radius:30px;
+        background:#222;
+        color:white;
+        ">
+        Home
+    </button>
+
+</div>
+`;
 }
 
 function goHome(){
