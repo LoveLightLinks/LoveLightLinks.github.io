@@ -452,8 +452,10 @@ if(routeID){
 function loadPage() {
 
     const grid = document.getElementById("modelGrid");
-    grid.innerHTML = "";
 
+if(pageIndex === 0){
+    grid.innerHTML = "";
+}
     let start, end;
 
 if(pageIndex === 0){
