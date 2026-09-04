@@ -662,16 +662,59 @@ document.getElementById("search").addEventListener("input", function() {
     loadPage();
 });
 
+function filterByTag(tag) {
+    const value = tag.toLowerCase().trim();
+
+    visibleModels = models.filter(model =>
+        (model.Tags || "")
+            .split(",")
+            .some(item => item.trim().toLowerCase() === value)
+    );
+
+    pageIndex = 0;
+    document.getElementById("search").value = tag;
+    document.getElementById("profileSection").innerHTML = "";
+    loadPage();
+
+    window.scrollTo({
+        top: document.getElementById("modelGrid").offsetTop - 20,
+        behavior: "smooth"
+    });
+}
+
+function loadModelsFromSheet() {
+    const script = document.createElement("script");
+    script.src = sheetURL;
+
+    script.onerror = function() {
+        document.getElementById("modelGrid").innerHTML =
+            "<p style='text-align:center;color:#fff;'>Unable to load models right now.</p>";
+    };
+
+    document.body.appendChild(script);
+}
+
 fetch("media-manifest.json")
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) {
+            throw new Error("Media manifest HTTP " + response.status);
+        }
+        return response.json();
+    })
     .then(data => {
         mediaManifest = data;
 
-        const script = document.createElement("script");
-        script.src = sheetURL;
-        document.body.appendChild(script);
+        if (models.length) {
+            pageIndex = 0;
+            loadPage();
+        }
     })
-    .catch(error => console.error("Media manifest failed:", error));
+    .catch(error => {
+        console.error("Media manifest failed:", error);
+    })
+    .finally(() => {
+        loadModelsFromSheet();
+    });
 
 function modelHubCallback(response) {
     if (response.status !== "ok") {
