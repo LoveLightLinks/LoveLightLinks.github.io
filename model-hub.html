@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Love Light Stream | Premium Adult Directory 18+</title>
+<meta name="description" content="Love Light Stream is a premium model directory featuring curated model profiles with direct access links.">
+<meta name="robots" content="index, follow">
+
+<!-- Social Preview -->
+<meta property="og:title" content="Love Light Stream | Premium Adult Model 18+">
+<meta property="og:description" content="Explore curated premium Adult model profiles in one clean directory.">
+<meta property="og:image" content="https://lovelightlinks.github.io/images/Icon.png">
+<meta property="og:url" content="https://lovelightlinks.github.io/">
+<meta property="og:type" content="website">
+
+<style>
+
+body {
+    margin:0;
+    font-family: Arial, sans-serif;
+    background: radial-gradient(circle at top, #2a003f, #000);
+    color:white;
+    text-align:center;
+}
+
+/* Header */
+.header {
+    padding:30px 20px 10px;
+}
+
+.logo {
+    width:140px;
+    display:block;
+    margin:0 auto;
+    animation: float 3s ease-in-out infinite,
+               glow 2s ease-in-out infinite alternate;
+}
+
+/* Slider */
+.slider {
+    width:100%;
+    height:70vh;
+    overflow:hidden;
+    border-radius:10px;
+    position:relative;
+    background:black;
+    display:flex;
+    align-items:center;
+}
+
+.slides {
+    display:flex;
+    transition:transform 0.4s ease;
+    align-items:center;
+}
+
+.slides img {
+    width:100%;
+    height:70vh;
+    object-fit:cover;
+    border-radius:10px;
+    flex-shrink:0;
+}
+
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+}
+
+@keyframes glow {
+    from { filter: drop-shadow(0 0 10px #ff00cc); }
+    to { filter: drop-shadow(0 0 25px #00ccff); }
+}
+
+h1 {
+    margin:10px 0 5px;
+}
+
+.tagline {
+    opacity:0.7;
+    font-size:14px;
+}
+
+/* Social Buttons */
+.social-links {
+    margin-top:15px;
+}
+
+.social-links a {
+    display:inline-block;
+    margin:5px 10px;
+    padding:8px 18px;
+    border-radius:25px;
+    text-decoration:none;
+    font-size:14px;
+    color:white;
+    border:1px solid #ff00cc;
+    transition:0.3s;
+}
+
+.social-links a:hover {
+    background:linear-gradient(45deg,#ff00cc,#00ccff);
+    box-shadow:0 0 15px #ff00cc;
+}
+
+/* Search */
+.search-box {
+    margin:20px auto;
+    width:90%;
+    max-width:400px;
+}
+
+.search-box input {
+    width:100%;
+    padding:12px;
+    border-radius:25px;
+    border:none;
+    outline:none;
+    background:#111;
+    color:white;
+    font-size:16px;
+}
+
+/* Model Grid */
+.grid {
+    display:grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap:15px;
+    padding:20px;
+    max-width:600px;
+    margin:auto;
+}
+
+.card {
+    background:rgba(255,255,255,0.05);
+    padding:12px;
+    border-radius:15px;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.card:hover {
+    transform:translateY(-5px);
+    box-shadow:0 0 20px #ff00cc;
+}
+
+.card img {
+    width:100%;
+    height:220px;
+    object-fit:cover;
+    border-radius:10px;
+}
+
+.card h3 {
+    margin:10px 0 5px;
+    font-size:16px;
+}
+
+/* Popup */
+.popup {
+    display:none;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.9);
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+    padding:15px;
+    box-sizing:border-box;
+}
+
+.popup-content {
+    width:90%;
+    max-width:400px;
+    background:#111;
+    padding:20px;
+    border-radius:15px;
+    box-sizing:border-box;
+    max-height:90vh;
+    overflow-y:auto;
+}
+
+.popup img {
+    width:100%;
+    border-radius:10px;
+}
+
+.popup h3 {
+    margin-top:15px;
+}
+
+.popup p {
+    font-size:14px;
+    opacity:0.8;
+}
+
+.popup button {
+    margin-top:15px;
+    padding:10px 20px;
+    border:none;
+    border-radius:25px;
+    background:#ff00cc;
+    color:white;
+    cursor:pointer;
+}
+
+.card {
+    user-select: none;
+}
+
+.card img {
+    pointer-events: none;
+}
+
+/* Slider Nav Buttons */
+.nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(5px);
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+    opacity: 0.85;
+}
+
+.nav-btn.left { left: 15px; }
+.nav-btn.right { right: 15px; }
+
+.nav-btn:hover {
+    transform: translateY(-50%) scale(1.05);
+}
+
+/* Load More Button */
+.load-more {
+    margin: 20px auto 40px;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 30px;
+    background: linear-gradient(45deg,#ff00cc,#00ccff);
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    display: block;
+}
+
+.load-more:hover { opacity: 0.85; }
+
+/* Age Badge */
+.age-badge {
+    display:inline-block;
+    margin-top:8px;
+    padding:5px 14px;
+    font-size:12px;
+    border-radius:20px;
+    background: rgba(255,0,204,0.15);
+    color:#ff00cc;
+    border:1px solid #ff00cc;
+    letter-spacing:1px;
+}
+
+/* Titles */
+.search-title {
+    margin-top: 35px;
+    margin-bottom: 10px;
+    font-size: 20px;
+    font-weight: bold;
+    color: rgba(255,255,255,0.85);
+}
+
+.blog-title {
+    margin: 50px 0 20px;
+    font-size: 22px;
+    font-weight: bold;
+    color: rgba(255,255,255,0.9);
+}
+
+/* Blog */
+.blog-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    max-width: 600px;
+    margin: auto;
+    padding: 0 20px;
+}
+
+.blog-card {
+    background: rgba(255,255,255,0.05);
+    border-radius: 15px;
+    padding: 15px;
+    text-align: left;
+}
+
+.blog-card img {
+    width: 100%;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.blog-card h3 {
+    font-size: 16px;
+    margin-bottom: 8px;
+}
+
+.blog-card p {
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+.blog-card a {
+    display: inline-block;
+    margin-top: 10px;
+    color: #ff00cc;
+    text-decoration: none;
+}
+
+</style>
+</head>
+<body>
+
+<div class="header">
+    <a href="home.html">
+        <img src="https://lovelightlinks.github.io/images/Icon.png" class="logo">
+    </a>
+    <h1>Love Light Stream</h1>
+    <div class="age-badge">18+ Adults Only</div>
+
+    <div class="social-links">
+        <a href="https://www.instagram.com/love_light_stream" target="_blank">Instagram</a>
+        <a href="https://x.com/LoveLightStream" target="_blank">X</a>
+        <a href="https://t.me/lovelightlinks" target="_blank">Telegram</a>
+    </div>
+</div>
+
+<h2 class="search-title">Premium Adult Directory</h2>
+
+<div class="search-box">
+    <input id="search" type="text" placeholder="Search by ID or nickname...">
+</div>
+
+<div id="profileSection"></div>
+
+<div class="grid" id="modelGrid"></div>
+
+<button id="loadMoreBtn" class="load-more" onclick="loadMore()">Load More</button>
+
+<script>
+const sheetURL = "https://docs.google.com/spreadsheets/d/1CAkjWcpnt3Inb887WthMt6Y6M02Lbe-1Kz1w2l_t14Q/gviz/tq?sheet=Models&tqx=responseHandler:modelHubCallback";
+
+let models = [];
+let visibleModels = [];
+let pageIndex = 0;
+
+const firstLoadCount = 10;
+const nextLoadCount = 6;
+
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+}
+
+function getModelImages(model) {
+    const folder = "images/models/" + encodeURIComponent(model.ID) + "/";
+    return [
+        folder + "1.jpg",
+        folder + "2.jpg",
+        folder + "3.jpg",
+        folder + "4.jpg"
+    ];
+}
+
+function loadPage() {
+    const grid = document.getElementById("modelGrid");
+
+    if (pageIndex === 0) {
+        grid.innerHTML = "";
+    }
+
+    const count = pageIndex === 0 ? firstLoadCount : nextLoadCount;
+    const start = pageIndex === 0 ? 0 : firstLoadCount + (pageIndex - 1) * nextLoadCount;
+    const end = start + count;
+
+    visibleModels.slice(start, end).forEach(model => {
+        const images = getModelImages(model);
+
+        const card = document.createElement("div");
+        card.className = "card";
+
+        card.innerHTML = `
+            <img src="${images[0]}" loading="lazy"
+                 onerror="this.style.display='none'">
+            <h3>${model.Nickname || model.ID || "Model"}</h3>
+            <p>${model.ID || ""}</p>
+        `;
+
+        card.onclick = () => loadProfile(model);
+        grid.appendChild(card);
+    });
+
+    if (end >= visibleModels.length) {
+        document.getElementById("loadMoreBtn").textContent = "Show More";
+    } else {
+        document.getElementById("loadMoreBtn").textContent = "Load More";
+    }
+}
+
+function loadMore() {
+    pageIndex++;
+    loadPage();
+}
+
+function loadProfile(model) {
+    const profile = document.getElementById("profileSection");
+    const images = getModelImages(model);
+
+    const links = [];
+
+    if (model.Instagram) links.push(`<a href="${model.Instagram}" target="_blank">Instagram</a>`);
+    if (model.X) links.push(`<a href="${model.X}" target="_blank">X</a>`);
+    if (model.Stripchat) links.push(`<a href="${model.Stripchat}" target="_blank">Stripchat</a>`);
+    if (model.OnlyFans) links.push(`<a href="${model.OnlyFans}" target="_blank">OnlyFans</a>`);
+    if (model.Other) links.push(`<a href="${model.Other}" target="_blank">Other</a>`);
+
+    const tags = model.Tags
+        ? model.Tags.split(",").map(tag =>
+            `<span class="tag">${tag.trim()}</span>`
+          ).join("")
+        : "";
+
+    profile.innerHTML = `
+        <div class="profile-card">
+
+            <div class="slider">
+                ${images.map((img, index) => `
+                    <img src="${img}"
+                         class="profile-image"
+                         style="${index === 0 ? "" : "display:none"}"
+                         onerror="this.remove()">
+                `).join("")}
+            </div>
+
+            <h3>${model.Nickname || model.ID || "Model"}</h3>
+
+            <p><strong>ID:</strong> ${model.ID || "—"}</p>
+
+            ${model.Details ? `<p>${model.Details}</p>` : ""}
+
+            ${tags ? `<div class="tags">${tags}</div>` : ""}
+
+            ${links.length ? `
+                <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:20px;">
+                    ${links.join("")}
+                </div>
+            ` : ""}
+
+            <button class="load-more" onclick="closeProfile()">Back to Models</button>
+
+        </div>
+    `;
+
+    window.scrollTo({
+        top: profile.offsetTop - 20,
+        behavior: "smooth"
+    });
+}
+
+function closeProfile() {
+    document.getElementById("profileSection").innerHTML = "";
+    window.scrollTo({
+        top: document.getElementById("modelGrid").offsetTop - 20,
+        behavior: "smooth"
+    });
+}
+
+document.getElementById("search").addEventListener("input", function() {
+    const value = this.value.toLowerCase().trim();
+
+    if (!value) {
+        visibleModels = [...models];
+        shuffleArray(visibleModels);
+        pageIndex = 0;
+        loadPage();
+        document.getElementById("profileSection").innerHTML = "";
+        return;
+    }
+
+    const results = models.filter(model =>
+        (model.ID || "").toLowerCase().includes(value) ||
+        (model.Nickname || "").toLowerCase().includes(value)
+    );
+
+    visibleModels = results;
+    pageIndex = 0;
+    document.getElementById("profileSection").innerHTML = "";
+
+    loadPage();
+});
+
+const script = document.createElement("script");
+script.src = sheetURL + "\&tqx=responseHandler:modelHubCallback";
+document.body.appendChild(script);
+
+function modelHubCallback(response) {
+    if (response.status !== "ok") {
+        document.getElementById("modelGrid").innerHTML = "<p style='text-align:center;color:#fff;'>Unable to load models right now.</p>";
+        return;
+    }
+
+    const rows = response.table.rows;
+    models = rows.slice(1).map(row => {
+        const c = row.c || [];
+        return {
+            Nickname: c[0]?.v || "",
+            Details: c[1]?.v || "",
+            Tags: c[2]?.v || "",
+            ID: c[3]?.v || "",
+            Instagram: c[4]?.v || "",
+            X: c[5]?.v || "",
+            Stripchat: c[6]?.v || "",
+            OnlyFans: c[7]?.v || "",
+            Other: c[8]?.v || "",
+            Media: c[9]?.v || ""
+        };
+    }).filter(model => model.ID);
+
+    visibleModels = [...models];
+    shuffleArray(visibleModels);
+    loadPage();
+}
+
+</script>
+
+<footer style="margin-top:50px;padding:30px;text-align:center;">
+    <p>© 2026 Love Light Stream. All rights reserved.</p>
+    <p>Love Light Stream is an independent 18+ directory and is not owned, operated, or officially affiliated with any listed platforms. All trademarks belong to their respective owners.</p>
+    <p>18+ Only. All content is intended for adults.</p>
+
+    <p style="margin-top:20px;font-size:14px;">
+        <a href="privacy.html" style="color:#ff00cc;text-decoration:none;">
+            Privacy Policy
+        </a>
+    </p>
+</footer>
+
+</body>
+</html>
