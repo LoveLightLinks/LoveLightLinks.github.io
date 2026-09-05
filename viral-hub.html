@@ -225,9 +225,19 @@ body {
     text-align:left;
 }
 
-.back-button {
-    display:inline-block;
-    margin:0 0 20px;
+.post-actions {
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-top:20px;
+}
+
+.post-action-button {
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-width:90px;
+    box-sizing:border-box;
     padding:9px 18px;
     border:1px solid #ff00cc;
     border-radius:25px;
@@ -235,9 +245,10 @@ body {
     color:#fff;
     cursor:pointer;
     font-size:14px;
+    text-decoration:none;
 }
 
-.back-button:hover {
+.post-action-button:hover {
     background:#ff00cc;
 }
 
@@ -290,6 +301,48 @@ body {
     text-decoration:none;
     font-size:16px;
     box-shadow:0 0 20px rgba(255,0,204,0.35);
+}
+
+.buzz-suggestions {
+    margin-top:35px;
+}
+
+.buzz-suggestions h3 {
+    margin:0 0 15px;
+    font-size:20px;
+    color:rgba(255,255,255,0.9);
+}
+
+.suggestion-list {
+    display:grid;
+    gap:12px;
+}
+
+.suggestion-card {
+    display:flex;
+    align-items:center;
+    gap:12px;
+    width:100%;
+    padding:10px;
+    border:1px solid rgba(255,0,204,0.35);
+    border-radius:15px;
+    background:rgba(255,255,255,0.05);
+    color:#fff;
+    text-align:left;
+    cursor:pointer;
+}
+
+.suggestion-media {
+    width:75px;
+    min-width:75px;
+    height:65px;
+    object-fit:cover;
+    border-radius:10px;
+}
+
+.suggestion-card span {
+    font-size:15px;
+    line-height:1.4;
 }
 
 .message {
@@ -598,22 +651,9 @@ function openPost(index, updateHistory = true) {
         return;
     }
 
-    const postView =
-        document.getElementById("postView");
+    const postView = document.getElementById("postView");
 
     let html = `
-        <button class="back-button" onclick="closePost()">
-            ← Back to Trending Buzz
-        </button>
-
-        ${
-            post.Category
-            ? '<div class="post-category">' +
-              escapeHTML(post.Category) +
-              '</div>'
-            : ''
-        }
-
         <h2>${escapeHTML(post.Title)}</h2>
 
         ${renderMedia(post.Media, "post-media")}
@@ -621,12 +661,17 @@ function openPost(index, updateHistory = true) {
         <div class="post-content">
             ${escapeHTML(post.FullContent || post.ShortDescription)}
         </div>
+
+        <div class="post-actions">
+            <button class="post-action-button" onclick="closePost()">
+                Trending
+            </button>
     `;
 
     if (post.OriginalLink) {
         html += `
             <a
-                class="original-link"
+                class="post-action-button"
                 href="${escapeHTML(post.OriginalLink)}"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -637,17 +682,51 @@ function openPost(index, updateHistory = true) {
     }
 
     html += `
-        <button
-            class="original-link"
-            style="margin-left:10px;cursor:pointer;"
-            onclick="sharePost()"
-        >
-            Share
-        </button>
+            <button
+                class="post-action-button"
+                onclick="sharePost()"
+            >
+                Share
+            </button>
+        </div>
     `;
 
-    postView.innerHTML = html;
+    const suggestions = buzzPosts
+        .map((item, itemIndex) => ({item, itemIndex}))
+        .filter(({item, itemIndex}) =>
+            itemIndex !== index &&
+            post.Category &&
+            String(item.Category).trim().toLowerCase() ===
+            String(post.Category).trim().toLowerCase()
+        )
+        .slice(0, 3);
 
+    if (suggestions.length) {
+        html += `
+            <div class="buzz-suggestions">
+                <h3>You may also like</h3>
+                <div class="suggestion-list">
+        `;
+
+        suggestions.forEach(({item, itemIndex}) => {
+            html += `
+                <button
+                    class="suggestion-card"
+                    onclick="openPost(${itemIndex})"
+                >
+                    ${renderMedia(item.Media, "suggestion-media", true)}
+                    <span>${escapeHTML(item.Title)}</span>
+                </button>
+            `;
+        });
+
+        html += `
+                </div>
+            </div>
+        `;
+    }
+
+    postView.innerHTML = html;
     document.getElementById("boardView").style.display = "none";
     postView.style.display = "block";
 
@@ -682,12 +761,13 @@ function sharePost() {
 }
 
 function closePost() {
+    if (location.hash) {
+        history.back();
+        return;
+    }
+
     document.getElementById("postView").style.display = "none";
     document.getElementById("boardView").style.display = "block";
-
-    if (location.hash) {
-        history.pushState({}, "", window.location.pathname);
-    }
 
     window.scrollTo({
         top:0,
@@ -701,6 +781,11 @@ window.addEventListener("popstate", function() {
     } else {
         document.getElementById("postView").style.display = "none";
         document.getElementById("boardView").style.display = "block";
+
+        window.scrollTo({
+            top:0,
+            behavior:"smooth"
+        });
     }
 });
 
@@ -716,9 +801,22 @@ function openPostFromHash() {
     const index = findPostById(id);
 
     if (index > -1) {
+        history.replaceState(
+            {buzzBoard:true},
+            "",
+            window.location.pathname
+        );
+
+        history.pushState(
+            {buzzPost:true},
+            "",
+            "#" + encodeURIComponent(buzzPosts[index].ID)
+        );
+
         openPost(index, false);
     }
 }
+
 function buzzHubCallback(response) {
 
     if (!response ||
