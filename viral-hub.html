@@ -4,401 +4,812 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Love Light Stream | Premium Adult Directory 18+</title>
-<meta name="description" content="Love Light Stream is a premium model directory featuring curated model profiles with direct access links.">
+<title>Love Light Stream | Trending Buzz</title>
+<meta name="description" content="Trending Buzz from Love Light Stream — hot topics, viral content, interesting stories and models.">
 <meta name="robots" content="index, follow">
 
-<!-- Social Preview -->
-<meta property="og:title" content="Love Light Stream | Premium Adult Model 18+">
-<meta property="og:description" content="Explore curated premium Adult model profiles in one clean directory.">
+<meta property="og:title" content="Love Light Stream | Trending Buzz">
+<meta property="og:description" content="Hot topics, viral content, interesting stories and more.">
 <meta property="og:image" content="https://lovelightlinks.github.io/images/Icon.png">
-<meta property="og:url" content="https://lovelightlinks.github.io/">
+<meta property="og:url" content="https://lovelightlinks.github.io/viral-hub.html">
 <meta property="og:type" content="website">
 
 <style>
+* {
+    box-sizing:border-box;
+}
 
 body {
     margin:0;
-    font-family: Arial, sans-serif;
-    background: radial-gradient(circle at top, #2a003f, #000);
-    color:white;
+    font-family:Arial,sans-serif;
+    background:radial-gradient(circle at top,#2a003f,#000);
+    color:#fff;
     text-align:center;
 }
 
-/* Header */
 .header {
-    padding:30px 20px 10px;
+    padding:30px 20px 15px;
 }
 
 .logo {
     width:140px;
     display:block;
     margin:0 auto;
-    animation: float 3s ease-in-out infinite,
-               glow 2s ease-in-out infinite alternate;
-}
-
-/* Slider */
-.slider {
-    width:100%;
-    height:70vh;
-    overflow:hidden;
-    border-radius:10px;
-    position:relative;
-    background:black;
-    display:flex;
-    align-items:center;
-}
-
-.slides {
-    display:flex;
-    transition:transform 0.4s ease;
-    align-items:center;
-}
-
-.slides img {
-    width:100%;
-    height:70vh;
-    object-fit:cover;
-    border-radius:10px;
-    flex-shrink:0;
+    animation:float 3s ease-in-out infinite,
+              glow 2s ease-in-out infinite alternate;
+    cursor:pointer;
 }
 
 @keyframes float {
-    0% { transform: translateY(0px); }
-    50% { transform: translateY(-10px); }
-    100% { transform: translateY(0px); }
+    0%,100% { transform:translateY(0); }
+    50% { transform:translateY(-8px); }
 }
 
 @keyframes glow {
-    from { filter: drop-shadow(0 0 10px #ff00cc); }
-    to { filter: drop-shadow(0 0 25px #00ccff); }
+    from {
+        filter:drop-shadow(0 0 10px #ff00cc);
+    }
+    to {
+        filter:drop-shadow(0 0 25px #00ccff);
+    }
 }
 
-h1 {
-    margin:10px 0 5px;
+.header h1 {
+    margin:12px 0 8px;
+    font-size:28px;
 }
 
-.tagline {
-    opacity:0.7;
-    font-size:14px;
-}
-
-/* Social Buttons */
-.social-links {
-    margin-top:15px;
-}
-
-.social-links a {
-    display:inline-block;
-    margin:5px 10px;
-    padding:8px 18px;
-    border-radius:25px;
-    text-decoration:none;
-    font-size:14px;
-    color:white;
-    border:1px solid #ff00cc;
-    transition:0.3s;
-}
-
-.social-links a:hover {
-    background:linear-gradient(45deg,#ff00cc,#00ccff);
-    box-shadow:0 0 15px #ff00cc;
-}
-
-/* Search */
-.search-box {
-    margin:20px auto;
-    width:90%;
-    max-width:400px;
-}
-
-.search-box input {
-    width:100%;
-    padding:12px;
-    border-radius:25px;
-    border:none;
-    outline:none;
-    background:#111;
-    color:white;
-    font-size:16px;
-}
-
-/* Model Grid */
-.grid {
-    display:grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap:15px;
-    padding:20px;
-    max-width:600px;
-    margin:auto;
-}
-
-.card {
-    background:rgba(255,255,255,0.05);
-    padding:12px;
-    border-radius:15px;
-    cursor:pointer;
-    transition:0.3s;
-}
-
-.card:hover {
-    transform:translateY(-5px);
-    box-shadow:0 0 20px #ff00cc;
-}
-
-.card img {
-    width:100%;
-    height:220px;
-    object-fit:cover;
-    border-radius:10px;
-}
-
-.card h3 {
-    margin:10px 0 5px;
-    font-size:16px;
-}
-
-/* Popup */
-.popup {
-    display:none;
-    position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    background:rgba(0,0,0,0.9);
-    justify-content:center;
-    align-items:center;
-    flex-direction:column;
-    padding:15px;
-    box-sizing:border-box;
-}
-
-.popup-content {
-    width:90%;
-    max-width:400px;
-    background:#111;
-    padding:20px;
-    border-radius:15px;
-    box-sizing:border-box;
-    max-height:90vh;
-    overflow-y:auto;
-}
-
-.popup img {
-    width:100%;
-    border-radius:10px;
-}
-
-.popup h3 {
-    margin-top:15px;
-}
-
-.popup p {
-    font-size:14px;
-    opacity:0.8;
-}
-
-.popup button {
-    margin-top:15px;
-    padding:10px 20px;
-    border:none;
-    border-radius:25px;
-    background:#ff00cc;
-    color:white;
-    cursor:pointer;
-}
-
-.card {
-    user-select: none;
-}
-
-.card img {
-    pointer-events: none;
-}
-
-/* Slider Nav Buttons */
-.nav-btn {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    border: none;
-    cursor: pointer;
-    background: rgba(0,0,0,0.7);
-    backdrop-filter: blur(5px);
-    color: white;
-    font-size: 24px;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 50;
-    opacity: 0.85;
-}
-
-.nav-btn.left { left: 15px; }
-.nav-btn.right { right: 15px; }
-
-.nav-btn:hover {
-    transform: translateY(-50%) scale(1.05);
-}
-
-/* Load More Button */
-.load-more {
-    margin: 20px auto 40px;
-    padding: 12px 25px;
-    border: none;
-    border-radius: 30px;
-    background: linear-gradient(45deg,#ff00cc,#00ccff);
-    color: white;
-    font-size: 16px;
-    cursor: pointer;
-    display: block;
-}
-
-.load-more:hover { opacity: 0.85; }
-
-/* Age Badge */
 .age-badge {
     display:inline-block;
-    margin-top:8px;
     padding:5px 14px;
     font-size:12px;
     border-radius:20px;
-    background: rgba(255,0,204,0.15);
+    background:rgba(255,0,204,0.15);
     color:#ff00cc;
     border:1px solid #ff00cc;
     letter-spacing:1px;
 }
 
-/* Titles */
-.search-title {
-    margin-top: 35px;
-    margin-bottom: 10px;
-    font-size: 20px;
-    font-weight: bold;
-    color: rgba(255,255,255,0.85);
+.social-links {
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    margin-top:15px;
+    flex-wrap:wrap;
 }
 
-.blog-title {
-    margin: 50px 0 20px;
-    font-size: 22px;
-    font-weight: bold;
-    color: rgba(255,255,255,0.9);
+.social-links a {
+    color:#fff;
+    text-decoration:none;
+    border:1px solid #ff00cc;
+    border-radius:25px;
+    padding:8px 15px;
+    font-size:13px;
 }
 
-/* Blog */
-.blog-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 20px;
-    max-width: 600px;
-    margin: auto;
-    padding: 0 20px;
+.social-links a:hover {
+    background:#ff00cc;
 }
 
-.blog-card {
-    background: rgba(255,255,255,0.05);
-    border-radius: 15px;
-    padding: 15px;
-    text-align: left;
+.page-title {
+    margin:35px 20px 8px;
+    font-size:24px;
+    font-weight:bold;
+    color:rgba(255,255,255,0.95);
 }
 
-.blog-card img {
-    width: 100%;
-    border-radius: 10px;
-    margin-bottom: 10px;
+.page-subtitle {
+    margin:0 auto 25px;
+    max-width:600px;
+    padding:0 20px;
+    font-size:14px;
+    color:rgba(255,255,255,0.65);
+    line-height:1.5;
 }
 
-.blog-card h3 {
-    font-size: 16px;
-    margin-bottom: 8px;
+/* Notice Board */
+.buzz-board {
+    max-width:1100px;
+    margin:0 auto;
+    padding:10px 12px 30px;
+    column-count:1;
+    column-gap:12px;
 }
 
-.blog-card p {
-    font-size: 14px;
-    opacity: 0.8;
+.buzz-card {
+    display:inline-block;
+    width:100%;
+    margin:0 0 12px;
+    padding:10px;
+    vertical-align:top;
+    break-inside:avoid;
+    background:rgba(255,255,255,0.055);
+    border:1px solid rgba(255,0,204,0.22);
+    border-radius:15px;
+    text-align:left;
+    cursor:pointer;
+    transition:transform .2s ease,
+               box-shadow .2s ease,
+               border-color .2s ease;
 }
 
-.blog-card a {
-    display: inline-block;
-    margin-top: 10px;
-    color: #ff00cc;
-    text-decoration: none;
+.buzz-card:hover {
+    transform:translateY(-3px);
+    border-color:#ff00cc;
+    box-shadow:0 0 20px rgba(255,0,204,0.35);
 }
 
+.buzz-media {
+    width:100%;
+    overflow:hidden;
+    border-radius:10px;
+    margin-bottom:10px;
+}
+
+.buzz-media img,
+.buzz-media video {
+    display:block;
+    width:100%;
+    height:auto;
+    border-radius:10px;
+}
+
+.buzz-category {
+    display:inline-block;
+    margin:2px 0 7px;
+    padding:4px 11px;
+    border:1px solid #ff00cc;
+    border-radius:20px;
+    color:#ff00cc;
+    background:rgba(255,0,204,0.12);
+    font-size:11px;
+    font-weight:bold;
+    text-transform:uppercase;
+}
+
+.buzz-card h3 {
+    margin:3px 0 7px;
+    font-size:17px;
+    line-height:1.3;
+    color:rgba(255,255,255,0.95);
+}
+
+.buzz-card p {
+    margin:0;
+    font-size:14px;
+    line-height:1.5;
+    color:rgba(255,255,255,0.72);
+}
+
+/* Pagination */
+.pagination {
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:8px;
+    flex-wrap:wrap;
+    margin:15px auto 40px;
+    padding:0 15px;
+}
+
+.page-number {
+    min-width:40px;
+    height:40px;
+    padding:0 10px;
+    border:1px solid rgba(255,0,204,0.5);
+    border-radius:50%;
+    background:#222;
+    color:#fff;
+    font-size:14px;
+    cursor:pointer;
+}
+
+.page-number:hover,
+.page-number.active {
+    background:#ff00cc;
+    border-color:#ff00cc;
+    box-shadow:0 0 15px rgba(255,0,204,0.5);
+}
+
+.pagination-dots {
+    color:rgba(255,255,255,0.6);
+    padding:0 2px;
+}
+
+/* Full Post */
+.post-view {
+    display:none;
+    max-width:700px;
+    margin:0 auto;
+    padding:10px 20px 40px;
+    text-align:left;
+}
+
+.back-button {
+    display:inline-block;
+    margin:0 0 20px;
+    padding:9px 18px;
+    border:1px solid #ff00cc;
+    border-radius:25px;
+    background:#222;
+    color:#fff;
+    cursor:pointer;
+    font-size:14px;
+}
+
+.back-button:hover {
+    background:#ff00cc;
+}
+
+.post-category {
+    display:inline-block;
+    margin-bottom:10px;
+    padding:5px 14px;
+    border:1px solid #ff00cc;
+    border-radius:20px;
+    color:#ff00cc;
+    font-size:12px;
+    text-transform:uppercase;
+}
+
+.post-view h2 {
+    margin:5px 0 18px;
+    font-size:25px;
+    line-height:1.3;
+}
+
+.post-content {
+    color:rgba(255,255,255,0.82);
+    font-size:16px;
+    line-height:1.7;
+    white-space:pre-wrap;
+    overflow-wrap:anywhere;
+}
+
+.post-media {
+    margin:20px 0;
+}
+
+.post-media img,
+.post-media video {
+    display:block;
+    width:100%;
+    height:auto;
+    margin:0 auto 12px;
+    border-radius:12px;
+}
+
+.original-link {
+    display:inline-block;
+    margin-top:20px;
+    padding:12px 25px;
+    border:none;
+    border-radius:30px;
+    background:linear-gradient(45deg,#ff00cc,#00ccff);
+    color:#fff;
+    text-decoration:none;
+    font-size:16px;
+    box-shadow:0 0 20px rgba(255,0,204,0.35);
+}
+
+.message {
+    padding:30px 20px;
+    color:rgba(255,255,255,0.7);
+}
+
+footer {
+    margin-top:20px;
+    padding:30px;
+    text-align:center;
+    color:rgba(255,255,255,0.7);
+    font-size:14px;
+    line-height:1.6;
+}
+
+footer a {
+    color:#ff00cc;
+    text-decoration:none;
+}
+
+@media (min-width:600px) {
+    .buzz-board {
+        column-count:2;
+    }
+}
+
+@media (min-width:900px) {
+    .buzz-board {
+        column-count:3;
+    }
+}
 </style>
 </head>
+
 <body>
+
 <div class="header">
-    <img src="https://lovelightlinks.github.io/images/Icon.png" class="logo">
+    <img
+        src="https://lovelightlinks.github.io/images/Icon.png"
+        class="logo"
+        onclick="goHome()"
+        alt="Love Light Stream"
+    >
+
     <h1>Love Light Stream</h1>
+
     <div class="age-badge">18+ Adults Only</div>
 
     <div class="social-links">
-        <a href="https://www.instagram.com/love_light_stream" target="_blank">Instagram</a>
-        <a href="https://x.com/LoveLightStream" target="_blank">X</a>
-        <a href="https://t.me/lovelightlinks" target="_blank">Telegram</a>
+        <a href="https://www.instagram.com/love_light_stream" target="_blank" rel="noopener">Instagram</a>
+        <a href="https://x.com/LoveLightStream" target="_blank" rel="noopener">X</a>
+        <a href="https://t.me/lovelightlinks" target="_blank" rel="noopener">Telegram</a>
     </div>
 </div>
 
-<div id="blogSection">
-    <h2 class="blog-title">From Our Blog</h2>
-    <div class="blog-grid" id="blogGrid"></div>
-</div>
-        background:linear-gradient(45deg,#ff00cc,#00ccff);
-        color:white;
-        box-shadow:0 0 20px #ff00cc;
-        ">
-        Open Link
-    </button>
+<section id="boardView">
+    <h2 class="page-title">Trending Buzz</h2>
 
-    <br><br>
+    <p class="page-subtitle">
+        Hot topics, viral content, interesting stories and moments creating attention.
+    </p>
 
-    <button onclick="goHome()"
-        style="
-        padding:12px 25px;
-        border:none;
-        border-radius:30px;
-        background:#222;
-        color:white;
-        ">
-        Home
-    </button>
+    <div id="buzzBoard" class="buzz-board">
+        <div class="message">Loading Trending Buzz...</div>
+    </div>
 
-</div>
-`;
-}
+    <div id="pagination" class="pagination"></div>
+</section>
 
-function goHome(){
-    history.pushState({}, "", window.location.pathname);
-    document.getElementById("profileSection").innerHTML = "";
-    
-    window.scrollTo({top:0,behavior:"smooth"});
-}
-    
-// BLOG
-function loadBlog(data) {
+<section id="postView" class="post-view"></section>
 
-    const entries = data.feed.entry.slice(0,3);
-    const blogGrid = document.getElementById("blogGrid");
-
-<script src="https://lovelightlinks.blogspot.com/feeds/posts/default?alt=json-in-script&callback=loadBlog"></script>
-<footer style="margin-top:50px;padding:30px;text-align:center;">
+<footer>
     <p>© 2026 Love Light Stream. All rights reserved.</p>
-    <p>Love Light Stream is an independent 18+ directory and is not owned, operated, or officially affiliated with any listed platforms. All trademarks belong to their respective owners.</p>
+
+    <p>
+        Love Light Stream is an independent 18+ directory and is not owned,
+        operated, or officially affiliated with any listed platforms.
+        All trademarks belong to their respective owners.
+    </p>
+
     <p>18+ Only. All content is intended for adults.</p>
 
-    <p style="margin-top:20px;font-size:14px;">
-        <a href="privacy.html" style="color:#ff00cc;text-decoration:none;">
-            Privacy Policy
-        </a>
+    <p style="margin-top:20px;">
+        <a href="privacy.html">Privacy Policy</a>
     </p>
 </footer>
+
+<script>
+const sheetURL =
+    "https://docs.google.com/spreadsheets/d/1CAkjWcpnt3Inb887WthMt6Y6M02Lbe-1Kz1w2l_t14Q/gviz/tq?sheet=Buzz&tqx=responseHandler:buzzHubCallback";
+
+const mediaManifestURL = "media-manifest.json";
+
+let buzzPosts = [];
+let currentPage = 1;
+
+const postsPerPage = 12;
+
+let mediaManifest = {};
+
+function escapeHTML(value) {
+    return String(value || "")
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+}
+
+function goHome() {
+    window.location.href = "home.html";
+}
+
+function getMediaFiles(mediaValue) {
+    if (!mediaValue) {
+        return [];
+    }
+
+    const value = mediaValue.trim();
+
+    /*
+     * Development storage:
+     * https://lovelightlinks.github.io/images/models/X1001/
+     *
+     * We detect the model folder and use the existing media manifest.
+     */
+    const match = value.match(/\/images\/models\/([^\/]+)\/?$/);
+
+    if (match) {
+        const id = decodeURIComponent(match[1]);
+        const files = mediaManifest[id] || [];
+
+        return files.map(file =>
+            "images/models/" +
+            encodeURIComponent(id) +
+            "/" +
+            encodeURIComponent(file)
+        );
+    }
+
+    /*
+     * If a direct media URL is supplied later, use it directly.
+     */
+    return [value];
+}
+
+function renderMedia(mediaValue, className, firstOnly = false) {
+    let files = getMediaFiles(mediaValue);
+
+    if (!files.length) {
+        return "";
+    }
+
+    if (firstOnly) {
+        files = files.slice(0, 1);
+    }
+
+    let html = '<div class="' + className + '">';
+
+    files.forEach(file => {
+        const safeFile = escapeHTML(file);
+
+        if (/\.(mp4|webm|ogg|mov)$/i.test(file)) {
+            html +=
+                '<video src="' + safeFile +
+                '" controls preload="metadata"></video>';
+        } else {
+            html +=
+                '<img src="' + safeFile +
+                '" alt="Trending Buzz media" loading="lazy">';
+        }
+    });
+
+    html += "</div>";
+
+    return html;
+}
+
+function renderBoard() {
+    const board = document.getElementById("buzzBoard");
+    const pagination = document.getElementById("pagination");
+
+    if (!buzzPosts.length) {
+        board.innerHTML =
+            '<div class="message">No Trending Buzz posts available.</div>';
+        pagination.innerHTML = "";
+        return;
+    }
+
+    const totalPages = Math.ceil(buzzPosts.length / postsPerPage);
+
+    if (currentPage > totalPages) {
+        currentPage = totalPages;
+    }
+
+    const start =
+        (currentPage - 1) * postsPerPage;
+
+    const pagePosts =
+        buzzPosts.slice(start, start + postsPerPage);
+
+    board.innerHTML = pagePosts.map((post, index) => {
+        const realIndex = start + index;
+
+        return `
+            <article
+                class="buzz-card"
+                onclick="openPost(${realIndex})"
+            >
+                ${renderMedia(post.Media, "buzz-media", true)}
+
+                ${
+                    post.Category
+                    ? '<span class="buzz-category">' +
+                      escapeHTML(post.Category) +
+                      '</span>'
+                    : ''
+                }
+
+                <h3>${escapeHTML(post.Title)}</h3>
+
+                <p>${escapeHTML(post.ShortDescription)}</p>
+            </article>
+        `;
+    }).join("");
+
+    renderPagination(totalPages);
+}
+
+function renderPagination(totalPages) {
+    const pagination =
+        document.getElementById("pagination");
+
+    if (totalPages <= 1) {
+        pagination.innerHTML = "";
+        return;
+    }
+
+    let html = "";
+
+    for (let i = 1; i <= totalPages; i++) {
+
+        /*
+         * Keep pagination compact when there are many pages.
+         */
+        if (totalPages <= 7) {
+            html += pageButton(i);
+            continue;
+        }
+
+        if (
+            i === 1 ||
+            i === totalPages ||
+            Math.abs(i - currentPage) <= 1
+        ) {
+            html += pageButton(i);
+        } else if (
+            i === 2 ||
+            i === totalPages - 1
+        ) {
+            html +=
+                '<span class="pagination-dots">...</span>';
+        }
+    }
+
+    pagination.innerHTML = html;
+}
+
+function pageButton(page) {
+    return `
+        <button
+            class="page-number ${page === currentPage ? "active" : ""}"
+            onclick="changePage(${page})"
+        >
+            ${page}
+        </button>
+    `;
+}
+
+function changePage(page) {
+    currentPage = page;
+
+    document.getElementById("boardView").style.display = "block";
+    document.getElementById("postView").style.display = "none";
+
+    renderBoard();
+
+    window.scrollTo({
+        top:document.getElementById("boardView").offsetTop,
+        behavior:"smooth"
+    });
+}
+
+function makeSlug(title) {
+    return String(title || "")
+        .toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "");
+}
+
+function findPostBySlug(slug) {
+    return buzzPosts.findIndex(post =>
+        makeSlug(post.Title) === slug
+    );
+}
+
+function openPost(index, updateHistory = true) {
+    const post = buzzPosts[index];
+
+    if (!post) {
+        return;
+    }
+
+    const postView =
+        document.getElementById("postView");
+
+    let html = `
+        <button class="back-button" onclick="closePost()">
+            ← Back to Trending Buzz
+        </button>
+
+        ${
+            post.Category
+            ? '<div class="post-category">' +
+              escapeHTML(post.Category) +
+              '</div>'
+            : ''
+        }
+
+        <h2>${escapeHTML(post.Title)}</h2>
+
+        ${renderMedia(post.Media, "post-media")}
+
+        <div class="post-content">
+            ${escapeHTML(post.FullContent || post.ShortDescription)}
+        </div>
+    `;
+
+    if (post.OriginalLink) {
+        html += `
+            <a
+                class="original-link"
+                href="${escapeHTML(post.OriginalLink)}"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                Open Link
+            </a>
+        `;
+    }
+
+    html += `
+        <button
+            class="original-link"
+            style="margin-left:10px;cursor:pointer;"
+            onclick="sharePost()"
+        >
+            Share
+        </button>
+    `;
+
+    postView.innerHTML = html;
+
+    document.getElementById("boardView").style.display = "none";
+    postView.style.display = "block";
+
+    if (updateHistory) {
+        history.pushState(
+            {buzzPost:true},
+            "",
+            "#" + makeSlug(post.Title)
+        );
+    }
+
+    window.scrollTo({
+        top:0,
+        behavior:"smooth"
+    });
+}
+
+function sharePost() {
+    const shareData = {
+        title: document.title,
+        text: "Trending Buzz - Love Light Stream",
+        url: window.location.href
+    };
+
+    if (navigator.share) {
+        navigator.share(shareData).catch(() => {});
+    } else {
+        navigator.clipboard.writeText(window.location.href)
+            .then(() => alert("Post link copied!"))
+            .catch(() => alert(window.location.href));
+    }
+}
+
+function closePost() {
+    document.getElementById("postView").style.display = "none";
+    document.getElementById("boardView").style.display = "block";
+
+    if (location.hash) {
+        history.pushState({}, "", window.location.pathname);
+    }
+
+    window.scrollTo({
+        top:0,
+        behavior:"smooth"
+    });
+}
+
+window.addEventListener("popstate", function() {
+    if (location.hash) {
+        openPostFromHash();
+    } else {
+        document.getElementById("postView").style.display = "none";
+        document.getElementById("boardView").style.display = "block";
+    }
+});
+
+function openPostFromHash() {
+    const slug = decodeURIComponent(
+        location.hash.substring(1)
+    );
+
+    if (!slug) {
+        return;
+    }
+
+    const index = findPostBySlug(slug);
+
+    if (index > -1) {
+        openPost(index, false);
+    }
+}
+
+function buzzHubCallback(response) {
+
+    if (!response ||
+        !response.table ||
+        response.table.cols.length < 6) {
+
+        document.getElementById("buzzBoard").innerHTML =
+            '<div class="message">Unable to load Trending Buzz right now.</div>';
+
+        return;
+    }
+
+    const rows = (response.table.rows || []).slice(1);
+
+    buzzPosts = rows.map(row => {
+        const cells = row.c || [];
+
+        return {
+            Title: cells[0] && cells[0].v != null
+                ? cells[0].v : "",
+
+            Category: cells[1] && cells[1].v != null
+                ? cells[1].v : "",
+
+            ShortDescription: cells[2] && cells[2].v != null
+                ? cells[2].v : "",
+
+            FullContent: cells[3] && cells[3].v != null
+                ? cells[3].v : "",
+
+            Media: cells[4] && cells[4].v != null
+                ? cells[4].v : "",
+
+            OriginalLink: cells[5] && cells[5].v != null
+                ? cells[5].v : ""
+        };
+    }).filter(post => post.Title.trim() !== "");
+
+    /*
+     * Google Sheet order is oldest -> newest.
+     * Website order is newest -> oldest.
+     */
+    buzzPosts.reverse();
+
+    currentPage = 1;
+    renderBoard();
+
+    if (location.hash) {
+        openPostFromHash();
+    }
+}
+
+function loadSheet() {
+    const script = document.createElement("script");
+
+    script.src = sheetURL;
+
+    script.onerror = function() {
+        document.getElementById("buzzBoard").innerHTML =
+            '<div class="message">Unable to load Trending Buzz right now.</div>';
+    };
+
+    document.body.appendChild(script);
+}
+
+fetch(mediaManifestURL)
+    .then(response => {
+        if (!response.ok) {
+            throw new Error("Media manifest HTTP " + response.status);
+        }
+
+        return response.json();
+    })
+    .then(data => {
+        mediaManifest = data;
+    })
+    .catch(error => {
+        console.error("Media manifest failed:", error);
+    })
+    .finally(() => {
+        loadSheet();
+    });
+</script>
 
 </body>
 </html>
