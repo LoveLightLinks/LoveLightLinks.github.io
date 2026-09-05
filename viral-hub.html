@@ -584,17 +584,10 @@ function changePage(page) {
     });
 }
 
-function makeSlug(title) {
-    return String(title || "")
-        .toLowerCase()
-        .trim()
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/^-+|-+$/g, "");
-}
-
-function findPostBySlug(slug) {
+function findPostById(id) {
+    const target = String(id || "").trim().toLowerCase();
     return buzzPosts.findIndex(post =>
-        makeSlug(post.Title) === slug
+        String(post.ID || "").trim().toLowerCase() === target
     );
 }
 
@@ -662,7 +655,7 @@ function openPost(index, updateHistory = true) {
         history.pushState(
             {buzzPost:true},
             "",
-            "#" + makeSlug(post.Title)
+            "#" + encodeURIComponent(post.ID)
         );
     }
 
@@ -712,26 +705,25 @@ window.addEventListener("popstate", function() {
 });
 
 function openPostFromHash() {
-    const slug = decodeURIComponent(
+    const id = decodeURIComponent(
         location.hash.substring(1)
     );
 
-    if (!slug) {
+    if (!id) {
         return;
     }
 
-    const index = findPostBySlug(slug);
+    const index = findPostById(id);
 
     if (index > -1) {
         openPost(index, false);
     }
 }
-
 function buzzHubCallback(response) {
 
     if (!response ||
         !response.table ||
-        response.table.cols.length < 6) {
+        response.table.cols.length < 7) {
 
         document.getElementById("buzzBoard").innerHTML =
             '<div class="message">Unable to load Trending Buzz right now.</div>';
@@ -761,7 +753,9 @@ function buzzHubCallback(response) {
                 ? cells[4].v : "",
 
             OriginalLink: cells[5] && cells[5].v != null
-                ? cells[5].v : ""
+                ? cells[5].v : "",
+            ID: cells[6] && cells[6].v != null
+                ? cells[6].v : ""
         };
     }).filter(post => post.Title.trim() !== "");
 
