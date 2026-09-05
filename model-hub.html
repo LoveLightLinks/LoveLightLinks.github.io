@@ -678,6 +678,35 @@ window.addEventListener("popstate", function() {
     }
 });
 
+
+function openModelFromHash() {
+    const hash = location.hash;
+
+    if (!hash.startsWith("#model-")) {
+        return;
+    }
+
+    const id = decodeURIComponent(hash.substring(7)).trim().toLowerCase();
+
+    if (!id) {
+        return;
+    }
+
+    const index = models.findIndex(model =>
+        String(model.ID || "").trim().toLowerCase() === id
+    );
+
+    if (index > -1) {
+        history.replaceState({ modelHub: true }, "", window.location.pathname);
+        history.pushState(
+            { modelProfile: true },
+            "",
+            "#model-" + encodeURIComponent(models[index].ID)
+        );
+        loadProfile(models[index]);
+    }
+}
+
 document.getElementById("search").addEventListener("input", function() {
     const value = this.value.toLowerCase().trim();
 
@@ -783,6 +812,10 @@ function modelHubCallback(response) {
     visibleModels = [...models];
     shuffleArray(visibleModels);
     loadPage();
+
+    if (location.hash.startsWith("#model-")) {
+        openModelFromHash();
+    }
 }
 
 </script>
