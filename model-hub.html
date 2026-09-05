@@ -679,6 +679,12 @@ window.addEventListener("popstate", function() {
 });
 
 
+window.addEventListener("hashchange", function() {
+    if (location.hash.startsWith("#model-") && models.length) {
+        openModelFromHash();
+    }
+});
+
 function openModelFromHash() {
     const hash = location.hash;
 
