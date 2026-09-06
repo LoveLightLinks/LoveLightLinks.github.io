@@ -331,46 +331,240 @@ h1 {
     text-decoration: none;
 }
 
-
-.home-button {
-    display:inline-block;
-    padding:11px 24px;
-    border:1px solid #ff00cc;
-    border-radius:25px;
-    background:#222;
-    color:#fff;
-    text-decoration:none;
-    font-size:16px;
-    box-shadow:0 0 15px rgba(255,0,204,0.65);
-}
-.home-button:hover {
-    background:#ff00cc;
-    box-shadow:0 0 20px #ff00cc;
-}
-
 </style>
+</head>
+
+<body>
+
 <div class="header">
     <img src="https://lovelightlinks.github.io/images/Icon.png" class="logo">
     <h1>Love Light Stream</h1>
     <div class="age-badge">18+ Adults Only</div>
+
     <div class="social-links">
         <a href="https://www.instagram.com/love_light_stream" target="_blank">Instagram</a>
         <a href="https://x.com/LoveLightStream" target="_blank">X</a>
         <a href="https://t.me/lovelightlinks" target="_blank">Telegram</a>
     </div>
 </div>
-<div style="text-align:center;margin:30px 0 10px;">
-    <a href="home.html" class="home-button">&lt;&lt;&lt; Home &gt;&gt;&gt;</a>
+
+<h2 class="search-title">Premium Adult Directory</h2>
+
+<div class="search-box">
+    <input type="text" id="search" placeholder="Search by Model ID or Username...">
 </div>
 
-<footer style="margin-top:50px;padding:30px;text-align:center;">
-    <p>© 2026 Love Light Stream. All rights reserved.</p>
-    <p>Love Light Stream is an independent 18+ directory and is not owned, operated, or officially affiliated with any listed platforms. All trademarks belong to their respective owners.</p>
-    <p>18+ Only. All content is intended for adults.</p>
+<!-- FEATURED PROFILE AREA (NEW — replaces popup later) -->
+<div id="profileSection" style="max-width:600px;margin:auto;padding:20px;"></div>
 
-    <p style="margin-top:20px;font-size:14px;">
-        <a href="privacy.html" style="color:#ff00cc;text-decoration:none;">
-            Privacy Policy
-        </a>
-    </p>
-</footer>
+<!-- MODEL GRID -->
+<div class="grid" id="modelGrid"></div>
+
+<button id="loadMoreBtn" onclick="loadMore()" class="load-more">
+    Next
+</button>
+
+<script>
+
+const sheetID = "1mLlHZt6MLsEV4Oq0m9_WQPex94v5JbY0pTgr9hL7PjY";
+const sheetURL = `https://opensheet.elk.sh/${sheetID}/Sheet1`;
+
+let models = [];
+let shuffled = [];
+let pageIndex = 0;
+let firstLoadCount = 10;
+let nextLoadCount = 6;
+let currentSlide = 0;
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+}
+
+Promise.all([
+    fetch(sheetURL).then(res=>res.json()),
+]).then(([modelsData, hubData])=>{
+
+    models = modelsData;
+
+    const params = new URLSearchParams(window.location.search);
+    const routeID = params.get("id");
+
+shuffled = [...models];
+shuffleArray(shuffled);
+loadPage();
+
+if(routeID){
+
+    let found = models.find(m =>
+        m.ID && m.ID.toLowerCase() === routeID.toLowerCase()
+    );
+
+    if(found){
+        loadProfile(found);
+    } else {
+
+        }
+    }
+}
+
+    shuffled = [...models];
+    shuffleArray(shuffled);
+    loadPage();
+
+});
+    
+function loadPage() {
+
+    const grid = document.getElementById("modelGrid");
+
+if(pageIndex === 0){
+    grid.innerHTML = "";
+}
+    let start, end;
+
+if(pageIndex === 0){
+    start = 0;
+    end = firstLoadCount;
+} else {
+    start = firstLoadCount + (pageIndex - 1) * nextLoadCount;
+    end = start + nextLoadCount;
+}
+
+    if(start >= shuffled.length){
+    shuffleArray(shuffled);
+    pageIndex = 0;
+
+    window.scrollTo({
+        top: document.getElementById("modelGrid").offsetTop - 40,
+        behavior: "smooth"
+    });
+
+    start = 0;
+    end = firstLoadCount;
+}
+
+    const slice = shuffled.slice(start,end);
+
+    slice.forEach(model => {
+
+    // Skip LINK HUB only entries (no image)
+    if(!model.Image1 || model.Image1.trim() === "") return;
+        const card = document.createElement("div");
+        card.className = "card";
+
+        card.innerHTML = `
+            <img src="${getImagePath(model.Image1)}" loading="lazy">
+            <h3>Model ${model.ID}</h3>
+        `;
+
+        card.onclick = () => loadProfile(model);
+
+        grid.appendChild(card);
+    });
+
+}
+function loadMore(){
+    pageIndex++;
+    loadPage();
+}
+function getImagePath(img){
+    if(!img) return "";
+    if(img.startsWith("http")) return img;
+    return "https://lovelightlinks.github.io/images/" + img;
+}
+function loadProfile(model){
+    
+    history.pushState({}, "", "?id=" + model.ID);
+    const images = [
+    getImagePath(model.Image1),
+    getImagePath(model.Image2),
+    getImagePath(model.Image3),
+    getImagePath(model.Image4)
+].filter(Boolean);
+
+    const profile = document.getElementById("profileSection");
+
+    profile.innerHTML = `
+        <div class="slider">
+            <button class="nav-btn left" onclick="prevSlide()">❮</button>
+            <div class="slides" id="slides">
+                ${images.map(img=>`<img src="${img}">`).join("")}
+            </div>
+            <button class="nav-btn right" onclick="nextSlide()">❯</button>
+        </div>
+
+        <h3 style="margin-top:15px;">Model: ${model.ID}</h3>
+        <p>ID: ${model.Username || "—"}</p>
+
+        <p>${model.Name}</p>
+
+        <button onclick="window.open('${model.Link}','_blank')" 
+        style="margin-top:10px;padding:10px 20px;border:none;border-radius:25px;background:#ff00cc;color:white;">
+        Visit
+        </button>
+        <button onclick="goHome()" 
+style="margin-top:10px;padding:10px 20px;border:none;border-radius:25px;background:#ff00cc;color:white;">
+Home
+</button>
+    `;
+
+    currentSlide = 0;
+
+    window.scrollTo({top:profile.offsetTop-50,behavior:"smooth"});
+}
+
+function nextSlide(){
+    const slides = document.getElementById("slides");
+    if(!slides) return;
+
+    const total = slides.children.length;
+    currentSlide++;
+    if(currentSlide>=total) currentSlide=0;
+
+    slides.style.transform = `translateX(-${currentSlide*100}%)`;
+}
+
+function prevSlide(){
+    const slides = document.getElementById("slides");
+    if(!slides) return;
+
+    const total = slides.children.length;
+    currentSlide--;
+    if(currentSlide<0) currentSlide=total-1;
+
+    slides.style.transform = `translateX(-${currentSlide*100}%)`;
+  }
+document.getElementById("search").addEventListener("input", function(){
+
+    const value = this.value.toLowerCase().trim();
+
+    if(!value){
+        document.getElementById("profileSection").innerHTML = "";
+        return;
+    }
+
+    let found = models.find(m =>
+        (m.ID && m.ID.toLowerCase() === value) ||
+        (m.Username && m.Username.toLowerCase() === value)
+    );
+
+    if(found){
+        this.blur();
+        loadProfile(found);
+        return;
+    }
+
+        return;
+    }
+
+    document.getElementById("profileSection").innerHTML = `
+        <div style="padding:25px;opacity:0.8">
+            <h3>Nothing Found</h3>
+            <p>Try correct Model ID</p>
+        </div>
+    `;
+});
+
+

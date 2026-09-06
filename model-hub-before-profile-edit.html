@@ -128,15 +128,15 @@ h1 {
 .grid {
     display:grid;
     grid-template-columns: repeat(2, 1fr);
-    gap:15px;
-    padding:20px;
+    gap:8px;
+    padding:8px;
     max-width:600px;
     margin:auto;
 }
 
 .card {
     background:rgba(255,255,255,0.05);
-    padding:12px;
+    padding:8px;
     border-radius:15px;
     cursor:pointer;
     transition:0.3s;
@@ -149,7 +149,7 @@ h1 {
 
 .card img {
     width:100%;
-    height:220px;
+    height:250px;
     object-fit:cover;
     border-radius:10px;
 }
@@ -331,37 +331,227 @@ h1 {
     text-decoration: none;
 }
 
-
-.home-button {
-    display:inline-block;
-    padding:11px 24px;
-    border:1px solid #ff00cc;
-    border-radius:25px;
-    background:#222;
-    color:#fff;
-    text-decoration:none;
-    font-size:16px;
-    box-shadow:0 0 15px rgba(255,0,204,0.65);
-}
-.home-button:hover {
-    background:#ff00cc;
-    box-shadow:0 0 20px #ff00cc;
-}
-
 </style>
+</head>
+<body>
+
 <div class="header">
-    <img src="https://lovelightlinks.github.io/images/Icon.png" class="logo">
+    <a href="home.html">
+        <img src="https://lovelightlinks.github.io/images/Icon.png" class="logo">
+    </a>
     <h1>Love Light Stream</h1>
     <div class="age-badge">18+ Adults Only</div>
+
     <div class="social-links">
         <a href="https://www.instagram.com/love_light_stream" target="_blank">Instagram</a>
         <a href="https://x.com/LoveLightStream" target="_blank">X</a>
         <a href="https://t.me/lovelightlinks" target="_blank">Telegram</a>
     </div>
 </div>
-<div style="text-align:center;margin:30px 0 10px;">
-    <a href="home.html" class="home-button">&lt;&lt;&lt; Home &gt;&gt;&gt;</a>
+
+<h2 class="search-title">Premium Adult Directory</h2>
+
+<div class="search-box">
+    <input id="search" type="text" placeholder="Search by ID or nickname...">
 </div>
+
+<div id="profileSection"></div>
+
+<div class="grid" id="modelGrid"></div>
+
+<button id="loadMoreBtn" class="load-more" onclick="loadMore()">Load More</button>
+
+<script>
+const sheetURL = "https://docs.google.com/spreadsheets/d/1CAkjWcpnt3Inb887WthMt6Y6M02Lbe-1Kz1w2l_t14Q/gviz/tq?sheet=Models&tqx=responseHandler:modelHubCallback";
+
+let models = [];
+let visibleModels = [];
+let pageIndex = 0;
+
+const firstLoadCount = 10;
+const nextLoadCount = 6;
+
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+}
+
+let mediaManifest = {};
+
+function getModelImages(model) {
+    const files = mediaManifest[model.ID] || [];
+    const folder = "images/models/" + encodeURIComponent(model.ID) + "/";
+    return files.map(file => folder + encodeURIComponent(file));
+}
+
+function loadPage() {
+    const grid = document.getElementById("modelGrid");
+
+    if (pageIndex === 0) {
+        grid.innerHTML = "";
+    }
+
+    const count = pageIndex === 0 ? firstLoadCount : nextLoadCount;
+    const start = pageIndex === 0 ? 0 : firstLoadCount + (pageIndex - 1) * nextLoadCount;
+    const end = start + count;
+
+    visibleModels.slice(start, end).forEach(model => {
+        const images = getModelImages(model);
+
+        const card = document.createElement("div");
+        card.className = "card";
+
+        card.innerHTML = `
+            <img src="${images[0]}" loading="lazy"
+                 onerror="this.style.display='none'">
+            <h3>${model.Nickname || model.ID || "Model"}</h3>
+        `;
+
+        card.onclick = () => loadProfile(model);
+        grid.appendChild(card);
+    });
+
+    if (end >= visibleModels.length) {
+        document.getElementById("loadMoreBtn").textContent = "Show More";
+    } else {
+        document.getElementById("loadMoreBtn").textContent = "Load More";
+    }
+}
+
+function loadMore() {
+    pageIndex++;
+    loadPage();
+}
+
+function loadProfile(model) {
+    const profile = document.getElementById("profileSection");
+    const images = getModelImages(model);
+
+    const links = [];
+
+    if (model.Instagram) links.push(`<a href="${model.Instagram}" target="_blank">Instagram</a>`);
+    if (model.X) links.push(`<a href="${model.X}" target="_blank">X</a>`);
+    if (model.Stripchat) links.push(`<a href="${model.Stripchat}" target="_blank">Stripchat</a>`);
+    if (model.OnlyFans) links.push(`<a href="${model.OnlyFans}" target="_blank">OnlyFans</a>`);
+    if (model.Other) links.push(`<a href="${model.Other}" target="_blank">Other</a>`);
+
+    const tags = model.Tags
+        ? model.Tags.split(",").map(tag =>
+            `<span class="tag">${tag.trim()}</span>`
+          ).join("")
+        : "";
+
+    profile.innerHTML = `
+        <div class="profile-card">
+
+            <div class="slider">
+                ${images.map((img, index) => `
+                    <img src="${img}"
+                         class="profile-image"
+                         style="${index === 0 ? "" : "display:none"}"
+                         onerror="this.remove()">
+                `).join("")}
+            </div>
+
+            <h3>${model.Nickname || model.ID || "Model"}</h3>
+
+            <p><strong>ID:</strong> ${model.ID || "—"}</p>
+
+            ${model.Details ? `<p>${model.Details}</p>` : ""}
+
+            ${tags ? `<div class="tags">${tags}</div>` : ""}
+
+            ${links.length ? `
+                <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:20px;">
+                    ${links.join("")}
+                </div>
+            ` : ""}
+
+            <button class="load-more" onclick="closeProfile()">Back to Models</button>
+
+        </div>
+    `;
+
+    window.scrollTo({
+        top: profile.offsetTop - 20,
+        behavior: "smooth"
+    });
+}
+
+function closeProfile() {
+    document.getElementById("profileSection").innerHTML = "";
+    window.scrollTo({
+        top: document.getElementById("modelGrid").offsetTop - 20,
+        behavior: "smooth"
+    });
+}
+
+document.getElementById("search").addEventListener("input", function() {
+    const value = this.value.toLowerCase().trim();
+
+    if (!value) {
+        visibleModels = [...models];
+        shuffleArray(visibleModels);
+        pageIndex = 0;
+        loadPage();
+        document.getElementById("profileSection").innerHTML = "";
+        return;
+    }
+
+    const results = models.filter(model =>
+        (model.ID || "").toLowerCase().includes(value) ||
+        (model.Nickname || "").toLowerCase().includes(value)
+    );
+
+    visibleModels = results;
+    pageIndex = 0;
+    document.getElementById("profileSection").innerHTML = "";
+
+    loadPage();
+});
+
+fetch("media-manifest.json")
+    .then(response => response.json())
+    .then(data => {
+        mediaManifest = data;
+
+        const script = document.createElement("script");
+        script.src = sheetURL;
+        document.body.appendChild(script);
+    })
+    .catch(error => console.error("Media manifest failed:", error));
+
+function modelHubCallback(response) {
+    if (response.status !== "ok") {
+        document.getElementById("modelGrid").innerHTML = "<p style='text-align:center;color:#fff;'>Unable to load models right now.</p>";
+        return;
+    }
+
+    const rows = response.table.rows;
+    models = rows.slice(1).map(row => {
+        const c = row.c || [];
+        return {
+            Nickname: c[0]?.v || "",
+            Details: c[1]?.v || "",
+            Tags: c[2]?.v || "",
+            ID: c[3]?.v || "",
+            Instagram: c[4]?.v || "",
+            X: c[5]?.v || "",
+            Stripchat: c[6]?.v || "",
+            OnlyFans: c[7]?.v || "",
+            Other: c[8]?.v || "",
+            Media: c[9]?.v || ""
+        };
+    }).filter(model => model.ID);
+
+    visibleModels = [...models];
+    shuffleArray(visibleModels);
+    loadPage();
+}
+
+</script>
 
 <footer style="margin-top:50px;padding:30px;text-align:center;">
     <p>© 2026 Love Light Stream. All rights reserved.</p>
@@ -374,3 +564,6 @@ h1 {
         </a>
     </p>
 </footer>
+
+</body>
+</html>
