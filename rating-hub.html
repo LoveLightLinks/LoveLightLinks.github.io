@@ -3,19 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Love Light Stream | Premium Adult Directory 18+</title>
-<meta name="description" content="Love Light Stream is a premium model directory featuring curated model profiles with direct access links.">
-<meta name="robots" content="index, follow">
-
-<!-- Social Preview -->
-<meta property="og:title" content="Love Light Stream | Premium Adult Model 18+">
-<meta property="og:description" content="Explore curated premium Adult model profiles in one clean directory.">
-<meta property="og:image" content="https://lovelightlinks.github.io/images/Icon.png">
-<meta property="og:url" content="https://lovelightlinks.github.io/">
-<meta property="og:type" content="website">
-
+<title>Love Light Stream | Know Them Well</title>
 <style>
+
 
 body {
     margin:0;
@@ -348,7 +338,285 @@ h1 {
     box-shadow:0 0 20px #ff00cc;
 }
 
+.rating-page {
+    width:100%;
+    max-width:600px;
+    margin:auto;
+    padding:20px;
+}
+
+.rating-intro {
+    margin:25px 0;
+}
+
+.rating-intro h2 {
+    font-size:22px;
+    margin-bottom:8px;
+}
+
+.rating-intro p {
+    color:rgba(255,255,255,.7);
+    font-size:14px;
+    line-height:1.5;
+}
+
+.platform-section {
+    display:grid;
+    gap:12px;
+    margin:25px 0;
+}
+
+.platform-button {
+    width:100%;
+    padding:14px;
+    border:1px solid #ff00cc;
+    border-radius:30px;
+    background:#222;
+    color:#fff;
+    font-size:16px;
+    cursor:pointer;
+}
+
+.platform-button.active,
+.platform-button:hover {
+    background:linear-gradient(45deg,#ff00cc,#00ccff);
+}
+
+.search-panel {
+    display:none;
+    margin:20px 0;
+    padding:18px;
+    background:rgba(255,255,255,.05);
+    border-radius:15px;
+}
+
+.search-panel h3 {
+    margin-top:0;
+}
+
+.search-row {
+    display:flex;
+    gap:10px;
+}
+
+.search-row input {
+    flex:1;
+    min-width:0;
+    padding:12px 15px;
+    border:1px solid rgba(255,0,204,.5);
+    border-radius:25px;
+    background:#111;
+    color:#fff;
+    font-size:16px;
+    outline:none;
+}
+
+.search-row button {
+    padding:12px 20px;
+    border:0;
+    border-radius:25px;
+    background:#ff00cc;
+    color:#fff;
+    cursor:pointer;
+}
+
+.model-result {
+    display:none;
+    margin-top:25px;
+}
+
+.model-hero {
+    position:relative;
+    min-height:390px;
+    border-radius:20px;
+    overflow:hidden;
+    background:
+        linear-gradient(to bottom,rgba(0,0,0,.1),rgba(0,0,0,.95)),
+        url("images/Icon.png") center/cover no-repeat;
+    box-shadow:0 0 25px #ff00cc;
+    display:flex;
+    align-items:flex-end;
+    text-align:left;
+}
+
+.model-overlay {
+    width:100%;
+    padding:25px 20px 20px;
+    background:linear-gradient(transparent,rgba(0,0,0,.95));
+}
+
+.result-platform {
+    color:#ff00cc;
+    font-size:13px;
+    font-weight:bold;
+    text-transform:uppercase;
+    letter-spacing:1px;
+}
+
+.model-overlay h2 {
+    margin:6px 0;
+    font-size:24px;
+}
+
+.result-id {
+    color:rgba(255,255,255,.7);
+    font-size:14px;
+}
+
+.rating-card {
+    width:100%;
+    margin-top:15px;
+    padding:16px;
+    border:0;
+    border-radius:15px;
+    color:#fff;
+    font-size:20px;
+    font-weight:bold;
+    background:#888;
+}
+
+.rating-card.high {
+    background:#18e35b;
+}
+
+.rating-card.medium {
+    background:#72b77a;
+}
+
+.rating-card.low {
+    background:#a1a7a3;
+}
+
+.rating-card.none {
+    background:#666;
+}
+
+.experiences {
+    margin-top:35px;
+}
+
+.experiences h3,
+.latest-ratings h2 {
+    color:rgba(255,255,255,.9);
+}
+
+.empty-experience {
+    padding:18px;
+    border-radius:15px;
+    background:rgba(255,255,255,.05);
+    color:rgba(255,255,255,.65);
+}
+
+.rate-button {
+    width:100%;
+    margin-top:15px;
+    padding:13px;
+    border:1px solid #ff00cc;
+    border-radius:30px;
+    background:linear-gradient(45deg,#ff00cc,#00ccff);
+    color:#fff;
+    font-size:16px;
+    cursor:pointer;
+}
+
+.latest-ratings {
+    margin-top:45px;
+}
+
+.rating-gallery {
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:12px;
+}
+
+.rating-tab {
+    overflow:hidden;
+    padding:0;
+    border:1px solid rgba(255,0,204,.3);
+    border-radius:15px;
+    background:rgba(255,255,255,.05);
+    color:#fff;
+    text-align:left;
+    cursor:pointer;
+}
+
+.rating-tab:hover {
+    box-shadow:0 0 15px #ff00cc;
+    transform:translateY(-2px);
+}
+
+.rating-tab img {
+    width:100%;
+    height:145px;
+    object-fit:cover;
+    display:block;
+}
+
+.rating-tab-info {
+    padding:10px;
+}
+
+.rating-tab-platform {
+    color:#ff00cc;
+    font-size:11px;
+    font-weight:bold;
+    text-transform:uppercase;
+}
+
+.rating-tab-name {
+    margin:4px 0;
+    font-size:15px;
+    font-weight:bold;
+}
+
+.rating-tab-id {
+    color:rgba(255,255,255,.6);
+    font-size:12px;
+}
+
+.rating-tab-score {
+    margin-top:7px;
+    font-size:14px;
+    font-weight:bold;
+}
+
+.no-ratings {
+    display:none;
+    padding:20px;
+    color:rgba(255,255,255,.65);
+}
+
+@media(max-width:420px) {
+    .rating-gallery {
+        gap:8px;
+    }
+
+    .rating-tab img {
+        height:125px;
+    }
+
+    .search-row {
+        flex-direction:column;
+    }
+
+    .search-row button {
+        width:100%;
+    }
+}
+.rating-page {
+    width:100%;
+    max-width:600px;
+    margin:0 auto;
+    padding:20px;
+    box-sizing:border-box;
+    overflow:hidden;
+}
+
+.rating-page * {
+    box-sizing:border-box;
+}
 </style>
+<body>
 <div class="header">
     <img src="https://lovelightlinks.github.io/images/Icon.png" class="logo">
     <h1>Love Light Stream</h1>
@@ -359,18 +627,274 @@ h1 {
         <a href="https://t.me/lovelightlinks" target="_blank">Telegram</a>
     </div>
 </div>
+<div class="rating-page">
+
+    <section class="rating-intro">
+        <h2>Know Them Well</h2>
+        <p>
+            Search a model by platform and ID,
+            discover community ratings and experiences.
+        </p>
+    <section class="platform-section">
+        <button class="platform-button" onclick="selectPlatform('eLive', this)">eLive</button>
+        <button class="platform-button" onclick="selectPlatform('Tango', this)">Tango</button>
+        <button class="platform-button" onclick="suggestApp()">Suggest an App</button>
+    </section>
+        <button class="platform-button" onclick="selectPlatform('Other', this)">Other</button>
+    </section>
+
+    <section id="searchPanel" class="search-panel">
+        <h3 id="searchTitle">Search Model</h3>
+        <div class="search-row">
+            <input id="modelIdInput" type="text" placeholder="Enter Model ID">
+            <button onclick="searchModel()">Search</button>
+        </div>
+    </section>
+
+    <section id="modelResult" class="model-result">
+        <div class="model-hero" id="modelHero">
+            <div class="model-overlay">
+                <div id="resultPlatform" class="result-platform"></div>
+                <h2 id="resultName">Model Name</h2>
+                <div id="resultId" class="result-id">ID: 0000</div>
+            </div>
+        </div>
+
+        <button id="ratingCard" class="rating-card">
+            ⭐ No rating yet
+        </button>
+
+        <section class="experiences">
+            <h3>Community Experiences</h3>
+            <div id="experienceList">
+                <div class="empty-experience">
+                    No community experiences yet.
+                </div>
+            </div>
+
+            <button class="rate-button" onclick="startRating()">
+                Rate This Model
+            </button>
+        </section>
+    </section>
+
+    <section class="latest-ratings">
+        <h2>Latest Ratings</h2>
+
+        <div id="ratingGallery" class="rating-gallery"></div>
+
+        <div id="noRatings" class="no-ratings">
+            No ratings yet.
+        </div>
+    </section>
+
+</div>
+
 <div style="text-align:center;margin:30px 0 10px;">
     <a href="home.html" class="home-button">&lt;&lt;&lt; Home &gt;&gt;&gt;</a>
 </div>
 
 <footer style="margin-top:50px;padding:30px;text-align:center;">
-    <p>© 2026 Love Light Stream. All rights reserved.</p>
-    <p>Love Light Stream is an independent 18+ directory and is not owned, operated, or officially affiliated with any listed platforms. All trademarks belong to their respective owners.</p>
-    <p>18+ Only. All content is intended for adults.</p>
-
-    <p style="margin-top:20px;font-size:14px;">
-        <a href="privacy.html" style="color:#ff00cc;text-decoration:none;">
-            Privacy Policy
-        </a>
+    <p style="color:rgba(255,255,255,.65);font-size:14px;">
+        Love Light Stream © 2026
+    </p>
+    <p style="color:rgba(255,255,255,.5);font-size:12px;">
+        18+ Adults Only. Community ratings are personal experiences
+        and should not be treated as verified facts.
     </p>
 </footer>
+
+<script>
+let selectedPlatform = "";
+let profileImages = [];
+fetch("images/rating-hub/profile-pool/manifest.json")
+    .then(function(response) { return response.json(); })
+    .then(function(images) { profileImages = images; })
+    .catch(function() { profileImages = []; });
+
+function getRandomProfileImage() {
+    if (!profileImages.length) return "images/Icon.png";
+    return "images/rating-hub/profile-pool/" + profileImages[Math.floor(Math.random() * profileImages.length)];
+}
+function getPlatformLogo(platform) {
+    const name = String(platform || "").trim().toLowerCase();
+    if (name === "elive") return "images/rating-hub/platforms/elive.webp";
+    if (name === "tango") return "images/rating-hub/platforms/tango.webp";
+    return "images/Icon.png";
+}
+
+const latestRatings = [
+    {
+        platform:"eLive",
+        id:"1234",
+        name:"Sample Model 1",
+        rating:4.8
+    },
+    {
+        platform:"Tango",
+        id:"5678",
+        name:"Sample Model 2",
+        rating:4.2
+    },
+    {
+        platform:"eLive",
+        id:"2468",
+        name:"Sample Model 3",
+        rating:3.5
+    },
+    {
+        platform:"Other",
+        id:"9012",
+        name:"Sample Model 4",
+        rating:2.6
+    }
+];
+
+function selectPlatform(platform, button) {
+
+    selectedPlatform = platform;
+
+    document.querySelectorAll(".platform-button")
+        .forEach(function(btn) {
+            btn.classList.remove("active");
+        });
+
+    button.classList.add("active");
+
+    document.getElementById("searchPanel").style.display = "block";
+
+    document.getElementById("searchTitle").textContent =
+        "Search " + platform + " Model";
+
+    document.getElementById("modelIdInput").value = "";
+    document.getElementById("modelIdInput").focus();
+
+    document.getElementById("modelResult").style.display = "none";
+}
+
+function searchModel() {
+
+    const id = document.getElementById("modelIdInput")
+        .value.trim();
+
+    if (!id || !selectedPlatform) return;
+
+    const existing = latestRatings.find(function(model) {
+        return model.platform.toLowerCase() === selectedPlatform.toLowerCase()
+            && model.id.toLowerCase() === id.toLowerCase();
+    });
+
+    if (existing) {
+        showModel(existing);
+    } else {
+        showModel({
+            platform:selectedPlatform,
+            id:id,
+            name:"Model " + id,
+            rating:0
+        });
+    }
+}
+
+function showModel(model) {
+
+    document.getElementById("resultPlatform").textContent =
+        model.platform;
+
+    document.getElementById("resultName").textContent =
+        model.name;
+
+    document.getElementById("resultId").textContent =
+        "ID: " + model.id;
+
+    document.getElementById("modelHero").style.backgroundImage =
+        "linear-gradient(to bottom,rgba(0,0,0,.1),rgba(0,0,0,.95)), url('" + getRandomProfileImage() + "')";
+    setRating(model.rating);
+
+    document.getElementById("modelResult").style.display =
+        "block";
+
+    document.getElementById("modelResult").scrollIntoView({
+        behavior:"smooth",
+        block:"start"
+    });
+}
+
+function setRating(score) {
+
+    const card = document.getElementById("ratingCard");
+
+    card.classList.remove("high","medium","low","none");
+
+    if (!score || score <= 0) {
+        card.classList.add("none");
+        card.textContent = "⭐ No rating yet";
+        return;
+    }
+
+    if (score >= 4) {
+        card.classList.add("high");
+    } else if (score >= 3) {
+        card.classList.add("medium");
+    } else {
+        card.classList.add("low");
+    }
+
+    card.textContent =
+        "⭐ " + score.toFixed(1) + " / 5";
+}
+
+function startRating() {
+
+    alert(
+        "The rating and verification system will be connected after the visual design is approved."
+    );
+}
+
+function renderLatestRatings() {
+
+    const gallery =
+        document.getElementById("ratingGallery");
+
+    gallery.innerHTML = "";
+
+    latestRatings.forEach(function(model) {
+
+        const card = document.createElement("button");
+
+        card.className = "rating-tab";
+
+        card.innerHTML = `
+            <img src="${getPlatformLogo(model.platform)}" alt="${model.platform}">
+            <div class="rating-tab-info">
+                <div class="rating-tab-platform">
+                    ${model.platform}
+                </div>
+
+                <div class="rating-tab-name">
+                    ${model.name}
+                </div>
+
+                <div class="rating-tab-id">
+                    ID: ${model.id}
+                </div>
+
+                <div class="rating-tab-score">
+                    ⭐ ${model.rating.toFixed(1)} / 5
+                </div>
+            </div>
+        `;
+
+        card.addEventListener("click", function() {
+            selectedPlatform = model.platform;
+            showModel(model);
+        });
+
+        gallery.appendChild(card);
+    });
+}
+
+renderLatestRatings();
+</script>
+</body>
+</html>
