@@ -714,13 +714,15 @@ h1 {
     </section>
 
     <section class="latest-ratings">
-        <h2>Latest Ratings</h2>
+        <h2>⭐ Last Month's Super Stars</h2>
+        <div id="superStarsGallery" class="rating-gallery"></div>
+        <div id="noSuperStars" class="no-ratings">No super stars yet.</div>
+    </section>
 
+    <section class="latest-ratings">
+        <h2>🔥 Recent Ratings</h2>
         <div id="ratingGallery" class="rating-gallery"></div>
-
-        <div id="noRatings" class="no-ratings">
-            No ratings yet.
-        </div>
+        <div id="noRatings" class="no-ratings">No recent ratings yet.</div>
     </section>
 
 </div>
@@ -763,25 +765,22 @@ const latestRatings = [
         platform:"eLive",
         id:"1234",
         name:"Sample Model 1",
-        rating:4.8
+        rating:4.8,
+        date:"2026-08-05"
     },
     {
         platform:"Tango",
         id:"5678",
         name:"Sample Model 2",
-        rating:4.2
+        rating:4.2,
+        date:"2026-07-20"
     },
     {
         platform:"eLive",
         id:"2468",
         name:"Sample Model 3",
-        rating:3.5
-    },
-    {
-        platform:"Other",
-        id:"9012",
-        name:"Sample Model 4",
-        rating:2.6
+        rating:3.5,
+        date:"2026-08-25"
     }
 ];
 
@@ -930,50 +929,96 @@ function startRating() {
     );
 }
 
-function renderLatestRatings() {
+function createRatingCard(model) {
+    const card = document.createElement("button");
+    card.className = "rating-tab";
 
-    const gallery =
-        document.getElementById("ratingGallery");
+    card.innerHTML = `
+        <img src="${getPlatformLogo(model.platform)}" alt="${model.platform}">
+        <div class="rating-tab-info">
+            <div class="rating-tab-platform">${model.platform}</div>
+            <div class="rating-tab-name">${model.name}</div>
+            <div class="rating-tab-id">ID: ${model.id}</div>
+            <div class="rating-tab-score">⭐ ${model.rating.toFixed(1)} / 5</div>
+        </div>
+    `;
 
-    gallery.innerHTML = "";
-
-    latestRatings.forEach(function(model) {
-
-        const card = document.createElement("button");
-
-        card.className = "rating-tab";
-
-        card.innerHTML = `
-            <img src="${getPlatformLogo(model.platform)}" alt="${model.platform}">
-            <div class="rating-tab-info">
-                <div class="rating-tab-platform">
-                    ${model.platform}
-                </div>
-
-                <div class="rating-tab-name">
-                    ${model.name}
-                </div>
-
-                <div class="rating-tab-id">
-                    ID: ${model.id}
-                </div>
-
-                <div class="rating-tab-score">
-                    ⭐ ${model.rating.toFixed(1)} / 5
-                </div>
-            </div>
-        `;
-
-        card.addEventListener("click", function() {
-            selectedPlatform = model.platform;
-            showModel(model);
-        });
-
-        gallery.appendChild(card);
+    card.addEventListener("click", function() {
+        selectedPlatform = model.platform;
+        showModel(model);
     });
+
+    return card;
 }
 
-renderLatestRatings();
+function sortRatings(a, b) {
+    const scoreDifference = Number(b.rating) - Number(a.rating);
+
+    if (scoreDifference !== 0) {
+        return scoreDifference;
+    }
+
+    return new Date(b.date) - new Date(a.date);
+}
+
+function renderRatingDiscovery() {
+    const superStarsGallery =
+        document.getElementById("superStarsGallery");
+
+    const recentGallery =
+        document.getElementById("ratingGallery");
+
+    const noSuperStars =
+        document.getElementById("noSuperStars");
+
+    const noRatings =
+        document.getElementById("noRatings");
+
+    const now = new Date();
+    const thirtyDaysAgo =
+        new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+    const sixtyDaysAgo =
+        new Date(now.getTime() - 60 * 24 * 60 * 60 * 1000);
+
+    const validRatings = latestRatings.filter(function(model) {
+        return Number(model.rating) >= 3 &&
+               model.date &&
+               new Date(model.date) <= now;
+    });
+
+    const superStars = validRatings
+        .filter(function(model) {
+            const date = new Date(model.date);
+            return date >= sixtyDaysAgo && date < thirtyDaysAgo;
+        })
+        .sort(sortRatings);
+
+    const recentRatings = validRatings
+        .filter(function(model) {
+            const date = new Date(model.date);
+            return date >= thirtyDaysAgo && date <= now;
+        })
+        .sort(sortRatings);
+
+    superStarsGallery.innerHTML = "";
+    recentGallery.innerHTML = "";
+
+    superStars.forEach(function(model) {
+        superStarsGallery.appendChild(createRatingCard(model));
+    });
+
+    recentRatings.forEach(function(model) {
+        recentGallery.appendChild(createRatingCard(model));
+    });
+
+    noSuperStars.style.display =
+        superStars.length ? "none" : "block";
+
+    noRatings.style.display =
+        recentRatings.length ? "none" : "block";
+}
+
+renderRatingDiscovery();
 </script>
 </body>
 </html>
