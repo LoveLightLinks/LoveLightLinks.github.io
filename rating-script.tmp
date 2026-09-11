@@ -1,0 +1,172 @@
+let selectedPlatform = "";
+
+const latestRatings = [
+    {
+        platform:"eLive",
+        id:"1234",
+        name:"Sample Model 1",
+        rating:4.8
+    },
+    {
+        platform:"Tango",
+        id:"5678",
+        name:"Sample Model 2",
+        rating:4.2
+    },
+    {
+        platform:"eLive",
+        id:"2468",
+        name:"Sample Model 3",
+        rating:3.5
+    },
+    {
+        platform:"Other",
+        id:"9012",
+        name:"Sample Model 4",
+        rating:2.6
+    }
+];
+
+function selectPlatform(platform, button) {
+
+    selectedPlatform = platform;
+
+    document.querySelectorAll(".platform-button")
+        .forEach(function(btn) {
+            btn.classList.remove("active");
+        });
+
+    button.classList.add("active");
+
+    document.getElementById("searchPanel").style.display = "block";
+
+    document.getElementById("searchTitle").textContent =
+        "Search " + platform + " Model";
+
+    document.getElementById("modelIdInput").value = "";
+    document.getElementById("modelIdInput").focus();
+
+    document.getElementById("modelResult").style.display = "none";
+}
+
+function searchModel() {
+
+    const id = document.getElementById("modelIdInput")
+        .value.trim();
+
+    if (!id || !selectedPlatform) return;
+
+    const existing = latestRatings.find(function(model) {
+        return model.platform.toLowerCase() === selectedPlatform.toLowerCase()
+            && model.id.toLowerCase() === id.toLowerCase();
+    });
+
+    if (existing) {
+        showModel(existing);
+    } else {
+        showModel({
+            platform:selectedPlatform,
+            id:id,
+            name:"Model " + id,
+            rating:0
+        });
+    }
+}
+
+function showModel(model) {
+
+    document.getElementById("resultPlatform").textContent =
+        model.platform;
+
+    document.getElementById("resultName").textContent =
+        model.name;
+
+    document.getElementById("resultId").textContent =
+        "ID: " + model.id;
+
+    setRating(model.rating);
+
+    document.getElementById("modelResult").style.display =
+        "block";
+
+    document.getElementById("modelResult").scrollIntoView({
+        behavior:"smooth",
+        block:"start"
+    });
+}
+
+function setRating(score) {
+
+    const card = document.getElementById("ratingCard");
+
+    card.classList.remove("high","medium","low","none");
+
+    if (!score || score <= 0) {
+        card.classList.add("none");
+        card.textContent = "⭐ No rating yet";
+        return;
+    }
+
+    if (score >= 4) {
+        card.classList.add("high");
+    } else if (score >= 3) {
+        card.classList.add("medium");
+    } else {
+        card.classList.add("low");
+    }
+
+    card.textContent =
+        "⭐ " + score.toFixed(1) + " / 5";
+}
+
+function startRating() {
+
+    alert(
+        "The rating and verification system will be connected after the visual design is approved."
+    );
+}
+
+function renderLatestRatings() {
+
+    const gallery =
+        document.getElementById("ratingGallery");
+
+    gallery.innerHTML = "";
+
+    latestRatings.forEach(function(model) {
+
+        const card = document.createElement("button");
+
+        card.className = "rating-tab";
+
+        card.innerHTML = `
+            <img src="images/Icon.png" alt="">
+            <div class="rating-tab-info">
+                <div class="rating-tab-platform">
+                    ${model.platform}
+                </div>
+
+                <div class="rating-tab-name">
+                    ${model.name}
+                </div>
+
+                <div class="rating-tab-id">
+                    ID: ${model.id}
+                </div>
+
+                <div class="rating-tab-score">
+                    ⭐ ${model.rating.toFixed(1)} / 5
+                </div>
+            </div>
+        `;
+
+        card.addEventListener("click", function() {
+            selectedPlatform = model.platform;
+            showModel(model);
+        });
+
+        gallery.appendChild(card);
+    });
+}
+
+renderLatestRatings();

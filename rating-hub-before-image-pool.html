@@ -602,7 +602,6 @@ h1 {
     .search-row button {
         width:100%;
     }
-}
 .rating-page {
     width:100%;
     max-width:600px;
@@ -615,36 +614,6 @@ h1 {
 .rating-page * {
     box-sizing:border-box;
 }
-.suggestion-panel { display:none;
-    margin-top:35px;
-    padding:20px;
-    border-radius:15px;
-    background:rgba(255,255,255,.05);
-    border:1px solid rgba(255,0,204,.25);
-}
-.suggestion-panel h3 {
-    margin:0 0 18px;
-    text-align:center;
-    color:#ff00cc;
-    font-size:20px;
-}
-.suggestion-panel input,
-.suggestion-panel textarea {
-    width:100%;
-    box-sizing:border-box;
-    margin-bottom:12px;
-    padding:12px 15px;
-    border:1px solid rgba(255,0,204,.35);
-    border-radius:15px;
-    background:#111;
-    color:#fff;
-    font:16px Arial;
-}
-.suggestion-panel textarea {
-    min-height:90px;
-    resize:vertical;
-}
-
 </style>
 <body>
 <div class="header">
@@ -665,10 +634,12 @@ h1 {
             Search a model by platform and ID,
             discover community ratings and experiences.
         </p>
+    </section>
+
     <section class="platform-section">
         <button class="platform-button" onclick="selectPlatform('eLive', this)">eLive</button>
         <button class="platform-button" onclick="selectPlatform('Tango', this)">Tango</button>
-        <button class="platform-button" onclick="suggestApp()">Suggest an App</button>
+        <button class="platform-button" onclick="selectPlatform('Other', this)">Other</button>
     </section>
 
     <section id="searchPanel" class="search-panel">
@@ -706,13 +677,6 @@ h1 {
         </section>
     </section>
 
-    <section id="suggestionPanel" class="suggestion-panel">
-        <h3>Suggest an App</h3>
-        <input id="suggestAppName" type="text" placeholder="App Name">
-        <textarea id="suggestAppNote" placeholder="Why should we add it?"></textarea>
-        <button class="rate-button" onclick="submitAppSuggestion()">Submit Suggestion</button>
-    </section>
-
     <section class="latest-ratings">
         <h2>Latest Ratings</h2>
 
@@ -741,22 +705,6 @@ h1 {
 
 <script>
 let selectedPlatform = "";
-let profileImages = [];
-fetch("images/rating-hub/profile-pool/manifest.json")
-    .then(function(response) { return response.json(); })
-    .then(function(images) { profileImages = images; })
-    .catch(function() { profileImages = []; });
-
-function getRandomProfileImage() {
-    if (!profileImages.length) return "images/Icon.png";
-    return "images/rating-hub/profile-pool/" + profileImages[Math.floor(Math.random() * profileImages.length)];
-}
-function getPlatformLogo(platform) {
-    const name = String(platform || "").trim().toLowerCase();
-    if (name === "elive") return "images/rating-hub/platforms/elive.webp";
-    if (name === "tango") return "images/rating-hub/platforms/tango.webp";
-    return "images/Icon.png";
-}
 
 const latestRatings = [
     {
@@ -842,8 +790,6 @@ function showModel(model) {
     document.getElementById("resultId").textContent =
         "ID: " + model.id;
 
-    document.getElementById("modelHero").style.backgroundImage =
-        "linear-gradient(to bottom,rgba(0,0,0,.1),rgba(0,0,0,.95)), url('" + getRandomProfileImage() + "')";
     setRating(model.rating);
 
     document.getElementById("modelResult").style.display =
@@ -879,50 +825,6 @@ function setRating(score) {
         "⭐ " + score.toFixed(1) + " / 5";
 }
 
-function suggestApp() {
-    document.getElementById("searchPanel").style.display = "none";
-    document.getElementById("modelResult").style.display = "none";
-    document.getElementById("suggestionPanel").style.display = "block";
-    document.getElementById("suggestAppName").value = "";
-    document.getElementById("suggestAppNote").value = "";
-    document.getElementById("suggestionPanel").scrollIntoView({ behavior:"smooth", block:"start" });
-    document.getElementById("suggestAppName").focus();
-}
-
-
-function submitAppSuggestion() {
-    const appName = document.getElementById("suggestAppName").value.trim();
-    const suggestion = document.getElementById("suggestAppNote").value.trim();
-
-    if (!appName) {
-        alert("Please enter the app name.");
-        return;
-    }
-
-    const button = document.querySelector("#suggestionPanel .rate-button");
-    button.disabled = true;
-    button.textContent = "Sending...";
-
-    fetch("https://script.google.com/macros/s/AKfycbyLQ80RyNIUVy6bbk48YjjPAErlu33brQOxd4XXDJznwBlrXipedgkN3Ert6_ya70np/exec", {
-        method: "POST",
-        headers: {"Content-Type":"text/plain;charset=utf-8"},
-        body: JSON.stringify({appName:appName, suggestion:suggestion})
-    })
-    .then(function() {
-        alert("Thank you! Your app suggestion has been submitted.");
-        document.getElementById("suggestAppName").value = "";
-        document.getElementById("suggestAppNote").value = "";
-    })
-    .catch(function() {
-        alert("Sorry, something went wrong. Please try again.");
-    })
-    .finally(function() {
-        button.disabled = false;
-        button.textContent = "Submit Suggestion";
-    });
-}
-
-
 function startRating() {
 
     alert(
@@ -944,7 +846,7 @@ function renderLatestRatings() {
         card.className = "rating-tab";
 
         card.innerHTML = `
-            <img src="${getPlatformLogo(model.platform)}" alt="${model.platform}">
+            <img src="images/Icon.png" alt="">
             <div class="rating-tab-info">
                 <div class="rating-tab-platform">
                     ${model.platform}

@@ -1,0 +1,62 @@
+<div class="rating-page">
+
+    <section class="rating-intro">
+        <h2>Know Them Well</h2>
+        <p>
+            Search a model by platform and ID,
+            discover community ratings and experiences.
+        </p>
+    </section>
+
+    <section class="platform-section">
+        <button class="platform-button" onclick="selectPlatform('eLive', this)">eLive</button>
+        <button class="platform-button" onclick="selectPlatform('Tango', this)">Tango</button>
+        <button class="platform-button" onclick="selectPlatform('Other', this)">Other</button>
+    </section>
+
+    <section id="searchPanel" class="search-panel">
+        <h3 id="searchTitle">Search Model</h3>
+        <div class="search-row">
+            <input id="modelIdInput" type="text" placeholder="Enter Model ID">
+            <button onclick="searchModel()">Search</button>
+        </div>
+    </section>
+
+    <section id="modelResult" class="model-result">
+        <div class="model-hero" id="modelHero">
+            <div class="model-overlay">
+                <div id="resultPlatform" class="result-platform"></div>
+                <h2 id="resultName">Model Name</h2>
+                <div id="resultId" class="result-id">ID: 0000</div>
+            </div>
+        </div>
+
+        <button id="ratingCard" class="rating-card">
+            ⭐ No rating yet
+        </button>
+
+        <section class="experiences">
+            <h3>Community Experiences</h3>
+            <div id="experienceList">
+                <div class="empty-experience">
+                    No community experiences yet.
+                </div>
+            </div>
+
+            <button class="rate-button" onclick="startRating()">
+                Rate This Model
+            </button>
+        </section>
+    </section>
+
+    <section class="latest-ratings">
+        <h2>Latest Ratings</h2>
+
+        <div id="ratingGallery" class="rating-gallery"></div>
+
+        <div id="noRatings" class="no-ratings">
+            No ratings yet.
+        </div>
+    </section>
+
+</div>
