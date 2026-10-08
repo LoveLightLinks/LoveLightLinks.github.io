@@ -742,8 +742,20 @@ h1 {
 </footer>
 
 <script>
+
+const API_URL = "https://script.google.com/macros/s/AKfycbxTczUj06k5dmyQUuIk6avx_glA8PX6viAiIm1tkWRxm_84oHMk2X2mi0go-POODTK0Rg/exec";
+
 let selectedPlatform = "";
+let selectedModel = null;
 let profileImages = [];
+let currentUser = null;
+
+let discoverySuperStars = [];
+let discoveryRecent = [];
+let superStarIndex = 0;
+let recentIndex = 0;
+let discoveryLoading = false;
+
 fetch("images/rating-hub/profile-pool/manifest.json")
     .then(function(response) { return response.json(); })
     .then(function(images) { profileImages = images; })
@@ -751,38 +763,57 @@ fetch("images/rating-hub/profile-pool/manifest.json")
 
 function getRandomProfileImage() {
     if (!profileImages.length) return "images/Icon.png";
-    return "images/rating-hub/profile-pool/" + profileImages[Math.floor(Math.random() * profileImages.length)];
+    return "images/rating-hub/profile-pool/" +
+        profileImages[Math.floor(Math.random() * profileImages.length)];
 }
+
 function getPlatformLogo(platform) {
     const name = String(platform || "").trim().toLowerCase();
-    if (name === "elive") return "images/rating-hub/platforms/elive.webp";
-    if (name === "tango") return "images/rating-hub/platforms/tango.webp";
+
+    if (name === "elive") {
+        return "images/rating-hub/platforms/elive.webp";
+    }
+
+    if (name === "tango") {
+        return "images/rating-hub/platforms/tango.webp";
+    }
+
     return "images/Icon.png";
 }
 
-const latestRatings = [
-    {
-        platform:"eLive",
-        id:"1234",
-        name:"Sample Model 1",
-        rating:4.8,
-        date:"2026-08-05"
-    },
-    {
-        platform:"Tango",
-        id:"5678",
-        name:"Sample Model 2",
-        rating:4.2,
-        date:"2026-07-20"
-    },
-    {
-        platform:"eLive",
-        id:"2468",
-        name:"Sample Model 3",
-        rating:3.5,
-        date:"2026-08-25"
-    }
-];
+function escapeHtml(value) {
+    return String(value == null ? "" : value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+function apiPost(action, data) {
+    return fetch(API_URL, {
+        method: "POST",
+        headers: {
+            "Content-Type": "text/plain;charset=utf-8"
+        },
+        body: JSON.stringify(
+            Object.assign({ action: action }, data || {})
+        )
+    }).then(function(response) {
+        if (!response.ok) {
+            throw new Error("API request failed.");
+        }
+
+        return response.json();
+    });
+}
+
+function getRatings(platform, modelId) {
+    return apiPost("getratings", {
+        platform: platform || "",
+        modelId: modelId || ""
+    });
+}
 
 function selectPlatform(platform, button) {
 
@@ -796,6 +827,7 @@ function selectPlatform(platform, button) {
     button.classList.add("active");
 
     document.getElementById("searchPanel").style.display = "block";
+    document.getElementById("suggestionPanel").style.display = "none";
 
     document.getElementById("searchTitle").textContent =
         "Search " + platform + " Model";
@@ -806,31 +838,84 @@ function selectPlatform(platform, button) {
     document.getElementById("modelResult").style.display = "none";
 }
 
-function searchModel() {
+async function searchModel() {
 
     const id = document.getElementById("modelIdInput")
         .value.trim();
 
-    if (!id || !selectedPlatform) return;
+    if (!id || !selectedPlatform) {
+        return;
+    }
 
-    const existing = latestRatings.find(function(model) {
-        return model.platform.toLowerCase() === selectedPlatform.toLowerCase()
-            && model.id.toLowerCase() === id.toLowerCase();
-    });
+    const button = document.querySelector(".search-row button");
 
-    if (existing) {
-        showModel(existing);
-    } else {
-        showModel({
-            platform:selectedPlatform,
-            id:id,
-            name:"Model " + id,
-            rating:0
-        });
+    if (button) {
+        button.disabled = true;
+        button.textContent = "Searching...";
+    }
+
+    try {
+
+        const result = await getRatings(selectedPlatform, id);
+
+        if (!result.success) {
+            throw new Error(result.error || "Unable to load ratings.");
+        }
+
+        const ratings = Array.isArray(result.ratings)
+            ? result.ratings
+            : [];
+
+        const modelName =
+            ratings.length && ratings[0].modelName
+                ? ratings[0].modelName
+                : "Model " + id;
+
+        selectedModel = {
+            platform: selectedPlatform,
+            id: id,
+            name: modelName,
+            ratings: ratings
+        };
+
+        showModel(selectedModel);
+
+    } catch (error) {
+
+        alert(
+            "Unable to load this model right now.\n\n" +
+            error.message
+        );
+
+    } finally {
+
+        if (button) {
+            button.disabled = false;
+            button.textContent = "Search";
+        }
     }
 }
 
+function calculateAverage(ratings) {
+
+    if (!ratings || !ratings.length) {
+        return 0;
+    }
+
+    const total = ratings.reduce(function(sum, item) {
+        return sum + Number(item.rating || 0);
+    }, 0);
+
+    return total / ratings.length;
+}
+
 function showModel(model) {
+
+    selectedModel = model;
+
+    const ratings = Array.isArray(model.ratings)
+        ? model.ratings
+        : [];
 
     document.getElementById("resultPlatform").textContent =
         model.platform;
@@ -842,15 +927,19 @@ function showModel(model) {
         "ID: " + model.id;
 
     document.getElementById("modelHero").style.backgroundImage =
-        "linear-gradient(to bottom,rgba(0,0,0,.1),rgba(0,0,0,.95)), url('" + getRandomProfileImage() + "')";
-    setRating(model.rating);
+        "linear-gradient(to bottom,rgba(0,0,0,.1),rgba(0,0,0,.95)), url('" +
+        getRandomProfileImage() +
+        "')";
+
+    setRating(calculateAverage(ratings));
+    renderExperiences(ratings);
 
     document.getElementById("modelResult").style.display =
         "block";
 
     document.getElementById("modelResult").scrollIntoView({
-        behavior:"smooth",
-        block:"start"
+        behavior: "smooth",
+        block: "start"
     });
 }
 
@@ -858,7 +947,7 @@ function setRating(score) {
 
     const card = document.getElementById("ratingCard");
 
-    card.classList.remove("high","medium","low","none");
+    card.classList.remove("high", "medium", "low", "none");
 
     if (!score || score <= 0) {
         card.classList.add("none");
@@ -875,84 +964,321 @@ function setRating(score) {
     }
 
     card.textContent =
-        "⭐ " + score.toFixed(1) + " / 5";
+        "⭐ " + Number(score).toFixed(1) + " / 5";
+}
+
+function formatDate(value) {
+
+    if (!value) return "";
+
+    const date = new Date(value);
+
+    if (isNaN(date.getTime())) {
+        return String(value);
+    }
+
+    return date.toLocaleDateString("en-IN", {
+        day: "numeric",
+        month: "short",
+        year: "numeric"
+    });
+}
+
+function renderExperiences(ratings) {
+
+    const container =
+        document.getElementById("experienceList");
+
+    container.innerHTML = "";
+
+    const experiences = (ratings || [])
+        .filter(function(item) {
+            return String(item.experience || "").trim();
+        })
+        .sort(function(a, b) {
+            return new Date(b.date) - new Date(a.date);
+        });
+
+    if (!experiences.length) {
+
+        container.innerHTML =
+            '<div class="empty-experience">' +
+            'No community experiences yet.' +
+            '</div>';
+
+        return;
+    }
+
+    experiences.forEach(function(item) {
+
+        const card = document.createElement("div");
+
+        card.className = "experience-card";
+
+        card.innerHTML =
+            '<div style="font-weight:bold;margin-bottom:6px;">' +
+                escapeHtml(item.publicLabel || "Anonymous") +
+            '</div>' +
+            '<div style="margin-bottom:8px;">' +
+                "⭐ " + Number(item.rating || 0).toFixed(1) + " / 5" +
+            '</div>' +
+            '<div style="line-height:1.5;">' +
+                escapeHtml(item.experience) +
+            '</div>' +
+            '<div style="font-size:12px;opacity:.55;margin-top:8px;">' +
+                escapeHtml(formatDate(item.date)) +
+            '</div>';
+
+        container.appendChild(card);
+    });
 }
 
 function suggestApp() {
+
     document.getElementById("searchPanel").style.display = "none";
     document.getElementById("modelResult").style.display = "none";
     document.getElementById("suggestionPanel").style.display = "block";
+
     document.getElementById("suggestAppName").value = "";
     document.getElementById("suggestAppNote").value = "";
-    document.getElementById("suggestionPanel").scrollIntoView({ behavior:"smooth", block:"start" });
+
+    document.getElementById("suggestionPanel")
+        .scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+
     document.getElementById("suggestAppName").focus();
 }
 
-
 function submitAppSuggestion() {
-    const appName = document.getElementById("suggestAppName").value.trim();
-    const suggestion = document.getElementById("suggestAppNote").value.trim();
+
+    const appName =
+        document.getElementById("suggestAppName").value.trim();
+
+    const suggestion =
+        document.getElementById("suggestAppNote").value.trim();
 
     if (!appName) {
         alert("Please enter the app name.");
         return;
     }
 
-    const button = document.querySelector("#suggestionPanel .rate-button");
+    const button =
+        document.querySelector("#suggestionPanel .rate-button");
+
     button.disabled = true;
     button.textContent = "Sending...";
 
-    fetch("https://script.google.com/macros/s/AKfycbyLQ80RyNIUVy6bbk48YjjPAErlu33brQOxd4XXDJznwBlrXipedgkN3Ert6_ya70np/exec", {
-        method: "POST",
-        headers: {"Content-Type":"text/plain;charset=utf-8"},
-        body: JSON.stringify({appName:appName, suggestion:suggestion})
+    apiPost("submitSuggestion", {
+        appName: appName,
+        suggestion: suggestion
     })
-    .then(function() {
+    .then(function(result) {
+
+        if (!result.success) {
+            throw new Error(
+                result.error || "Unable to submit suggestion."
+            );
+        }
+
         alert("Thank you! Your app suggestion has been submitted.");
+
         document.getElementById("suggestAppName").value = "";
         document.getElementById("suggestAppNote").value = "";
+
     })
-    .catch(function() {
-        alert("Sorry, something went wrong. Please try again.");
+    .catch(function(error) {
+
+        alert(
+            "Sorry, something went wrong.\n\n" +
+            error.message
+        );
+
     })
     .finally(function() {
+
         button.disabled = false;
         button.textContent = "Submit Suggestion";
     });
 }
 
+async function startRating() {
 
-function startRating() {
+    if (!selectedModel) {
+        alert("Please search for a model first.");
+        return;
+    }
 
-    alert(
-        "The rating and verification system will be connected after the visual design is approved."
+    if (!currentUser) {
+
+        const email = prompt(
+            "Enter your registered email:"
+        );
+
+        if (!email) return;
+
+        const pin = prompt(
+            "Enter your 6-digit Love Light PIN:"
+        );
+
+        if (!pin) return;
+
+        try {
+
+            const loginResult = await apiPost("login", {
+                email: email.trim(),
+                pin: pin.trim()
+            });
+
+            if (!loginResult.success) {
+                alert(
+                    loginResult.error ||
+                    "Login failed."
+                );
+                return;
+            }
+
+            currentUser = {
+                userId: loginResult.userId,
+                name: loginResult.name
+            };
+
+        } catch (error) {
+
+            alert(
+                "Unable to login right now.\n\n" +
+                error.message
+            );
+
+            return;
+        }
+    }
+
+    const ratingInput = prompt(
+        "Give this model a rating from 1 to 5:"
     );
+
+    if (ratingInput === null) return;
+
+    const rating = Number(ratingInput);
+
+    if (!Number.isFinite(rating) || rating < 1 || rating > 5) {
+        alert("Please enter a rating between 1 and 5.");
+        return;
+    }
+
+    const experience = prompt(
+        "Share your experience with this model:"
+    );
+
+    if (experience === null || !experience.trim()) {
+        alert("Please enter your experience.");
+        return;
+    }
+
+    try {
+
+        const result = await apiPost("submitrating", {
+            userId: currentUser.userId,
+            platform: selectedModel.platform,
+            modelId: selectedModel.id,
+            modelName: selectedModel.name,
+            rating: rating,
+            experience: experience.trim()
+        });
+
+        if (!result.success) {
+            alert(
+                result.error ||
+                "Unable to submit your rating."
+            );
+            return;
+        }
+
+        alert(
+            result.message ||
+            "Your rating has been submitted successfully."
+        );
+
+        const refreshed = await getRatings(
+            selectedModel.platform,
+            selectedModel.id
+        );
+
+        if (refreshed.success) {
+
+            selectedModel.ratings =
+                Array.isArray(refreshed.ratings)
+                    ? refreshed.ratings
+                    : [];
+
+            showModel(selectedModel);
+        }
+
+        renderRatingDiscovery();
+
+    } catch (error) {
+
+        alert(
+            "Unable to submit your rating right now.\n\n" +
+            error.message
+        );
+    }
 }
 
 function createRatingCard(model) {
+
     const card = document.createElement("button");
+
     card.className = "rating-tab";
 
     card.innerHTML = `
-        <img src="${getPlatformLogo(model.platform)}" alt="${model.platform}">
+        <img src="${getPlatformLogo(model.platform)}" alt="${escapeHtml(model.platform)}">
         <div class="rating-tab-info">
-            <div class="rating-tab-platform">${model.platform}</div>
-            <div class="rating-tab-name">${model.name}</div>
-            <div class="rating-tab-id">ID: ${model.id}</div>
-            <div class="rating-tab-score">⭐ ${model.rating.toFixed(1)} / 5</div>
+            <div class="rating-tab-platform">${escapeHtml(model.platform)}</div>
+            <div class="rating-tab-name">${escapeHtml(model.name)}</div>
+            <div class="rating-tab-id">ID: ${escapeHtml(model.id)}</div>
+            <div class="rating-tab-score">⭐ ${Number(model.rating).toFixed(1)} / 5</div>
         </div>
     `;
 
-    card.addEventListener("click", function() {
-        selectedPlatform = model.platform;
-        showModel(model);
+    card.addEventListener("click", async function() {
+
+        try {
+
+            const result =
+                await getRatings(model.platform, model.id);
+
+            if (!result.success) {
+                throw new Error(
+                    result.error || "Unable to load model."
+                );
+            }
+
+            showModel({
+                platform: model.platform,
+                id: model.id,
+                name: model.name,
+                ratings: result.ratings || []
+            });
+
+        } catch (error) {
+
+            alert(
+                "Unable to load this model.\n\n" +
+                error.message
+            );
+        }
     });
 
     return card;
 }
 
 function sortRatings(a, b) {
-    const scoreDifference = Number(b.rating) - Number(a.rating);
+
+    const scoreDifference =
+        Number(b.rating) - Number(a.rating);
 
     if (scoreDifference !== 0) {
         return scoreDifference;
@@ -961,64 +1287,213 @@ function sortRatings(a, b) {
     return new Date(b.date) - new Date(a.date);
 }
 
-function renderRatingDiscovery() {
+function groupRatings(ratings) {
+
+    const groups = {};
+
+    (ratings || []).forEach(function(item) {
+
+        const platform =
+            String(item.platform || "").trim();
+
+        const id =
+            String(item.modelId || "").trim();
+
+        if (!platform || !id) return;
+
+        const key =
+            platform.toLowerCase() + "|" +
+            id.toLowerCase();
+
+        if (!groups[key]) {
+
+            groups[key] = {
+                platform: platform,
+                id: id,
+                name: item.modelName || ("Model " + id),
+                ratings: []
+            };
+        }
+
+        groups[key].ratings.push(item);
+    });
+
+    return Object.keys(groups).map(function(key) {
+
+        const group = groups[key];
+
+        const latest =
+            group.ratings.slice().sort(function(a, b) {
+                return new Date(b.date) - new Date(a.date);
+            })[0];
+
+        return {
+            platform: group.platform,
+            id: group.id,
+            name: group.name,
+            rating: calculateAverage(group.ratings),
+            date: latest ? latest.date : "",
+            ratings: group.ratings
+        };
+    });
+}
+
+function renderDiscoveryBatch() {
+
     const superStarsGallery =
         document.getElementById("superStarsGallery");
 
     const recentGallery =
         document.getElementById("ratingGallery");
 
-    const noSuperStars =
-        document.getElementById("noSuperStars");
+    let added = false;
 
-    const noRatings =
-        document.getElementById("noRatings");
+    const superStarBatch =
+        discoverySuperStars.slice(
+            superStarIndex,
+            superStarIndex + 20
+        );
 
-    const now = new Date();
-    const thirtyDaysAgo =
-        new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
-    const sixtyDaysAgo =
-        new Date(now.getTime() - 60 * 24 * 60 * 60 * 1000);
-
-    const validRatings = latestRatings.filter(function(model) {
-        return Number(model.rating) >= 3 &&
-               model.date &&
-               new Date(model.date) <= now;
+    superStarBatch.forEach(function(model) {
+        superStarsGallery.appendChild(
+            createRatingCard(model)
+        );
     });
 
-    const superStars = validRatings
-        .filter(function(model) {
-            const date = new Date(model.date);
-            return date >= sixtyDaysAgo && date < thirtyDaysAgo;
-        })
-        .sort(sortRatings);
+    if (superStarBatch.length) {
+        added = true;
+        superStarIndex += superStarBatch.length;
+    }
 
-    const recentRatings = validRatings
-        .filter(function(model) {
-            const date = new Date(model.date);
-            return date >= thirtyDaysAgo && date <= now;
-        })
-        .sort(sortRatings);
+    const recentBatch =
+        discoveryRecent.slice(
+            recentIndex,
+            recentIndex + 20
+        );
 
-    superStarsGallery.innerHTML = "";
-    recentGallery.innerHTML = "";
-
-    superStars.forEach(function(model) {
-        superStarsGallery.appendChild(createRatingCard(model));
+    recentBatch.forEach(function(model) {
+        recentGallery.appendChild(
+            createRatingCard(model)
+        );
     });
 
-    recentRatings.forEach(function(model) {
-        recentGallery.appendChild(createRatingCard(model));
-    });
+    if (recentBatch.length) {
+        added = true;
+        recentIndex += recentBatch.length;
+    }
 
-    noSuperStars.style.display =
-        superStars.length ? "none" : "block";
+    document.getElementById("noSuperStars").style.display =
+        discoverySuperStars.length ? "none" : "block";
 
-    noRatings.style.display =
-        recentRatings.length ? "none" : "block";
+    document.getElementById("noRatings").style.display =
+        discoveryRecent.length ? "none" : "block";
+
+    return added;
 }
 
+async function renderRatingDiscovery() {
+
+    if (discoveryLoading) return;
+
+    discoveryLoading = true;
+
+    try {
+
+        const result = await getRatings("", "");
+
+        if (!result.success) {
+            throw new Error(
+                result.error || "Unable to load ratings."
+            );
+        }
+
+        const grouped =
+            groupRatings(result.ratings || []);
+
+        const now = new Date();
+
+        const thirtyDaysAgo =
+            new Date(
+                now.getTime() -
+                30 * 24 * 60 * 60 * 1000
+            );
+
+        const sixtyDaysAgo =
+            new Date(
+                now.getTime() -
+                60 * 24 * 60 * 60 * 1000
+            );
+
+        const validRatings =
+            grouped.filter(function(model) {
+                return Number(model.rating) >= 3 &&
+                       model.date &&
+                       new Date(model.date) <= now;
+            });
+
+        discoverySuperStars =
+            validRatings
+                .filter(function(model) {
+
+                    const date = new Date(model.date);
+
+                    return date >= sixtyDaysAgo &&
+                           date < thirtyDaysAgo;
+                })
+                .sort(sortRatings);
+
+        discoveryRecent =
+            validRatings
+                .filter(function(model) {
+
+                    const date = new Date(model.date);
+
+                    return date >= thirtyDaysAgo &&
+                           date <= now;
+                })
+                .sort(sortRatings);
+
+        superStarIndex = 0;
+        recentIndex = 0;
+
+        document.getElementById("superStarsGallery").innerHTML = "";
+        document.getElementById("ratingGallery").innerHTML = "";
+
+        renderDiscoveryBatch();
+
+    } catch (error) {
+
+        console.error(error);
+
+        document.getElementById("noSuperStars").style.display = "block";
+        document.getElementById("noRatings").style.display = "block";
+
+    } finally {
+
+        discoveryLoading = false;
+    }
+}
+
+window.addEventListener("scroll", function() {
+
+    if (
+        window.innerHeight +
+        window.scrollY <
+        document.body.offsetHeight - 700
+    ) {
+        return;
+    }
+
+    if (
+        superStarIndex < discoverySuperStars.length ||
+        recentIndex < discoveryRecent.length
+    ) {
+        renderDiscoveryBatch();
+    }
+});
+
 renderRatingDiscovery();
+
 </script>
 </body>
 </html>
