@@ -1,0 +1,1249 @@
+/*************************************************
+ * LOVE LIGHT STREAM
+ * Backend — Foundation
+ *************************************************/
+
+const APP_NAME = "Love Light Stream";
+const SHEET_NAME = "Users";
+
+/**
+ * FIRST-TIME SETUP
+ * Creates the Google Sheet database automatically.
+ */
+function setupLoveLightStream() {
+  const props = PropertiesService.getScriptProperties();
+
+  let spreadsheetId = props.getProperty("SPREADSHEET_ID");
+
+  if (spreadsheetId) {
+    Logger.log("Database already exists.");
+    Logger.log("Spreadsheet ID: " + spreadsheetId);
+    return;
+  }
+
+  const spreadsheet = SpreadsheetApp.create(
+    "Love Light Stream - User Database"
+  );
+
+  const sheet = spreadsheet.getSheets()[0];
+  sheet.setName(SHEET_NAME);
+
+  sheet.appendRow([
+    "User ID",
+    "Email",
+    "Name",
+    "PIN",
+    "Verified",
+    "Created At",
+    "Last Login"
+  ]);
+
+  props.setProperty(
+    "SPREADSHEET_ID",
+    spreadsheet.getId()
+  );
+
+  Logger.log("Love Light Stream database created.");
+  Logger.log("Spreadsheet ID: " + spreadsheet.getId());
+}
+
+
+/**
+ * Returns the database sheet.
+ */
+function getUsersSheet() {
+  const spreadsheetId =
+    PropertiesService.getScriptProperties()
+      .getProperty("SPREADSHEET_ID");
+
+  if (!spreadsheetId) {
+    throw new Error(
+      "Database not initialized. Run setupLoveLightStream() first."
+    );
+  }
+
+  const spreadsheet =
+    SpreadsheetApp.openById(spreadsheetId);
+
+  return spreadsheet.getSheetByName(SHEET_NAME);
+}
+
+
+/**
+ * Web App GET endpoint.
+ */
+function doGet() {
+  return ContentService
+    .createTextOutput(
+      JSON.stringify({
+        success: true,
+        app: APP_NAME,
+        status: "online"
+      })
+    )
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+/**
+ * LOVE LIGHT STREAM — WEB APP API ROUTER
+ */
+function doPost(e) {
+
+  try {
+
+    const data =
+      e && e.postData && e.postData.contents
+        ? JSON.parse(e.postData.contents)
+        : {};
+
+    const action =
+      String(data.action || "").trim().toLowerCase();
+
+    // -------------------------------------------------
+    // CREATE USER
+    // -------------------------------------------------
+
+    if (action === "createuser") {
+
+      const result = createLoveLightUser(
+        data.email,
+        data.name
+      );
+
+      if (!result.success) {
+        return apiResponse(result);
+      }
+
+      // Only return information needed by the new user.
+      return apiResponse({
+        success: true,
+        userId: result.userId,
+        message: "Account created successfully."
+      });
+    }
+
+    // -------------------------------------------------
+    // SEND PIN
+    // -------------------------------------------------
+
+    if (action === "sendpin") {
+
+      return apiResponse(
+        sendPINEmail(data.email)
+      );
+    }
+
+    // -------------------------------------------------
+    // VERIFY PIN
+    // -------------------------------------------------
+
+    if (action === "verifypin") {
+
+      const result = verifyLoveLightUser(
+        data.email,
+        data.pin
+      );
+
+      if (!result.success) {
+        return apiResponse(result);
+      }
+
+      return apiResponse({
+        success: true,
+        userId: result.userId,
+        name: result.name,
+        message: "Account verified successfully."
+      });
+    }
+
+    // -------------------------------------------------
+    // LOGIN
+    // -------------------------------------------------
+
+    if (action === "login") {
+
+      const result = loginLoveLightUser(
+        data.userId || data.identifier
+      );
+
+      if (!result.success) {
+        return apiResponse(result);
+      }
+
+      return apiResponse({
+        success: true,
+        userId: result.userId,
+        name: result.name,
+        message: "Login successful."
+      });
+    }
+
+    // -------------------------------------------------
+    // FORGOT LOVE LIGHT ID
+    // -------------------------------------------------
+
+    if (action === "forgotid") {
+      return apiResponse(sendLoveLightIdEmail(data.email));
+    }
+
+    // -------------------------------------------------
+    // SUBMIT RATING
+    // -------------------------------------------------
+
+    if (action === "submitrating") {
+
+      const result = submitRating(
+        data.userId,
+        data.platform,
+        data.modelId,
+        data.modelName,
+        data.rating,
+        data.experience
+      );
+
+      return apiResponse(result);
+    }
+
+    // -------------------------------------------------
+    // GET PUBLIC RATINGS
+    // -------------------------------------------------
+
+    if (action === "getratings") {
+
+      const result = getPublicRatings(
+        data.platform,
+        data.modelId
+      );
+
+      return apiResponse(result);
+    }
+
+// =====================================================
+// APP SUGGESTION
+// =====================================================
+
+if (action === "submitsuggestion") {
+
+  const result = submitSuggestion(
+    data.appName,
+    data.suggestion
+  );
+
+  if (!result.success) {
+    return apiResponse(result);
+  }
+
+  return apiResponse({
+    success: true,
+    message: result.message
+  });
+}
+
+    // -------------------------------------------------
+    // UNKNOWN ACTION
+    // -------------------------------------------------
+
+    return apiResponse({
+      success: false,
+      error: "Unknown API action."
+    });
+
+  } catch (error) {
+
+    return apiResponse({
+      success: false,
+      error: error.message
+    });
+  }
+}
+
+
+/**
+ * Standard JSON API response.
+ */
+function apiResponse(data) {
+
+  return ContentService
+    .createTextOutput(
+      JSON.stringify(data)
+    )
+    .setMimeType(
+      ContentService.MimeType.JSON
+    );
+}
+
+
+// ======================================================
+// LOVE LIGHT STREAM — USER REGISTRATION
+// ======================================================
+
+/**
+ * Normalize email address.
+ */
+function normalizeEmail(email) {
+  return String(email || "").trim().toLowerCase();
+}
+
+
+/**
+ * Find an existing user by email.
+ */
+function findUserByEmail(email) {
+  const sheet = getUsersSheet();
+  const normalizedEmail = normalizeEmail(email);
+
+  if (!normalizedEmail) {
+    return null;
+  }
+
+  const data = sheet.getDataRange().getValues();
+
+  // Skip header row
+  for (let i = 1; i < data.length; i++) {
+    const rowEmail = normalizeEmail(data[i][1]);
+
+    if (rowEmail === normalizedEmail) {
+      return {
+        row: i + 1,
+        userId: data[i][0],
+        email: data[i][1],
+        name: data[i][2],
+        pin: data[i][3],
+        verified: data[i][4],
+        createdAt: data[i][5],
+        lastLogin: data[i][6]
+      };
+    }
+  }
+
+  return null;
+}
+
+
+/**
+ * Generate a unique public ID from the email username.
+ * Example: sandeep@gmail.com -> SAND1234
+ * Existing IDs are not changed.
+ */
+function generateLoveLightUserId(email) {
+  const localPart = normalizeEmail(email).split("@")[0] || "";
+  const letters = localPart.replace(/[^a-z]/gi, "").substring(0, 4).toUpperCase();
+
+  if (!letters) {
+    throw new Error("Email username must contain at least one letter.");
+  }
+
+  const sheet = getUsersSheet();
+  const data = sheet.getDataRange().getValues();
+  const existingIds = new Set(
+    data.slice(1).map(row => String(row[0] || "").trim().toUpperCase())
+  );
+
+  for (let attempt = 0; attempt < 1000; attempt++) {
+    const digits = String(Math.floor(Math.random() * 10000)).padStart(4, "0");
+    const userId = letters + digits;
+
+    if (!existingIds.has(userId)) {
+      return userId;
+    }
+  }
+
+  throw new Error("Could not generate a unique Love Light ID. Please try again.");
+}
+
+
+/**
+ * Generate a 6-digit Love Light PIN.
+ */
+function generateLoveLightPIN() {
+  return String(
+    Math.floor(100000 + Math.random() * 900000)
+  );
+}
+
+
+/**
+ * Create a new Love Light Stream user.
+ *
+ * Required:
+ * email
+ * name
+ */
+function createLoveLightUser(email, name) {
+  email = normalizeEmail(email);
+  name = String(name || "").trim();
+
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return { success: false, error: "Please enter a valid email address." };
+  }
+
+  if (!name) {
+    return { success: false, error: "Display Name is required." };
+  }
+
+  const existingUser = findUserByEmail(email);
+  if (existingUser) {
+    return {
+      success: false,
+      error: "An account with this email already exists. Use Forgot ID if needed."
+    };
+  }
+
+  const userId = generateLoveLightUserId(email);
+  const createdAt = new Date();
+  const sheet = getUsersSheet();
+
+  // Keep the existing database columns for compatibility.
+  sheet.appendRow([userId, email, name, "", true, createdAt, ""]);
+
+  try {
+    MailApp.sendEmail({
+      to: email,
+      subject: "Your Love Light Stream ID",
+      body:
+        "Hello " + name + ",\n\n" +
+        "Your Love Light ID is: " + userId + "\n\n" +
+        "Keep this ID safe. You will need it whenever you submit a rating.\n\n" +
+        "Your Display Name may appear publicly, but your email will remain private.\n\n" +
+        "Love Light Stream"
+    });
+  } catch (error) {
+    Logger.log("ID email failed for " + email + ": " + error.message);
+    return {
+      success: true,
+      userId: userId,
+      name: name,
+      message: "Account created, but the email could not be sent. Contact support with your ID: " + userId
+    };
+  }
+
+  return {
+    success: true,
+    userId: userId,
+    name: name,
+    message: "Account created successfully. Your Love Light ID has been emailed to you."
+  };
+}
+
+// ======================================================
+// LOVE LIGHT STREAM — ID RECOVERY
+// ======================================================
+
+function sendLoveLightIdEmail(email) {
+  email = normalizeEmail(email);
+
+  if (!email) {
+    return { success: false, error: "Email is required." };
+  }
+
+  const user = findUserByEmail(email);
+
+  if (!user) {
+    return {
+      success: false,
+      error: "No Love Light ID found for this email. Please create one first."
+    };
+  }
+
+  MailApp.sendEmail({
+    to: user.email,
+    subject: "Your Love Light Stream ID",
+    body:
+      "Hello " + user.name + ",\n\n" +
+      "Your Love Light ID is: " + user.userId + "\n\n" +
+      "Keep this ID safe. You will need it whenever you submit a rating.\n\n" +
+      "Love Light Stream"
+  });
+
+  return { success: true, message: "Your Love Light ID has been emailed to you." };
+}
+
+// ======================================================
+// LOVE LIGHT STREAM — PIN EMAIL & VERIFICATION
+// ======================================================
+
+/**
+ * Send a user's PIN by email.
+ */
+function sendPINEmail(email) {
+  email = normalizeEmail(email);
+
+  if (!email) {
+    return {
+      success: false,
+      error: "Email is required."
+    };
+  }
+
+  const user = findUserByEmail(email);
+
+  if (!user) {
+    return {
+      success: false,
+      error: "User not found."
+    };
+  }
+
+  MailApp.sendEmail({
+    to: user.email,
+    subject: "Your Love Light Stream PIN",
+    body:
+      "Hello " + user.name + ",\n\n" +
+      "Your Love Light Stream verification PIN is:\n\n" +
+      user.pin + "\n\n" +
+      "Enter this PIN to verify your account.\n\n" +
+      "Love Light Stream"
+  });
+
+  return {
+    success: true,
+    message: "PIN sent successfully."
+  };
+}
+
+
+/**
+ * Verify a user's PIN.
+ */
+function verifyLoveLightUser(email, enteredPIN) {
+  email = normalizeEmail(email);
+  enteredPIN = String(enteredPIN || "").trim();
+
+  if (!email || !enteredPIN) {
+    return {
+      success: false,
+      error: "Email and PIN are required."
+    };
+  }
+
+  const user = findUserByEmail(email);
+
+  if (!user) {
+    return {
+      success: false,
+      error: "User not found."
+    };
+  }
+
+  if (String(user.pin) !== enteredPIN) {
+    return {
+      success: false,
+      error: "Incorrect PIN."
+    };
+  }
+
+  const sheet = getUsersSheet();
+
+  // Verified column = E
+  sheet.getRange(user.row, 5).setValue(true);
+
+  return {
+    success: true,
+    userId: user.userId,
+    email: user.email,
+    name: user.name,
+    message: "Account verified successfully."
+  };
+}
+// ======================================================
+// LOVE LIGHT STREAM — USER LOGIN
+// ======================================================
+
+/**
+ * Log in an existing Love Light Stream user.
+ *
+ * Required:
+ * email
+ * PIN
+ */
+function loginLoveLightUser(identifier) {
+  identifier = String(identifier || "").trim();
+
+  if (!identifier) {
+    return {
+      success: false,
+      error: "Love Light ID is required."
+    };
+  }
+
+  const user = findUserByUserId(identifier);
+
+  if (!user) {
+    return {
+      success: false,
+      error: "No Love Light ID found. Please check your ID or use Forgot ID."
+    };
+  }
+
+  if (user.verified !== true) {
+    return {
+      success: false,
+      error: "Account is not verified."
+    };
+  }
+
+  const sheet = getUsersSheet();
+  sheet.getRange(user.row, 7).setValue(new Date());
+
+  return {
+    success: true,
+    userId: user.userId,
+    name: user.name,
+    message: "Login successful."
+  };
+}
+
+// ======================================================
+// LOVE LIGHT STREAM — EXISTING USER LOOKUP
+// ======================================================
+
+function getLoveLightUser(email) {
+
+  email = normalizeEmail(email);
+
+  if (!email) {
+    return {
+      success: false,
+      error: "Email is required."
+    };
+  }
+
+  const user = findUserByEmail(email);
+
+  if (!user) {
+    return {
+      success: false,
+      error: "User not found."
+    };
+  }
+
+  return {
+    success: true,
+    userId: user.userId,
+    email: user.email,
+    name: user.name,
+    verified: user.verified,
+    createdAt: user.createdAt,
+    lastLogin: user.lastLogin
+  };
+}
+
+// ======================================================
+// LOVE LIGHT STREAM — WEB APP API
+// ======================================================
+
+function doGet(e) {
+
+  return ContentService
+    .createTextOutput(
+      JSON.stringify({
+        success: true,
+        message: "Love Light Stream API is running."
+      })
+    )
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+// =====================================================
+// LOVE LIGHT STREAM — RATING DATABASE SETUP
+// =====================================================
+
+function setupRatingDatabase() {
+  const spreadsheetId =
+    PropertiesService.getScriptProperties().getProperty("SPREADSHEET_ID");
+
+  if (!spreadsheetId) {
+    throw new Error("Database not initialized.");
+  }
+
+  const spreadsheet = SpreadsheetApp.openById(spreadsheetId);
+
+  // Add private Public Label column to Users sheet
+  const usersSheet = spreadsheet.getSheetByName("Users");
+
+  if (usersSheet) {
+    const lastColumn = usersSheet.getLastColumn();
+    const headers = usersSheet
+      .getRange(1, 1, 1, lastColumn)
+      .getValues()[0]
+      .map(String);
+
+    if (!headers.includes("Public Label")) {
+      usersSheet.getRange(1, lastColumn + 1).setValue("Public Label");
+    }
+  }
+
+  // Create Ratings sheet if it doesn't exist
+  let ratingsSheet = spreadsheet.getSheetByName("Ratings");
+
+  if (!ratingsSheet) {
+    ratingsSheet = spreadsheet.insertSheet("Ratings");
+
+    ratingsSheet.appendRow([
+      "Rating ID",
+      "Platform",
+      "Model ID",
+      "Model Name",
+      "Rating",
+      "Experience",
+      "Date/Time",
+      "User ID",
+      "Public Label",
+      "Verification",
+      "Status",
+      "Admin Note"
+    ]);
+  }
+
+  Logger.log("Rating database is ready.");
+  Logger.log("Ratings sheet: " + ratingsSheet.getName());
+}
+
+// =====================================================
+// LOVE LIGHT STREAM — ANONYMOUS PUBLIC LABELS
+// =====================================================
+
+function getOrCreatePublicLabel(userId) {
+  const user = findUserByUserId(userId);
+
+  if (!user) {
+    return {
+      success: false,
+      error: "User not found."
+    };
+  }
+
+  // Display Name is public; email remains private.
+  const publicLabel = String(user.name || "").trim();
+
+  if (!publicLabel) {
+    return {
+      success: false,
+      error: "Display Name is missing."
+    };
+  }
+
+  // Preserve the existing Public Label column for compatibility.
+  const sheet = getUsersSheet();
+  const data = sheet.getDataRange().getValues();
+
+  for (let i = 1; i < data.length; i++) {
+    if (String(data[i][0]).trim().toLowerCase() ===
+        String(userId).trim().toLowerCase()) {
+      sheet.getRange(i + 1, 8).setValue(publicLabel);
+      break;
+    }
+  }
+
+  return {
+    success: true,
+    userId: user.userId,
+    publicLabel: publicLabel
+  };
+}
+function testPublicLabel() {
+  const result = getOrCreatePublicLabel("LLS1001");
+  Logger.log(JSON.stringify(result));
+}
+
+// =====================================================
+// LOVE LIGHT STREAM — DUPLICATE RATING CHECK
+// =====================================================
+
+function checkExistingRating(userId, platform, modelId) {
+  const spreadsheetId =
+    PropertiesService.getScriptProperties().getProperty("SPREADSHEET_ID");
+
+  if (!spreadsheetId) {
+    throw new Error("Database not initialized.");
+  }
+
+  const spreadsheet = SpreadsheetApp.openById(spreadsheetId);
+  const sheet = spreadsheet.getSheetByName("Ratings");
+
+  if (!sheet) {
+    return {
+      exists: false
+    };
+  }
+
+  const data = sheet.getDataRange().getValues();
+
+  const normalizedPlatform = String(platform || "").trim().toLowerCase();
+  const normalizedModelId = String(modelId || "").trim().toLowerCase();
+  const normalizedUserId = String(userId || "").trim().toLowerCase();
+
+  for (let i = 1; i < data.length; i++) {
+    const rowUserId = String(data[i][7] || "").trim().toLowerCase();
+    const rowPlatform = String(data[i][1] || "").trim().toLowerCase();
+    const rowModelId = String(data[i][2] || "").trim().toLowerCase();
+
+    if (
+      rowUserId === normalizedUserId &&
+      rowPlatform === normalizedPlatform &&
+      rowModelId === normalizedModelId
+    ) {
+      return {
+        exists: true,
+        ratingId: data[i][0],
+        message: "You have already rated this model on this platform."
+      };
+    }
+  }
+
+  return {
+    exists: false
+  };
+}
+
+function testDuplicateRatingCheck() {
+  const result = checkExistingRating(
+    "LLS1001",
+    "eLive",
+    "1234"
+  );
+
+  Logger.log(JSON.stringify(result));
+}
+
+// =====================================================
+// LOVE LIGHT STREAM — SUBMIT RATING
+// =====================================================
+
+function submitRating(userId, platform, modelId, modelName, rating, experience) {
+
+  userId = String(userId || "").trim();
+  platform = String(platform || "").trim();
+  modelId = String(modelId || "").trim();
+  modelName = String(modelName || "").trim();
+  experience = String(experience || "").trim();
+
+  const numericRating = Number(rating);
+
+  // Basic validation
+  if (!userId) {
+    return {
+      success: false,
+      error: "User ID is required."
+    };
+  }
+
+  if (!platform) {
+    return {
+      success: false,
+      error: "Platform is required."
+    };
+  }
+
+  if (!modelId) {
+    return {
+      success: false,
+      error: "Model ID is required."
+    };
+  }
+
+  if (!Number.isFinite(numericRating) ||
+      numericRating < 1 ||
+      numericRating > 5) {
+    return {
+      success: false,
+      error: "Rating must be between 1 and 5."
+    };
+  }
+
+  // Only approved platforms
+  const normalizedPlatform = platform.toLowerCase();
+
+  if (
+    normalizedPlatform !== "elive" &&
+    normalizedPlatform !== "tango"
+  ) {
+    return {
+      success: false,
+      error: "Unsupported platform."
+    };
+  }
+
+  // Verify user
+  const user = findUserByUserId(userId);
+
+  if (!user) {
+    return {
+      success: false,
+      error: "User not found."
+    };
+  }
+
+  if (user.verified !== true) {
+    return {
+      success: false,
+      error: "Account is not verified."
+    };
+  }
+
+  // Prevent simultaneous duplicate submissions
+  const lock = LockService.getScriptLock();
+
+  try {
+    lock.waitLock(10000);
+
+    // Check duplicate rating
+    const duplicate = checkExistingRating(
+      userId,
+      platform,
+      modelId
+    );
+
+    if (duplicate.exists) {
+      return {
+        success: false,
+        error: duplicate.message,
+        ratingId: duplicate.ratingId
+      };
+    }
+
+    // Get anonymous public label
+    const publicLabelResult = getOrCreatePublicLabel(userId);
+
+    if (!publicLabelResult.success) {
+      return {
+        success: false,
+        error: publicLabelResult.error
+      };
+    }
+
+    const spreadsheetId =
+      PropertiesService.getScriptProperties()
+        .getProperty("SPREADSHEET_ID");
+
+    const spreadsheet =
+      SpreadsheetApp.openById(spreadsheetId);
+
+    const sheet =
+      spreadsheet.getSheetByName("Ratings");
+
+    if (!sheet) {
+      return {
+        success: false,
+        error: "Ratings database is not available."
+      };
+    }
+
+    // Generate Rating ID
+    const timestamp = new Date().getTime();
+
+    const randomPart = Math.floor(
+      1000 + Math.random() * 9000
+    );
+
+    const ratingId =
+      "R" + timestamp + randomPart;
+
+    const now = new Date();
+
+    // Save rating
+    sheet.appendRow([
+      ratingId,
+      platform,
+      modelId,
+      modelName,
+      numericRating,
+      experience,
+      now,
+      userId,
+      publicLabelResult.publicLabel,
+      "Verified User",
+      "New",
+      ""
+    ]);
+
+    return {
+      success: true,
+      ratingId: ratingId,
+      platform: platform,
+      modelId: modelId,
+      rating: numericRating,
+      publicLabel: publicLabelResult.publicLabel,
+      message: "Rating submitted successfully."
+    };
+
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+// =====================================================
+// FIND USER BY USER ID
+// =====================================================
+
+function findUserByUserId(userId) {
+
+  const sheet = getUsersSheet();
+  const data = sheet.getDataRange().getValues();
+
+  const normalizedUserId =
+    String(userId || "").trim().toLowerCase();
+
+  if (!normalizedUserId) {
+    return null;
+  }
+
+  for (let i = 1; i < data.length; i++) {
+
+    const rowUserId =
+      String(data[i][0] || "").trim().toLowerCase();
+
+    if (rowUserId === normalizedUserId) {
+
+      return {
+        row: i + 1,
+        userId: data[i][0],
+        email: data[i][1],
+        name: data[i][2],
+        pin: data[i][3],
+        verified: data[i][4],
+        createdAt: data[i][5],
+        lastLogin: data[i][6],
+        publicLabel: data[i][7]
+      };
+    }
+  }
+
+  return null;
+}
+
+function testSubmitRating() {
+  const result = submitRating(
+    "LLS1001",
+    "eLive",
+    "1234",
+    "Test Model",
+    4.5,
+    "This is a test community experience."
+  );
+
+  Logger.log(JSON.stringify(result));
+}
+
+function testDuplicateSubmission() {
+  const result = submitRating(
+    "LLS1001",
+    "eLive",
+    "1234",
+    "Test Model",
+    5,
+    "This should be rejected as a duplicate."
+  );
+
+  Logger.log(JSON.stringify(result));
+}
+// =====================================================
+// LOVE LIGHT STREAM — PUBLIC RATINGS READER
+// =====================================================
+
+function getPublicRatings(platform, modelId) {
+
+  platform = String(platform || "").trim();
+  modelId = String(modelId || "").trim();
+
+  const spreadsheetId =
+    PropertiesService.getScriptProperties()
+      .getProperty("SPREADSHEET_ID");
+
+  if (!spreadsheetId) {
+    throw new Error("Database not initialized.");
+  }
+
+  const spreadsheet =
+    SpreadsheetApp.openById(spreadsheetId);
+
+  const sheet =
+    spreadsheet.getSheetByName("Ratings");
+
+  if (!sheet) {
+    return {
+      success: true,
+      ratings: []
+    };
+  }
+
+  const data = sheet.getDataRange().getValues();
+
+  const normalizedPlatform =
+    platform.toLowerCase();
+
+  const normalizedModelId =
+    modelId.toLowerCase();
+
+  const publicRatings = [];
+
+  for (let i = 1; i < data.length; i++) {
+
+    const rowPlatform =
+      String(data[i][1] || "").trim();
+
+    const rowModelId =
+      String(data[i][2] || "").trim();
+
+    const status =
+      String(data[i][10] || "").trim();
+
+    // Never expose rejected ratings
+    if (status.toLowerCase() === "rejected") {
+      continue;
+    }
+
+    // Platform filter
+    if (
+      normalizedPlatform &&
+      rowPlatform.toLowerCase() !== normalizedPlatform
+    ) {
+      continue;
+    }
+
+    // Model ID filter
+    if (
+      normalizedModelId &&
+      rowModelId.toLowerCase() !== normalizedModelId
+    ) {
+      continue;
+    }
+
+    const dateValue = data[i][6];
+
+    let date = "";
+
+    if (dateValue instanceof Date) {
+      date = dateValue.toISOString();
+    } else if (dateValue) {
+      date = String(dateValue);
+    }
+
+    // IMPORTANT:
+    // Only public-safe fields are returned.
+    publicRatings.push({
+      platform: rowPlatform,
+      modelId: rowModelId,
+      modelName: String(data[i][3] || ""),
+      rating: Number(data[i][4] || 0),
+      experience: String(data[i][5] || ""),
+      date: date,
+      publicLabel: String(data[i][8] || "Anonymous")
+    });
+  }
+return {
+    success: true,
+    ratings: publicRatings
+};
+}
+
+// ============================================================
+// LOVE LIGHT STREAM — SUGGESTIONS DATABASE
+// ============================================================
+
+function setupSuggestionsDatabase() {
+
+  const spreadsheetId =
+    PropertiesService.getScriptProperties().getProperty("SPREADSHEET_ID");
+
+  if (!spreadsheetId) {
+    throw new Error("Database not initialized.");
+  }
+
+  const spreadsheet = SpreadsheetApp.openById(spreadsheetId);
+
+  let suggestionsSheet =
+    spreadsheet.getSheetByName("Suggestions");
+
+  if (!suggestionsSheet) {
+
+    suggestionsSheet =
+      spreadsheet.insertSheet("Suggestions");
+
+    suggestionsSheet.appendRow([
+      "App Name",
+      "Suggestion",
+      "Date/Time",
+      "Status"
+    ]);
+  }
+
+  Logger.log("Suggestions database is ready.");
+  Logger.log(
+    "Suggestions sheet: " + suggestionsSheet.getName()
+  );
+}
+
+function testPublicRatings() {
+
+  const result = getPublicRatings(
+    "eLive",
+    "1234"
+  );
+
+  Logger.log(JSON.stringify(result));
+}
+
+// =====================================================
+// LOVE LIGHT STREAM — APP SUGGESTIONS
+// =====================================================
+
+function submitSuggestion(appName, suggestion) {
+
+  appName = String(appName || "").trim();
+  suggestion = String(suggestion || "").trim();
+
+  if (!appName) {
+    return {
+      success: false,
+      error: "App name is required."
+    };
+  }
+
+  const spreadsheetId =
+    PropertiesService.getScriptProperties().getProperty("SPREADSHEET_ID");
+
+  if (!spreadsheetId) {
+    throw new Error("Database not initialized.");
+  }
+
+  const spreadsheet = SpreadsheetApp.openById(spreadsheetId);
+
+  let sheet = spreadsheet.getSheetByName("Suggestions");
+
+  if (!sheet) {
+    sheet = spreadsheet.insertSheet("Suggestions");
+
+    sheet.appendRow([
+      "App Name",
+      "Suggestion",
+      "Date/Time",
+      "Status"
+    ]);
+  }
+
+  const now = new Date();
+
+  sheet.appendRow([
+    appName,
+    suggestion,
+    now,
+    "New"
+  ]);
+
+  MailApp.sendEmail({
+    to: "lovelightstream@gmail.com",
+    subject: "New Love Light Stream App Suggestion",
+    body:
+      "A new app suggestion was submitted.\n\n" +
+      "App Name: " + appName + "\n" +
+      "Suggestion: " + (suggestion || "No suggestion provided") + "\n" +
+      "Date/Time: " + now.toLocaleString()
+  });
+
+  return {
+    success: true,
+    message: "Suggestion submitted successfully."
+  };
+}
+
