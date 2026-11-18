@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#10091d">
+<title>Become a Model | Love Light Stream</title>
+<meta name="description" content="Explore live streaming platforms and discover opportunities to connect with a global audience.">
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;
+ min-height:100vh;
+ color:#fff;
+ font-family:Arial,sans-serif;
+ background:radial-gradient(ellipse at top,#321044 0%,#160d25 42%,#090711 100%);
+}
+header{text-align:center;padding:28px 16px 12px}
+.logo{font-size:13px;letter-spacing:3px;color:#e9b5ff}
+h1{
+ margin:12px 0 8px;
+ font-size:clamp(27px,7vw,40px);
+ background:linear-gradient(90deg,#ff55d9,#a98bff,#53e7ff);
+ -webkit-background-clip:text;
+ background-clip:text;
+ color:transparent;
+}
+.intro{
+ max-width:520px;
+ margin:0 auto;
+ padding:0 14px;
+ color:#c9bed5;
+ line-height:1.6;
+ font-size:14px;
+}
+main{max-width:760px;margin:auto;padding:20px 16px 45px}
+.section-title{text-align:center;font-size:18px;margin:12px 0 18px}
+#platforms{display:grid;grid-template-columns:1fr;gap:14px}
+
+.platform-logo {
+    width:92px;
+    height:92px;
+    flex:0 0 92px;
+    object-fit:contain;
+    border-radius:14px;
+    background:transparent;
+}
+
+\n
+.platform-info {
+    display:flex !important;
+    flex-direction:row !important;
+    align-items:center;
+    gap:16px;
+}
+.platform-details {
+    min-width:0;
+    flex:1;
+}
+
+.platform-card {
+    padding:18px;
+    border:1px solid #75468A;
+    border-radius:20px;
+    background:#291A38;
+    color:#FFFFFF;
+    box-shadow:0 8px 24px #0004;
+}
+
+.platform-card h2 {
+    color:#FFFFFF;
+    font-size:20px;
+    line-height:1.25;
+    margin:0 0 9px;
+}
+
+.platform-card p {
+    color:#D5C9DF;
+    font-size:14px;
+    line-height:1.5;
+    margin:0;
+}
+
+.visit {
+    display:block;
+    width:100%;
+    margin-top:18px;
+    padding:19px 12px;
+    box-sizing:border-box;
+    border-radius:20px;
+    background:#21152E;
+    color:#fff;
+    text-align:center;
+    text-decoration:none;
+    font-size:20px;
+    font-weight:bold;
+}
+
+#message{text-align:center;color:#c9bed5;font-size:14px;padding:20px}
+.blog{
+ margin-top:28px;padding:21px 16px;text-align:center;
+ border:1px solid #55416b;border-radius:16px;
+ background:#171020;
+}
+.blog h2{font-size:18px;margin:0 0 8px}
+.blog p{font-size:13px;color:#c9bed5;line-height:1.5}
+.blog a{color:#66dcff;font-weight:bold;text-decoration:none}
+footer{text-align:center;padding:18px;color:#8e8299;font-size:12px}
+
+.header {
+    padding:30px 20px 10px;
+    text-align:center;
+}
+.logo {
+    width:120px;
+    display:block;
+    margin:0 auto;
+}
+.header h1 {
+    font-size:25px;
+    color:white;
+    background:none;
+    margin:10px 0;
+}
+.age-badge {
+    display:inline-block;
+    padding:5px 12px;
+    border-radius:20px;
+    background:#ff00cc;
+    font-size:12px;
+    margin:5px;
+}
+.social-links {
+    display:block;
+    margin-top:15px;
+}
+.social-links a {
+    color:#fff;
+    text-decoration:none;
+    font-size:13px;
+}
+.home-button {
+    display:inline-block;
+    padding:11px 24px;
+    border:1px solid #ff00cc;
+    border-radius:25px;
+    background:#222;
+    color:#fff;
+    text-decoration:none;
+    font-size:16px;
+    box-shadow:0 0 15px rgba(255,0,204,.65);
+}
+
+
+.header { padding:30px 20px 10px; text-align:center; }
+.logo {
+    width:140px; display:block; margin:0 auto;
+    animation:float 3s ease-in-out infinite, glow 2s ease-in-out infinite alternate;
+}
+@keyframes float {
+    0% { transform:translateY(0); }
+    50% { transform:translateY(-10px); }
+    100% { transform:translateY(0); }
+}
+@keyframes glow {
+    from { filter:drop-shadow(0 0 10px #ff00cc); }
+    to { filter:drop-shadow(0 0 25px #00ccff); }
+}
+.header h1 {
+    margin:10px 0 5px;
+    color:white;
+    background:none;
+    -webkit-text-fill-color:white;
+}
+.social-links { margin-top:15px; }
+.social-links a {
+    display:inline-block; margin:5px 10px; padding:8px 18px;
+    border-radius:25px; text-decoration:none; font-size:14px;
+    color:white; border:1px solid #ff00cc; transition:.3s;
+}
+.social-links a:hover {
+    background:linear-gradient(45deg,#ff00cc,#00ccff);
+    box-shadow:0 0 15px #ff00cc;
+}
+
+
+.intro-section {
+    text-align:center;
+    margin:8px auto 30px;
+    max-width:600px;
+}
+.intro-section h2 {
+    color:#fff;
+    font-size:21px;
+    margin:0 0 12px;
+}
+.intro-section p {
+    color:#D5C9DF;
+    font-size:14px;
+    line-height:1.7;
+    margin:0 0 12px;
+}
+.learn-more {
+    display:inline-block;
+    margin:3px 0 8px;
+    color:#55DDF5;
+    font-weight:bold;
+    text-decoration:none;
+}
+.section-title {
+    text-align:center;
+    font-size:18px;
+    margin:12px 0 18px;
+}
+\n</style>
+</head>
+<body>
+<div class="header">
+    <a href="home.html">
+        <img src="https://lovelightlinks.github.io/images/Icon.png" class="logo" alt="Love Light Stream">
+    </a>
+    <h1>Love Light Stream</h1>
+    <div class="age-badge">18+ Adults Only</div>
+
+    <div class="social-links">
+        <a href="https://www.instagram.com/love_light_stream" target="_blank">Instagram</a>
+        <a href="https://x.com/LoveLightStream" target="_blank">X</a>
+        <a href="https://t.me/lovelightlinks" target="_blank">Telegram</a>
+    </div>
+</div>
+
+<main>
+ <section class="intro-section">
+  <h2>Become a Model</h2>
+  <p>There are many platforms offering adult modelling opportunities where you can work and earn. Explore some of our recommended platforms below and discover opportunities that suit you.</p>
+  <p>Want to know more about the industry and how it works?</p>
+  <a class="learn-more" href="https://lovelightlinks.blogspot.com/2026/03/live-streaming-vs-recorded-adult.html?m=1"
+     target="_blank" rel="noopener noreferrer">Learn More →</a>
+ </section>
+
+ <h2 class="section-title">Explore Recommended Platforms</h2>
+ <div id="platforms">
+  <div id="message">Loading platforms...</div>
+ </div>
+</main>
+
+<div style="text-align:center;margin:30px 0 10px;">
+    <a href="home.html" class="home-button">&lt;&lt;&lt; Home &gt;&gt;&gt;</a>
+</div>
+
+<footer style="margin-top:50px;padding:30px;text-align:center;">
+    <p>© 2026 Love Light Stream. All rights reserved.</p>
+    <p>Love Light Stream is an independent 18+ directory and is not owned, operated, or officially affiliated with any listed platforms. All trademarks belong to their respective owners.</p>
+    <p>18+ Only. All content is intended for adults.</p>
+    <p style="margin-top:20px;font-size:14px;">
+        <a href="privacy.html" style="color:#ff00cc;text-decoration:none;">Privacy Policy</a>
+    </p>
+</footer>
+
+
+
+<script>
+(() => {
+ const sheet = "https://docs.google.com/spreadsheets/d/1CAkjWcpnt3Inb887WthMt6Y6M02Lbe-1Kz1w2l_t14Q/gviz/tq";
+ const box = document.getElementById("platforms");
+
+ const esc = value => String(value ?? "").replace(/[&<>"']/g, c =>
+  ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[c]
+ );
+
+ function loadPlatforms(){
+  return new Promise((resolve,reject) => {
+   const callback = "__llsPlatforms";
+   const script = document.createElement("script");
+   let finished = false;
+
+   const finish = (data,error) => {
+    if(finished)return;
+    finished = true;
+    clearTimeout(timer);
+    delete window[callback];
+    script.remove();
+    error ? reject(Error("Sheet unavailable")) : resolve(data);
+   };
+
+   const timer = setTimeout(() => finish(null,true),15000);
+   window[callback] = data => finish(data,false);
+   script.onerror = () => finish(null,true);
+   script.src = sheet + "?sheet=" + encodeURIComponent("Platforms") +
+    "&tqx=" + encodeURIComponent("responseHandler:" + callback);
+   document.body.appendChild(script);
+  });
+ }
+
+ function render(data){
+  if(!data || data.status !== "ok" || !data.table || !data.table.rows)
+   throw Error("Invalid sheet data");
+
+  const platforms = data.table.rows.slice(1).map(row => {
+   const c = row.c || [];
+   return {
+    name:c[0]?.v ?? "",
+    description:c[1]?.v ?? "",
+    link:c[2]?.v ?? "",
+    logo:c[3]?.v ?? "",
+    status:c[4]?.v ?? ""
+   };
+  }).filter(p => {
+   try {
+    const url = new URL(String(p.link));
+    return String(p.name).trim() &&
+     String(p.status).trim().toLowerCase() === "active" &&
+     ["https:","http:"].includes(url.protocol);
+   } catch(_) { return false; }
+  });
+
+  if(!platforms.length){
+   box.innerHTML = '<div id="message">No platforms are available right now. Please check back soon.</div>';
+   return;
+  }
+
+  box.innerHTML = platforms.map(p => `
+   <article class="platform-card">
+    <div class="platform-info" style="display:flex;flex-direction:row;align-items:center;gap:16px;">
+     ${p.logo ? `<img class="platform-logo" style="width:92px;height:92px;flex:0 0 92px;object-fit:contain;display:block;" src="${esc(p.logo)}"
+       alt="${esc(p.name)} logo" loading="lazy"
+       onerror="this.style.display='none'">` : ""}
+     <div class="platform-details" style="flex:1;min-width:0;">
+      <h2>${esc(p.name)}</h2>
+      <p>${esc(p.description)}</p>
+     </div>
+    </div>
+    <a class="visit" href="${esc(p.link)}"
+       target="_blank" rel="noopener noreferrer">Visit Platform →</a>
+   </article>
+  `).join("");
+ }
+
+ loadPlatforms().then(render).catch(() => {
+  box.innerHTML = '<div id="message">Platforms are temporarily unavailable. Please try again later.</div>';
+ });
+})();
+</script>
+</body>
+</html>
