@@ -571,13 +571,48 @@ function loadProfile(model) {
         /\.(mp4|webm|ogg|mov)$/i.test(file)
     );
 
-    const links = [];
+    function escapeLinkText(value) {
+        return String(value).replace(/[&<>"']/g, char => ({
+            "&": "&amp;", "<": "&lt;", ">": "&gt;",
+            '"': "&quot;", "'": "&#39;"
+        })[char]);
+    }
 
-    if (model.Instagram) links.push(`<a href="${model.Instagram}" target="_blank" rel="noopener">Instagram</a>`);
-    if (model.X) links.push(`<a href="${model.X}" target="_blank" rel="noopener">X</a>`);
-    if (model.Stripchat) links.push(`<a href="${model.Stripchat}" target="_blank" rel="noopener">Stripchat</a>`);
-    if (model.OnlyFans) links.push(`<a href="${model.OnlyFans}" target="_blank" rel="noopener">OnlyFans</a>`);
-    if (model.Other) links.push(`<a href="${model.Other}" target="_blank" rel="noopener">Other</a>`);
+    const linkFields = [
+        model.Link1, model.Link2, model.Link3, model.Link4, model.Link5
+    ];
+
+    const linksHTML = '<div style="display:flex;flex-direction:column;gap:14px;width:100%;margin-top:22px;">' +
+        linkFields.map((entry, index) => {
+            const fallbackTitle = "Link " + (index + 1);
+            const value = String(entry || "").trim();
+            let title = fallbackTitle;
+            let url = "";
+
+            if (value.includes("|")) {
+                const separator = value.indexOf("|");
+                title = value.slice(0, separator).trim() || fallbackTitle;
+                url = value.slice(separator + 1).trim();
+            } else {
+                url = value;
+            }
+
+            let validURL = false;
+            try {
+                const parsed = new URL(url);
+                validURL = parsed.protocol === "https:" || parsed.protocol === "http:";
+            } catch (_) {}
+
+            if (!validURL) {
+                return '<span style="display:block;width:100%;box-sizing:border-box;text-align:center;padding:16px 20px;border:1px solid #75468A;border-radius:16px;background:#21152E;color:#D5C9DF;">' +
+                    escapeLinkText(fallbackTitle) + ' — Not Available</span>';
+            }
+
+            return '<a href="' + escapeLinkText(url) +
+                '" target="_blank" rel="noopener noreferrer" style="display:block;width:100%;box-sizing:border-box;text-align:center;padding:12px;border-radius:30px;background:linear-gradient(45deg,#ff00cc,#00ccff);color:white;text-decoration:none;font-size:19px;font-weight:bold;">' +
+                escapeLinkText(title) + ' ↗</a>';
+        }).join("") +
+    '</div>';
 
     const tags = model.Tags
         ? model.Tags.split(",").map(tag => {
@@ -658,14 +693,10 @@ function loadProfile(model) {
             galleryHTML +
             '<h3>' + (model.Nickname || model.ID || "Model") + '</h3>' +
             '<p><strong>ID:</strong> ' + (model.ID || "—") + '</p>' +
-            (details ? '<div class="profile-details"><h4>MODEL DETAILS</h4>' + details + '</div>' : '') +
+            '<div class="profile-details"><h4>MODEL DETAILS</h4>' + details + linksHTML + '</div>' +
             (tags ? '<div class="tags">' + tags + '</div>' : '') +
             videosHTML +
-            (links.length
-                ? '<div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:20px;">' +
-                  links.join("") +
-                  '</div>'
-                : '') +
+
         '</div>';
 
     window.changeProfileImage = function(direction) {
@@ -825,11 +856,11 @@ function modelHubCallback(response) {
             Details: c[1]?.v || "",
             Tags: c[2]?.v || "",
             ID: c[3]?.v || "",
-            Instagram: c[4]?.v || "",
-            X: c[5]?.v || "",
-            Stripchat: c[6]?.v || "",
-            OnlyFans: c[7]?.v || "",
-            Other: c[8]?.v || "",
+            Link1: c[4]?.v || "",
+            Link2: c[5]?.v || "",
+            Link3: c[6]?.v || "",
+            Link4: c[7]?.v || "",
+            Link5: c[8]?.v || "",
             Media: c[9]?.v || ""
         };
     }).filter(model => model.ID);
