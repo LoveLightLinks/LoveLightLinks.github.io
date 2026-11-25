@@ -520,6 +520,33 @@ function getModelImages(model) {
     return files.map(file => folder + encodeURIComponent(file));
 }
 
+
+function showNoImage(img) {
+    img.onerror = null;
+    img.style.display = "none";
+
+    if (img.nextElementSibling &&
+        img.nextElementSibling.classList.contains("no-image")) return;
+
+    const placeholder = document.createElement("div");
+    placeholder.className = "no-image";
+    placeholder.textContent = "No Image Available";
+
+    Object.assign(placeholder.style, {
+        display: "block",
+        width: "100%",
+        boxSizing: "border-box",
+        padding: "18px 8px",
+        textAlign: "center",
+        color: "#aaa",
+        background: "#151515",
+        borderRadius: "10px",
+        fontSize: "13px"
+    });
+
+    img.insertAdjacentElement("afterend", placeholder);
+}
+
 function loadPage() {
     const grid = document.getElementById("modelGrid");
 
@@ -539,7 +566,7 @@ function loadPage() {
 
         card.innerHTML = `
             <img src="${images[0]}" loading="lazy"
-                 onerror="this.style.display='none'">
+                 onerror="showNoImage(this)">
             <h3>${model.Nickname || model.ID || "Model"}</h3>
         `;
 
@@ -586,6 +613,7 @@ function loadProfile(model) {
         linkFields.map((entry, index) => {
             const fallbackTitle = "Link " + (index + 1);
             const value = String(entry || "").trim();
+            if (!value) return "";
             let title = fallbackTitle;
             let url = "";
 
@@ -647,7 +675,7 @@ function loadProfile(model) {
               '<img src="' + img + '"' +
               ' class="profile-image"' +
               ' style="display:' + (index === 0 ? 'block' : 'none') + '"' +
-              ' onerror="this.remove()">' 
+              ' onerror="showNoImage(this)">'
           ).join("") +
           (imageFiles.length > 1
               ? '<button class="nav-btn left" onclick="changeProfileImage(-1)">‹</button>' +

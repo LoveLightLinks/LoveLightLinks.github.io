@@ -499,6 +499,12 @@ function getMediaFiles(mediaValue) {
         const id = decodeURIComponent(match[1]);
         const files = mediaManifest[id] || [];
 
+        if (!files.length) {
+            const number = Math.floor(Math.random() * 22) + 1;
+            const filename = String(number).padStart(2, "0");
+            return ["images/rating-hub-webp/rating-" + filename + ".webp"];
+        }
+
         return files.map(file =>
             "images/models/" +
             encodeURIComponent(id) +
@@ -512,6 +518,33 @@ function getMediaFiles(mediaValue) {
      */
     return [value];
 }
+
+function useTrendingFallback(img) {
+    img.onerror = function() {
+        this.onerror = null;
+        this.style.display = "none";
+    };
+
+    const number = Math.floor(Math.random() * 22) + 1;
+    const filename = String(number).padStart(2, "0");
+
+    img.src = "images/rating-hub-webp/rating-" + filename + ".webp";
+}
+
+document.addEventListener("error", function(event) {
+    const img = event.target;
+
+    if (!(img instanceof HTMLImageElement)) return;
+    if (!img.closest(".buzz-media, .post-media, .suggestion-media")) return;
+    if (img.dataset.fallbackTried === "true") return;
+
+    img.dataset.fallbackTried = "true";
+
+    const number = Math.floor(Math.random() * 22) + 1;
+    const filename = String(number).padStart(2, "0");
+
+    img.src = "images/rating-hub-webp/rating-" + filename + ".webp";
+}, true);
 
 function renderMedia(mediaValue, className, firstOnly = false) {
     let files = getMediaFiles(mediaValue);
@@ -536,7 +569,7 @@ function renderMedia(mediaValue, className, firstOnly = false) {
         } else {
             html +=
                 '<img src="' + safeFile +
-                '" alt="Trending Buzz media" loading="lazy">';
+                '" alt="Trending Buzz media" loading="lazy" onerror="this.onerror=null;this.src=\'images/rating-hub-webp/rating-\'+String(Math.floor(Math.random()*22)+1).padStart(2,\'0\')+\'.webp\'">';
         }
     });
 
